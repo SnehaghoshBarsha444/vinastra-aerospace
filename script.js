@@ -19,7 +19,7 @@ window.addEventListener('load', () => {
 const topbar = document.querySelector('#topbar');
 const root = document.documentElement;
 const updateScrollTelemetry = () => {
-  topbar.classList.toggle('scrolled', window.scrollY > 30);
+  if (topbar) topbar.classList.toggle('scrolled', window.scrollY > 30);
   const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
   root.style.setProperty('--scroll-progress', scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0);
 };
@@ -34,6 +34,60 @@ window.addEventListener('pointermove', (event) => {
   heroVisual.style.setProperty('--pointer-x', x.toFixed(3));
   heroVisual.style.setProperty('--pointer-y', y.toFixed(3));
 }, { passive: true });
+
+// The supplied blueprint and concept render use the same composition. The reveal
+// stays aligned with their geometry instead of trying to falsely morph flat artwork.
+const factoryStage = document.querySelector('[data-factory-stage]');
+const factoryProgress = document.querySelector('[data-progress]');
+const factoryCopy = document.querySelector('[data-factory-copy]');
+let factoryFrame = null;
+const updateFactoryReveal = () => {
+  factoryFrame = null;
+  if (!factoryStage || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const bounds = factoryStage.parentElement.getBoundingClientRect();
+  const distance = Math.max(1, factoryStage.parentElement.offsetHeight - window.innerHeight);
+  const progress = Math.min(1, Math.max(0, -bounds.top / distance));
+  // Keep the opening frame as the blueprint, then begin the colour pass after
+  // a brief visual hold. The lower copy enters in the same scroll direction.
+  const reveal = Math.round(Math.min(1, Math.max(0, (progress - 0.14) / 0.86)) * 100);
+  factoryStage.style.setProperty('--factory-reveal', reveal);
+  if (factoryCopy) {
+    const copyProgress = Math.min(1, Math.max(0, (progress - 0.07) / 0.22));
+    factoryCopy.style.setProperty('--hero-copy-progress', copyProgress.toFixed(3));
+    factoryCopy.style.setProperty('--hero-copy-events', copyProgress > 0.9 ? 'auto' : 'none');
+  }
+  if (factoryProgress) factoryProgress.textContent = String(reveal).padStart(2, '0');
+};
+const requestFactoryReveal = () => { if (!factoryFrame) factoryFrame = requestAnimationFrame(updateFactoryReveal); };
+window.addEventListener('scroll', requestFactoryReveal, { passive: true });
+window.addEventListener('resize', requestFactoryReveal);
+updateFactoryReveal();
+
+const componentData = {
+  solar: ['01', 'Solar power arrays', 'Scalable collection surfaces support the illustrated factory’s power needs and manufacturing operations.'],
+  control: ['02', 'Avionics & AI control', 'A conceptual control layer coordinates sensing, navigation and autonomous operations across the platform.'],
+  processing: ['03', 'Resource processing', 'Illustrated processing modules explore how raw material could be sorted, refined and prepared for use.'],
+  robotics: ['04', 'Robotic assembly', 'Robotic manipulators are shown performing inspection, handling and external assembly activities.'],
+  manufacturing: ['05', 'Manufacturing bay', 'The central bay represents additive manufacturing and fabrication concepts designed for orbital conditions.'],
+  docking: ['06', 'Docking hub', 'A multi-port hub conceptually supports transfer, servicing and the movement of materials between vehicles.']
+};
+const explorer = document.querySelector('[data-explorer]');
+if (explorer) {
+  const index = explorer.querySelector('[data-component-index]');
+  const title = explorer.querySelector('[data-component-title]');
+  const description = explorer.querySelector('[data-component-description]');
+  const selectComponent = (key) => {
+    const item = componentData[key];
+    if (!item) return;
+    explorer.querySelectorAll('.component-marker').forEach((marker) => marker.classList.toggle('active', marker.dataset.component === key));
+    [index.textContent, title.textContent, description.textContent] = item;
+  };
+  explorer.querySelectorAll('.component-marker').forEach((marker) => marker.addEventListener('click', () => selectComponent(marker.dataset.component)));
+  explorer.querySelector('[data-panel-close]')?.addEventListener('click', () => {
+    explorer.querySelectorAll('.component-marker').forEach((marker) => marker.classList.remove('active'));
+    index.textContent = '01'; title.textContent = 'Factory overview'; description.textContent = 'Select any illustrated marker to learn how that conceptual subsystem relates to the wider factory.';
+  });
+}
 
 const menuToggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.primary-nav');
