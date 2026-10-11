@@ -32,7 +32,7 @@ const serveFile = async (request, response, pathname) => {
   try {
     const content = await fs.readFile(filePath);
     const extension = path.extname(filePath);
-    const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpeg': 'image/jpeg', '.ico': 'image/x-icon' };
+    const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json' };
     response.writeHead(200, { 'Content-Type': types[extension] || 'application/octet-stream' });
     response.end(content);
   } catch {
@@ -61,4 +61,8 @@ const server = createServer(async (request, response) => {
   return serveFile(request, response, url.pathname);
 });
 
-server.listen(port, () => console.log(`Vinastra Aerospace listening on http://localhost:${port}`));
+if (process.env.VERCEL !== '1') {
+  server.listen(port, () => console.log(`Vinastra Aerospace listening on http://localhost:${port}`));
+}
+
+export default server;
