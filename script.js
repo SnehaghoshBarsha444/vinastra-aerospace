@@ -64,12 +64,12 @@ window.addEventListener('resize', requestFactoryReveal);
 updateFactoryReveal();
 
 const componentData = {
-  solar: ['01', 'Solar power arrays', 'Scalable collection surfaces support the illustrated factory’s power needs and manufacturing operations.'],
-  control: ['02', 'Avionics & AI control', 'A conceptual control layer coordinates sensing, navigation and autonomous operations across the platform.'],
-  processing: ['03', 'Resource processing', 'Illustrated processing modules explore how raw material could be sorted, refined and prepared for use.'],
-  robotics: ['04', 'Robotic assembly', 'Robotic manipulators are shown performing inspection, handling and external assembly activities.'],
-  manufacturing: ['05', 'Manufacturing bay', 'The central bay represents additive manufacturing and fabrication concepts designed for orbital conditions.'],
-  docking: ['06', 'Docking hub', 'A multi-port hub conceptually supports transfer, servicing and the movement of materials between vehicles.']
+  planner: ['01', 'AI Mission Planner', 'Task sequencing, replanning and anomaly response form the proposed autonomous planning layer.'],
+  twin: ['02', 'Digital Twin', 'A blueprint and simulation layer could compare planned progress with the constructed module.'],
+  builders: ['03', 'Robotic Builders', 'Arms, mobile robots, 3D printing and joining tools are proposed for construction and assembly tasks.'],
+  vision: ['04', 'Machine Vision', 'Vision, sensors and metrology are intended to support inspection, alignment and quality checks.'],
+  ground: ['05', 'Ground Control', 'Earth-based operators would issue supervisory commands and recovery actions when needed.'],
+  oversight: ['06', 'Human Supervision', 'ASCS is autonomous-first, human-supervised and designed to be remotely recoverable in concept.']
 };
 const explorer = document.querySelector('[data-explorer]');
 if (explorer) {
