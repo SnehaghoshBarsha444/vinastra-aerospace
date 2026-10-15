@@ -1,3 +1,8 @@
+const polishStylesheet = document.createElement('link');
+polishStylesheet.rel = 'stylesheet';
+polishStylesheet.href = '/professional.css';
+document.head.append(polishStylesheet);
+
 const loader = document.querySelector('#loader');
 const loaderMessage = document.querySelector('#loader-message');
 const messages = ['INITIALIZING SYSTEM', 'ESTABLISHING ORBITAL LINK', 'SYSTEM READY'];

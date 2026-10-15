@@ -1,0 +1,306 @@
+:root {
+  --pro-surface: rgba(12, 31, 53, 0.78);
+  --pro-surface-strong: rgba(16, 42, 70, 0.92);
+  --pro-border: rgba(157, 205, 229, 0.2);
+  --pro-border-bright: rgba(117, 221, 244, 0.46);
+  --pro-shadow: 0 22px 70px rgba(0, 0, 0, 0.22);
+}
+
+body {
+  letter-spacing: 0;
+}
+
+.topbar {
+  border-bottom-color: rgba(188, 220, 236, 0.24);
+}
+
+.brand {
+  gap: 10px;
+  letter-spacing: 0.18em;
+}
+
+.brand-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border: 1px solid rgba(199, 166, 106, 0.52);
+  border-radius: 50%;
+}
+
+.primary-nav a {
+  position: relative;
+  transition: color 180ms ease;
+}
+
+.primary-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -9px;
+  height: 1px;
+  background: var(--v-cyan, #75ddf4);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+}
+
+.primary-nav a:hover::after,
+.primary-nav a:focus-visible::after,
+.primary-nav a.active-route::after {
+  transform: scaleX(1);
+}
+
+.primary-nav a:focus-visible,
+.hero-button:focus-visible,
+.story-link:focus-visible,
+.component-marker:focus-visible,
+.panel-close:focus-visible {
+  outline: 2px solid #75ddf4;
+  outline-offset: 5px;
+}
+
+.hero-button,
+.story-link {
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.hero-button:hover,
+.story-link:hover {
+  transform: translateY(-2px);
+}
+
+.hero-button--primary {
+  box-shadow: 0 12px 28px rgba(10, 92, 147, 0.24);
+}
+
+.hero-button--secondary {
+  background: rgba(5, 18, 34, 0.58);
+  border-color: rgba(199, 208, 220, 0.42);
+}
+
+.factory-copy {
+  width: min(650px, 50vw);
+}
+
+.factory-copy h1 {
+  max-width: 680px;
+  line-height: 0.94;
+  text-wrap: balance;
+}
+
+.factory-copy > p:not(.hero-eyebrow) {
+  max-width: 535px;
+  color: rgba(235, 244, 248, 0.84);
+  font-size: clamp(15px, 1.25vw, 18px);
+  line-height: 1.65;
+}
+
+.section-heading h2,
+.story-copy h2,
+.autonomy h2,
+.vision-copy h2 {
+  max-width: 780px;
+  text-wrap: balance;
+}
+
+.section-intro-copy p,
+.story-copy > p:not(.section-kicker),
+.autonomy-copy > p:not(.section-kicker),
+.vision-copy > p:not(.section-kicker) {
+  max-width: 640px;
+  color: rgba(199, 208, 220, 0.84);
+  line-height: 1.75;
+}
+
+.explorer,
+.resource-card,
+.autonomy-list,
+.route-content {
+  position: relative;
+}
+
+.explorer {
+  border: 1px solid var(--pro-border);
+  box-shadow: var(--pro-shadow);
+}
+
+.component-panel {
+  background: linear-gradient(145deg, rgba(13, 42, 68, 0.96), rgba(5, 18, 34, 0.92));
+}
+
+.component-marker {
+  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.component-marker:hover,
+.component-marker.active {
+  transform: scale(1.12);
+  background: #75ddf4;
+  color: #061321;
+  box-shadow: 0 0 0 7px rgba(117, 221, 244, 0.14), 0 0 24px rgba(117, 221, 244, 0.5);
+}
+
+.resource-grid {
+  gap: 1px;
+  background: var(--pro-border);
+  border: 1px solid var(--pro-border);
+  box-shadow: var(--pro-shadow);
+}
+
+.resource-card {
+  min-height: 240px;
+  background: linear-gradient(150deg, rgba(17, 44, 72, 0.96), rgba(7, 22, 39, 0.96));
+  border: 0;
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.resource-card:hover {
+  z-index: 1;
+  background: linear-gradient(150deg, rgba(23, 61, 94, 0.98), rgba(8, 27, 47, 0.98));
+  transform: translateY(-4px);
+}
+
+.story-panel,
+.vision {
+  border-top: 1px solid var(--pro-border);
+  border-bottom: 1px solid var(--pro-border);
+}
+
+.story-copy,
+.vision-copy {
+  padding-left: clamp(7vw, 11vw, 15vw);
+  padding-right: clamp(7vw, 11vw, 15vw);
+}
+
+.autonomy {
+  background: linear-gradient(110deg, #061321 0%, #0b2742 54%, #071426 100%);
+}
+
+.autonomy-list > div {
+  border-color: var(--pro-border);
+  background: rgba(4, 15, 28, 0.32);
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.autonomy-list > div:hover {
+  border-color: var(--pro-border-bright);
+  background: rgba(20, 60, 92, 0.36);
+}
+
+.route-page {
+  padding-top: 168px;
+}
+
+.route-grid,
+.route-content,
+.route-footer {
+  width: min(1380px, 100%);
+}
+
+.route-aside {
+  background: linear-gradient(145deg, rgba(15, 47, 76, 0.38), rgba(5, 18, 32, 0.18));
+  padding: 28px 28px 24px;
+  box-shadow: var(--pro-shadow);
+}
+
+.route-aside strong {
+  display: block;
+  margin: 20px 0 28px;
+  color: #eef7fa;
+  font-size: clamp(28px, 3.4vw, 54px);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+
+.route-content {
+  margin-top: 110px;
+  gap: 1px;
+  background: var(--pro-border);
+  border: 1px solid var(--pro-border);
+  box-shadow: var(--pro-shadow);
+}
+
+.route-item {
+  min-height: 230px;
+  padding: 34px 32px 36px;
+  background: linear-gradient(150deg, rgba(15, 42, 68, 0.9), rgba(6, 20, 35, 0.94));
+  border: 0;
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.route-item:hover {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(150deg, rgba(23, 61, 94, 0.98), rgba(8, 27, 47, 0.98));
+  transform: translateY(-3px);
+}
+
+.route-item h2 {
+  max-width: 400px;
+  color: #f0f6f8;
+  text-wrap: balance;
+}
+
+.route-item p {
+  max-width: 430px;
+  color: rgba(199, 208, 220, 0.8);
+  line-height: 1.7;
+}
+
+.route-footer {
+  border-top-color: var(--pro-border);
+  color: #91aebd;
+}
+
+@media (max-width: 800px) {
+  .brand-logo {
+    width: 25px;
+    height: 25px;
+  }
+
+  .factory-copy {
+    width: auto;
+  }
+
+  .factory-copy > p:not(.hero-eyebrow) {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .story-copy,
+  .vision-copy {
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+
+  .route-page {
+    padding-top: 126px;
+  }
+
+  .route-aside {
+    min-height: 0;
+    padding: 22px 20px;
+  }
+
+  .route-content {
+    margin-top: 68px;
+  }
+
+  .route-item {
+    min-height: 0;
+    padding: 27px 22px 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primary-nav a::after,
+  .hero-button,
+  .story-link,
+  .component-marker,
+  .resource-card,
+  .autonomy-list > div,
+  .route-item {
+    transition: none;
+  }
+}
