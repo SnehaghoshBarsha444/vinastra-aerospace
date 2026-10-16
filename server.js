@@ -19,7 +19,10 @@ const sendJson = (response, status, payload) => {
 
 const readBody = async (request) => {
   let body = '';
-  for await (const chunk of request) body += chunk;
+  for await (const chunk of request) {
+    body += chunk;
+    if (body.length > 64 * 1024) throw new Error('Request body too large');
+  }
   return JSON.parse(body || '{}');
 };
 
@@ -46,10 +49,15 @@ const server = createServer(async (request, response) => {
   if (url.pathname === '/api/news' && request.method === 'GET') return sendJson(response, 200, stories);
   if (url.pathname === '/api/contact' && request.method === 'POST') {
     try {
+      if (!request.headers['content-type']?.includes('application/json')) {
+        return sendJson(response, 415, { error: 'JSON content type required' });
+      }
       const inquiry = await readBody(request);
       const emailParts = String(inquiry.email || '').split('@');
       const hasValidEmail = emailParts.length === 2 && emailParts[0].length > 0 && emailParts[1].includes('.');
-      if (!inquiry.name || !hasValidEmail) return sendJson(response, 400, { error: 'Name and valid email are required' });
+      if (inquiry.website || !inquiry.name || !inquiry.message || !hasValidEmail) {
+        return sendJson(response, 400, { error: 'Name, email, and message are required' });
+      }
       await fs.mkdir(path.dirname(inquiryStore), { recursive: true });
       let entries = [];
       try { entries = JSON.parse(await fs.readFile(inquiryStore, 'utf8')); } catch {}

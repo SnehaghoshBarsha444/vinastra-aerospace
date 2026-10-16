@@ -10,8 +10,15 @@ const messageTimer = loaderMessage ? setInterval(() => {
 }, 430) : null;
 
 window.addEventListener('load', () => {
-  if (loader) setTimeout(() => loader.classList.add('loaded'), 650);
+  if (loader) {
+    const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 80 : 650;
+    setTimeout(() => loader.classList.add('loaded'), delay);
+  }
 });
+
+const routeName = window.location.pathname.split('/').filter(Boolean)[0] || 'home';
+document.body.dataset.route = routeName;
+document.querySelector('main')?.setAttribute('data-route', routeName);
 
 const topbar = document.querySelector('#topbar');
 const root = document.documentElement;
@@ -100,7 +107,7 @@ document.querySelectorAll('.primary-nav').forEach((navigation) => {
   const currentPath = window.location.pathname.replace(/\/$/, '') || '/home';
   navigation.innerHTML = navItems.map(([label, href]) => {
     const active = currentPath === href.replace(/\/$/, '') ? ' class="active-route"' : '';
-    return `<a${active} href="${href}">${label}</a>`;
+    return `<a${active}${active ? ' aria-current="page"' : ''} href="${href}">${label}</a>`;
   }).join('');
 });
 
@@ -117,6 +124,13 @@ if (menuToggle && nav) {
   }));
 }
 
+if (!document.querySelector('.dossier-footer') && !document.querySelector('.site-footer')) {
+  const footer = document.createElement('footer');
+  footer.className = 'site-footer';
+  footer.innerHTML = '<span>VINASTRA AEROSPACE / EARLY-STAGE R&amp;D</span><span>CONCEPTS ARE LABELLED THROUGHOUT</span><a href="/contact/">Start a conversation <b>↗</b></a>';
+  document.querySelector('main')?.insertAdjacentElement('afterend', footer);
+}
+
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
@@ -128,11 +142,14 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
 document.querySelectorAll('.route-item').forEach((element) => observer.observe(element));
 
-const contactForm = document.querySelector('form');
+const contactForm = document.querySelector('form[data-contact-form]');
 if (contactForm) contactForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   const button = event.currentTarget.querySelector('button');
+  const status = event.currentTarget.querySelector('[data-form-status]');
   button.disabled = true;
+  button.textContent = 'Transmitting…';
+  if (status) status.textContent = '';
   try {
     const response = await fetch('/api/contact', {
       method: 'POST',
@@ -140,12 +157,14 @@ if (contactForm) contactForm.addEventListener('submit', async (event) => {
       body: JSON.stringify(Object.fromEntries(new FormData(event.currentTarget)))
     });
     if (!response.ok) throw new Error('Transmission rejected');
-    button.innerHTML = 'Transmission received <span>✓</span>';
+    button.textContent = 'Transmission received';
+    if (status) status.textContent = 'Thank you. Your enquiry has been recorded.';
     event.currentTarget.reset();
   } catch (error) {
     console.error(error);
     button.disabled = false;
-    button.innerHTML = 'Retry transmission <span>↻</span>';
+    button.textContent = 'Retry transmission';
+    if (status) status.textContent = 'Transmission failed. Please try again.';
   }
 });
 
