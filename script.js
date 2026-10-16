@@ -1,8 +1,3 @@
-const polishStylesheet = document.createElement('link');
-polishStylesheet.rel = 'stylesheet';
-polishStylesheet.href = '/professional.css';
-document.head.append(polishStylesheet);
-
 const loader = document.querySelector('#loader');
 const loaderMessage = document.querySelector('#loader-message');
 const messages = ['INITIALIZING SYSTEM', 'ESTABLISHING ORBITAL LINK', 'SYSTEM READY'];
@@ -15,10 +10,7 @@ const messageTimer = loaderMessage ? setInterval(() => {
 }, 430) : null;
 
 window.addEventListener('load', () => {
-  if (loader) setTimeout(() => {
-    loader.classList.add('loaded');
-    if (document.body.dataset.redirectAfterLoad) window.location.assign(document.body.dataset.redirectAfterLoad);
-  }, 1250);
+  if (loader) setTimeout(() => loader.classList.add('loaded'), 650);
 });
 
 const topbar = document.querySelector('#topbar');
@@ -93,6 +85,24 @@ if (explorer) {
     index.textContent = '01'; title.textContent = 'Factory overview'; description.textContent = 'Select any illustrated marker to learn how that conceptual subsystem relates to the wider factory.';
   });
 }
+
+const navItems = [
+  ['Home', '/home/'],
+  ['About', '/about/'],
+  ['Innovation', '/innovation/'],
+  ['Research & Development', '/research/'],
+  ['News & Updates', '/news/'],
+  ['Investors', '/investors/'],
+  ['Collaborations', '/collaborate/'],
+  ['Contact', '/contact/']
+];
+document.querySelectorAll('.primary-nav').forEach((navigation) => {
+  const currentPath = window.location.pathname.replace(/\/$/, '') || '/home';
+  navigation.innerHTML = navItems.map(([label, href]) => {
+    const active = currentPath === href.replace(/\/$/, '') ? ' class="active-route"' : '';
+    return `<a${active} href="${href}">${label}</a>`;
+  }).join('');
+});
 
 const menuToggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.primary-nav');
