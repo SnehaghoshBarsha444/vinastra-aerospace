@@ -142,6 +142,7 @@ body {
 }
 
 .resource-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   background: var(--pro-border);
   border: 1px solid var(--pro-border);
@@ -149,7 +150,7 @@ body {
 }
 
 .resource-card {
-  min-height: 240px;
+  min-height: 260px;
   background: linear-gradient(150deg, rgba(17, 44, 72, 0.96), rgba(7, 22, 39, 0.96));
   border: 0;
   transition: background-color 180ms ease, transform 180ms ease;
@@ -196,6 +197,14 @@ body {
 .route-content,
 .route-footer {
   width: min(1380px, 100%);
+}
+
+.concept-note {
+  max-width: 760px;
+  margin-top: 26px;
+  color: rgba(199, 208, 220, 0.62);
+  font: 10px/1.65 var(--mono);
+  letter-spacing: 0.08em;
 }
 
 .route-aside {
@@ -290,6 +299,14 @@ body {
   .route-item {
     min-height: 0;
     padding: 27px 22px 30px;
+  }
+
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-card {
+    min-height: 210px;
   }
 }
 
