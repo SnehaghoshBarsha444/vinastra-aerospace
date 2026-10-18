@@ -71,6 +71,7 @@ let parallaxAnimationFrame = null;
 
 const applyParallax = () => {
   parallaxAnimationFrame = null;
+  if (typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth < 860) {
     parallaxElements.forEach((el) => el.style.removeProperty('--parallax-y'));
     return;
@@ -220,19 +221,154 @@ if (factoryToggleBtns.length > 0 && factoryImage) {
   });
 }
 
-// Scroll-Triggered Reveal Elements (IntersectionObserver)
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      revealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+// ==========================================================================
+// GSAP + SCROLLTRIGGER COORDINATED SCROLL EFFECTS
+// ==========================================================================
+const initGSAPScrollEffects = () => {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    document.querySelectorAll('.reveal, .dossier-card, .bottleneck-card, .pillar-card, .news-card').forEach((el) => {
+      el.classList.add('visible');
+    });
+    return;
+  }
 
-document.querySelectorAll('.reveal, .dossier-card, .bottleneck-card, .pillar-card, .news-card').forEach((el) => {
-  revealObserver.observe(el);
-});
+  if (typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 1. Hero Coordinated Entrance Timeline
+    const heroCopy = document.querySelector('.hero-copy');
+    if (heroCopy) {
+      const heroTL = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      heroTL
+        .from('.hero-copy .eyebrow', { opacity: 0, y: 25, duration: 0.8, delay: 0.1 })
+        .from('.hero-headline', { opacity: 0, y: 35, duration: 1.0 }, '-=0.6')
+        .from('.hero-desc', { opacity: 0, y: 25, duration: 0.8 }, '-=0.6')
+        .from('.hero-actions .action', { opacity: 0, y: 20, stagger: 0.15, duration: 0.7 }, '-=0.5')
+        .from('.mission-console', { opacity: 0, x: 45, duration: 1.0, ease: 'power2.out' }, '-=0.8');
+    }
+
+    // 2. Parallax Synced with Scroll (Scrubbed)
+    if (window.innerWidth >= 860) {
+      document.querySelectorAll('[data-parallax]').forEach((el) => {
+        const intensity = parseFloat(el.dataset.parallax || '0.12');
+        const section = el.closest('section') || el.parentElement || el;
+        gsap.to(el, {
+          y: () => (window.innerHeight * intensity * 0.75),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2
+          }
+        });
+      });
+    }
+
+    // 3. Staggered Reveals for Section Headers
+    document.querySelectorAll('.section-header').forEach((header) => {
+      const children = Array.from(header.children).filter((c) => !c.classList.contains('no-animate'));
+      if (children.length > 0) {
+        gsap.from(children, {
+          opacity: 0,
+          y: 28,
+          stagger: 0.14,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: header,
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        });
+      }
+    });
+
+    // 4. Staggered Card Reveals (Dossiers, Bottlenecks, Pillars, News)
+    const cardGridSelectors = [
+      '.bottleneck-grid',
+      '.dossier-grid',
+      '.pillars-grid',
+      '.news-grid',
+      '.console-telemetry-grid',
+      '.ascs-subsystems-list',
+      '.timeline-grid',
+      '.specs-grid'
+    ];
+
+    cardGridSelectors.forEach((gridSelector) => {
+      document.querySelectorAll(gridSelector).forEach((grid) => {
+        const cards = Array.from(grid.children);
+        if (cards.length > 0) {
+          gsap.from(cards, {
+            opacity: 0,
+            y: 35,
+            stagger: 0.12,
+            duration: 0.75,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: grid,
+              start: 'top 85%',
+              toggleActions: 'play none none none'
+            }
+          });
+        }
+      });
+    });
+
+    // 5. Timeline-driven sequence: ASCS Architecture Section
+    const ascsSection = document.querySelector('#architecture') || document.querySelector('.ascs-architecture-section');
+    if (ascsSection) {
+      const archTL = gsap.timeline({
+        scrollTrigger: {
+          trigger: ascsSection,
+          start: 'top 75%',
+          toggleActions: 'play none none none'
+        }
+      });
+      archTL
+        .from('.ascs-nav-header', { opacity: 0, y: 20, duration: 0.6 })
+        .from('.ascs-subsystem-btn', { opacity: 0, x: -25, stagger: 0.08, duration: 0.5 }, '-=0.3')
+        .from('.ascs-panel-detail', { opacity: 0, scale: 0.98, duration: 0.7, ease: 'power2.out' }, '-=0.4');
+    }
+
+    // 6. Synchronized Scroll Progress Bar
+    const scrollTracker = document.querySelector('.scroll-tracker');
+    if (scrollTracker) {
+      ScrollTrigger.create({
+        start: 'top top',
+        end: 'max',
+        onUpdate: (self) => {
+          rootElement.style.setProperty('--scroll-progress', self.progress.toFixed(4));
+        }
+      });
+    }
+
+    // Ensure all reveals mark visible for CSS transitions
+    document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+  } else {
+    // Fallback: IntersectionObserver
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .dossier-card, .bottleneck-card, .pillar-card, .news-card').forEach((el) => {
+      revealObserver.observe(el);
+    });
+  }
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initGSAPScrollEffects);
+} else {
+  initGSAPScrollEffects();
+}
 
 // Contact Form Handler connected to /api/contact
 const contactForms = document.querySelectorAll('form[data-contact-form]');

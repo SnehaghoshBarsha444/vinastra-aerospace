@@ -14,6 +14,16 @@
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/motion.css">
   <link rel="stylesheet" href="/route.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+      }
+    }
+  </script>
 </head>
 <body data-route="collaborate">
   <div class="scroll-tracker" aria-hidden="true"></div>
@@ -37,6 +47,7 @@
       <span class="sr-only">Menu</span>
     </button>
     <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation"></nav>
+    <div class="topbar-auth" id="topbar-auth"></div>
   </header>
 
   <main class="site-main route-page" id="top">
@@ -282,6 +293,9 @@
     </div>
   </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="/script.js"></script>
+  <script type="module" src="/firebase-auth.js"></script>
 </body>
 </html>

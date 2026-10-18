@@ -156,6 +156,8 @@ for (const [label, path, expectedTitle] of routes) {
     assert.ok(html.includes('/styles.css'), `styles.css link missing on ${path}`);
     assert.ok(html.includes('/motion.css'), `motion.css link missing on ${path}`);
     assert.ok(html.includes('/script.js'), `script.js link missing on ${path}`);
+    assert.ok(html.includes('/firebase-auth.js'), `firebase-auth.js missing on ${path}`);
+    assert.ok(html.includes('ScrollTrigger.min.js'), `ScrollTrigger missing on ${path}`);
     assert.ok(html.includes('thesparkofwisdom@gmail.com'), `Official email missing on ${path}`);
   });
 }
@@ -168,6 +170,7 @@ const assets = [
   ['/home-redesign.css', 'text/css'],
   ['/route.css', 'text/css'],
   ['/script.js', 'text/javascript'],
+  ['/firebase-auth.js', 'text/javascript'],
   ['/public/vinastra-space-factory-blueprint.webp', 'image/webp'],
   ['/public/vinastra-space-factory-render.webp', 'image/webp'],
   ['/public/nasa-capstone-spacecraft.webp', 'image/webp'],
