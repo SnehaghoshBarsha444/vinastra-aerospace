@@ -3,32 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<<<<<<< HEAD
-  <meta name="theme-color" content="#050b16">
-  <meta name="description" content="Vinastra Aerospace develops proposed systems for autonomous construction and infrastructure beyond Earth.">
-  <title>Vinastra Aerospace | Initialising</title>
-  <link rel="icon" href="/public/favicon_io/favicon.ico">
-  <link rel="stylesheet" href="/styles.css">
-  <link rel="stylesheet" href="/motion.css">
-<link rel="stylesheet" href="/animations.css">
-</head>
-<body>
-  <div class="loading-overlay"><div class="spinner"></div></div>
-  <main class="loader intro-screen" aria-labelledby="intro-title">
-    <div class="loader-mark"><img src="/public/favicon_io/android-chrome-512x512.png" alt="VINASTRA Aerospace emblem"></div>
-    <p id="intro-title" class="loader-wordmark">VINASTRA<span>AEROSPACE</span></p>
-    <p class="loader-status"><i></i><span id="loader-message">INITIALIZING SYSTEM</span><b>VNA / 001</b></p>
-    <a class="intro-skip" href="/home/">Skip intro <span>↗</span></a>
-  </main>
-  <script>
-    const destination = '/home/';
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const returningVisitor = sessionStorage.getItem('vinastra-intro-seen') === '1';
-    const delay = reducedMotion || returningVisitor ? 120 : 1500;
-    sessionStorage.setItem('vinastra-intro-seen', '1');
-    window.setTimeout(() => { window.location.replace(destination); }, delay);
-  </script>
-=======
   <meta name="theme-color" content="#07090D">
   <meta name="description" content="Vinastra Aerospace is an early-stage Indian SpaceTech company developing the Autonomous Space Construction System (ASCS) for building and servicing infrastructure beyond Earth.">
   <title>Vinastra Aerospace | Engineering The Next Frontier</title>
@@ -749,6 +723,5 @@
   </footer>
 
   <script src="/script.js"></script>
->>>>>>> 5e6f757 (Cinematic redesign, added graceful port fallback, updated script, added tests, converted missing asset, updated documentation)
 </body>
 </html>
