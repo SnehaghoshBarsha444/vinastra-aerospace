@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07090D">
+  <meta name="description" content="Contact Vinastra Aerospace — Official communication channel for research collaborations, Prototype-1 partnerships, seed investment, and media.">
+  <title>Contact &amp; Inquiries | Vinastra Aerospace</title>
+  <link rel="icon" href="/public/favicon_io/favicon.ico">
+  <link rel="apple-touch-icon" href="/public/favicon_io/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/motion.css">
+  <link rel="stylesheet" href="/route.css">
+</head>
+<body data-route="contact">
+  <div class="scroll-tracker" aria-hidden="true"></div>
+
+  <!-- Global Navigation Topbar -->
+  <header class="topbar" id="topbar">
+    <a class="brand" href="/home/" aria-label="Vinastra Aerospace home">
+      <img class="brand-symbol" src="/public/favicon_io/android-chrome-512x512.png" alt="Vinastra Aerospace emblem" width="32" height="32">
+      <span class="brand-text">
+        <span class="brand-name">VINASTRA</span>
+        <span class="brand-sub">AEROSPACE</span>
+      </span>
+    </a>
+    <div class="nav-meta">
+      <span class="status-dot"></span>
+      <span>EARLY-STAGE SPACETECH / INDIA</span>
+    </div>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span class="sr-only">Menu</span>
+    </button>
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation"></nav>
+  </header>
+
+  <main class="site-main route-page" id="top">
+    <!-- Atmospheric Visual Backdrop -->
+    <div class="route-backdrop" data-parallax="0.08">
+      <img src="/public/nasa-canadarm2.jpg" alt="Space telemetry and robotics in low Earth orbit" loading="lazy">
+    </div>
+    <div class="route-vignette" aria-hidden="true"></div>
+
+    <div class="editorial-container">
+      <!-- Route Hero Section -->
+      <section class="route-hero reveal">
+        <div class="route-header-split">
+          <div>
+            <div class="eyebrow">
+              <span>07 / SECURE COMMUNICATIONS &amp; DISPATCH</span>
+            </div>
+            <h1 class="route-title">
+              ESTABLISH<br>
+              <span class="accent">DIRECT</span><br>
+              <em>CONTACT.</em>
+            </h1>
+            <p class="route-lead">
+              Connect directly with Vinastra Aerospace for technical research partnerships, Prototype-1 engineering collaborations, seed investment dialogues, or media briefings.
+            </p>
+          </div>
+
+          <!-- Route Aside Status Box -->
+          <aside class="route-hud-box" aria-label="Channel Status Readout">
+            <span class="hud-kicker">COMMUNICATION DISPATCH</span>
+            <div class="hud-stat-value">CHANNEL OPEN</div>
+            <div class="hud-caption">
+              <i>●</i> DIRECT TO FOUNDER
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
+              <span class="status-pill status-active"><i></i> SECURE GATEWAY</span>
+              <span class="status-pill status-proposed"><i></i> OFFICIAL INQUIRY</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Contact Layout (Channels + Form) -->
+      <div class="contact-layout reveal">
+        <!-- Direct Verified Channels -->
+        <div class="contact-channels">
+          <div class="channel-card">
+            <div class="channel-label">PRIMARY VERIFIED EMAIL</div>
+            <div class="channel-val">
+              <a href="mailto:thesparkofwisdom@gmail.com">thesparkofwisdom@gmail.com</a>
+            </div>
+            <p class="channel-desc">
+              Direct communication monitored by founder &amp; CEO Vinay Jeedi. We respond to verified research, technical, and investor inquiries within 48 hours.
+            </p>
+          </div>
+
+          <div class="channel-card">
+            <div class="channel-label">HEADQUARTERS &amp; OPERATIONAL BASES</div>
+            <div class="channel-val">Hyderabad &amp; Bengaluru, India</div>
+            <p class="channel-desc">
+              Positioned in India's premier aerospace and deep-tech corridors, facilitating close proximity to national space research organizations, robotics component makers, and academic labs.
+            </p>
+          </div>
+
+          <div class="channel-card">
+            <div class="channel-label">RESEARCH &amp; PROTOTYPE PARTNERSHIPS</div>
+            <div class="channel-val">Open Academic &amp; Industry Call</div>
+            <p class="channel-desc">
+              Universities, research laboratories, robotics developers, and space agencies interested in joint R&amp;D on ASCS kinematics, computer vision, or grant applications are warmly welcomed.
+            </p>
+          </div>
+
+          <div class="channel-card">
+            <div class="channel-label">SEED CAPITAL ENGAGEMENT</div>
+            <div class="channel-val">Proposed ₹2.5 Cr Round</div>
+            <p class="channel-desc">
+              Accredited angel syndicates, institutional venture capital funds, and deep-tech family offices may request our confidential investor presentation and prototype roadmap.
+            </p>
+          </div>
+        </div>
+
+        <!-- Interactive Inquiry Transmission Form -->
+        <div class="contact-form-card">
+          <div style="margin-bottom: 24px; border-bottom: 1px solid var(--color-line-subtle); padding-bottom: 16px;">
+            <div style="font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 6px;">
+              TRANSMISSION TERMINAL
+            </div>
+            <h2 style="font-size: 1.5rem; letter-spacing: -0.03em; margin: 0;">
+              Transmit an Inquiry
+            </h2>
+          </div>
+
+          <form data-contact-form method="POST" action="/api/contact">
+            <!-- Anti-Spam Honeypot Field (Hidden from real users) -->
+            <div class="honeypot-field">
+              <label for="form-website">Website (Leave Blank)</label>
+              <input type="text" id="form-website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-name">
+                Full Name <span class="req">*</span>
+              </label>
+              <input class="form-input" type="text" id="form-name" name="name" placeholder="Dr. Jane Doe / John Smith" autocomplete="name" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-email">
+                Institutional / Corporate Email <span class="req">*</span>
+              </label>
+              <input class="form-input" type="email" id="form-email" name="email" placeholder="jane@aerospace-lab.edu" autocomplete="email" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-type">
+                Inquiry Category <span class="req">*</span>
+              </label>
+              <select class="form-select" id="form-type" name="type" required>
+                <option value="Research & Academic Collaboration">Research &amp; Academic Collaboration</option>
+                <option value="Prototype-1 Hardware Partnership">Prototype-1 Hardware Partnership</option>
+                <option value="Seed Investment Inquiry">Seed Investment Inquiry</option>
+                <option value="Space Agency & Grant Program">Space Agency &amp; Grant Program</option>
+                <option value="General & Media Inquiry">General &amp; Media Inquiry</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="form-message">
+                Inquiry Transmission Message <span class="req">*</span>
+              </label>
+              <textarea class="form-textarea" id="form-message" name="message" rows="5" placeholder="Detail your technical question, collaborative proposal, or investment inquiry..." required></textarea>
+            </div>
+
+            <button class="action action-primary" type="submit" style="width: 100%;">
+              TRANSMIT INQUIRY <span class="action-arrow">↗</span>
+            </button>
+
+            <!-- Dynamic Form Status Feedback Area -->
+            <div class="form-feedback" data-form-feedback role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Route Navigation Footer -->
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 40px 0; border-top: 1px solid var(--color-line-subtle); margin-top: 60px; flex-wrap: wrap; gap: 20px;">
+        <a class="action action-line" href="/collaborate/">
+          <span class="action-arrow">←</span> VIEW COLLABORATION PATHWAYS
+        </a>
+        <a class="action action-line" href="/home/">
+          RETURN TO OVERVIEW <span class="action-arrow">↑</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="site-footer">
+    <div class="editorial-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="/home/" aria-label="Vinastra Aerospace home">
+            <img class="brand-symbol" src="/public/favicon_io/android-chrome-512x512.png" alt="Vinastra Aerospace emblem" width="32" height="32">
+            <span class="brand-text">
+              <span class="brand-name">VINASTRA</span>
+              <span class="brand-sub">AEROSPACE</span>
+            </span>
+          </a>
+          <p class="footer-desc">
+            Vinastra Aerospace Pvt. Ltd. is an early-stage Indian SpaceTech venture developing the Autonomous Space Construction System (ASCS) for assembling, maintaining, and manufacturing orbital infrastructure.
+          </p>
+          <span class="status-pill status-active">
+            <i></i> FOUNDED 2026 · HYDERABAD / BENGALURU, INDIA
+          </span>
+        </div>
+
+        <div>
+          <div class="footer-heading">ARCHITECTURE</div>
+          <ul class="footer-links">
+            <li><a href="/home/">Overview</a></li>
+            <li><a href="/about/">About &amp; Mission</a></li>
+            <li><a href="/innovation/">ASCS Architecture</a></li>
+            <li><a href="/research/">Planned R&amp;D &amp; Roadmap</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-heading">ENGAGEMENT</div>
+          <ul class="footer-links">
+            <li><a href="/news/">Public Register</a></li>
+            <li><a href="/investors/">Seed Investor Brief</a></li>
+            <li><a href="/collaborate/">Collaboration Pathways</a></li>
+            <li><a href="/contact/">Direct Contact Channel</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-heading">COMMUNICATIONS</div>
+          <div class="footer-contact-item">
+            <span>OFFICIAL CONTACT EMAIL</span>
+            <a href="mailto:thesparkofwisdom@gmail.com">thesparkofwisdom@gmail.com</a>
+          </div>
+          <div class="footer-contact-item">
+            <span>HEADQUARTERS</span>
+            <span style="color: var(--color-text);">Hyderabad / Bengaluru, India</span>
+          </div>
+          <div class="footer-contact-item">
+            <span>MEDIA &amp; ASSETS CITATIONS</span>
+            <a href="/public/IMAGE-CREDITS.md" target="_blank" rel="noopener">Public Domain Credits</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-disclaimer">
+        <strong>HONEST POSITIONING &amp; DISCLOSURE STATEMENT:</strong> Vinastra Aerospace Pvt. Ltd. is an early-stage DeepTech startup founded in 2026 by Vinay Jeedi. Current work comprises conceptual design, mathematical modeling, simulation environments, and early-stage prototype planning. References to autonomous space factories, asteroid-resource processing, satellite servicing, and deep-space manufacturing represent proposed architectures and long-term research trajectories, not operational hardware. Vinastra does not claim active orbit assets, commercial customers, secured institutional venture funding, or formal government contracts.
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 VINASTRA AEROSPACE PVT. LTD. ALL RIGHTS RESERVED.</div>
+        <div>
+          <a href="#top">BACK TO ORBIT TOP ↑</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>

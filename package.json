@@ -1,0 +1,15 @@
+{
+  "name": "vinastra-aerospace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vinastra Aerospace full-stack website",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node tests/verify-site.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
