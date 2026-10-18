@@ -143,7 +143,10 @@ const routes = [
   ['News register (/news/)', '/news/', 'Public Register &amp; Dispatches | Vinastra Aerospace'],
   ['Investors brief (/investors/)', '/investors/', 'Seed Investor Brief | Vinastra Aerospace'],
   ['Collaborate page (/collaborate/)', '/collaborate/', 'Collaboration Pathways | Vinastra Aerospace'],
-  ['Contact page (/contact/)', '/contact/', 'Contact &amp; Inquiries | Vinastra Aerospace']
+  ['Contact page (/contact/)', '/contact/', 'Contact &amp; Inquiries | Vinastra Aerospace'],
+  ['Login portal (/login/)', '/login/', 'Client &amp; User Registry | Vinastra Aerospace'],
+  ['Register portal (/register/)', '/register/', 'Client &amp; User Registry | Vinastra Aerospace'],
+  ['Create Account portal (/create-account/)', '/create-account/', 'Client &amp; User Registry | Vinastra Aerospace']
 ];
 
 for (const [label, path, expectedTitle] of routes) {

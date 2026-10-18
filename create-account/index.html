@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07090D">
+  <meta name="description" content="Vinastra Aerospace Client & User Registry — Login and Create Account for Students, Aerospace Professionals, and Investors.">
+  <title>Client &amp; User Registry | Vinastra Aerospace</title>
+  <link rel="icon" href="/public/favicon_io/favicon.ico">
+  <link rel="apple-touch-icon" href="/public/favicon_io/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/motion.css">
+  <link rel="stylesheet" href="/route.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+      }
+    }
+  </script>
+  <style>
+    .auth-portal-section {
+      min-height: calc(100vh - var(--header-height));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px var(--gutter) 60px;
+      position: relative;
+      z-index: 2;
+    }
+    .auth-portal-card {
+      width: 100%;
+      max-width: 540px;
+      background: rgba(13, 18, 27, 0.94);
+      border: 1px solid var(--color-line-bright);
+      border-radius: 4px;
+      padding: 40px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8), 0 0 50px rgba(255, 180, 68, 0.08);
+      position: relative;
+    }
+    .auth-portal-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .auth-portal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.18em;
+      color: var(--color-accent);
+      background: rgba(255, 180, 68, 0.08);
+      border: 1px solid rgba(255, 180, 68, 0.25);
+      padding: 4px 12px;
+      border-radius: 2px;
+      margin-bottom: 16px;
+    }
+    .auth-portal-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--color-text);
+      margin: 0 0 8px;
+    }
+    .auth-portal-desc {
+      font-size: 0.875rem;
+      color: var(--color-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .portal-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--color-line);
+      margin-bottom: 26px;
+    }
+    .portal-tab-btn {
+      flex: 1;
+      text-align: center;
+      padding: 12px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--color-muted);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      margin-bottom: -1px;
+    }
+    .portal-tab-btn:hover {
+      color: var(--color-text);
+    }
+    .portal-tab-btn.active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+      font-weight: 700;
+    }
+    .portal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .portal-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .portal-form-group label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.12em;
+      color: var(--color-muted);
+    }
+    .portal-form-group input,
+    .portal-form-group select {
+      width: 100%;
+      background: rgba(7, 9, 13, 0.9);
+      border: 1px solid var(--color-line);
+      color: var(--color-text);
+      padding: 12px 14px;
+      border-radius: 2px;
+      font-family: var(--font-sans);
+      font-size: 0.9375rem;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .portal-form-group input:focus,
+    .portal-form-group select:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 16px rgba(255, 180, 68, 0.2);
+    }
+    .portal-field-hint {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--color-muted);
+    }
+    .portal-submit-btn {
+      margin-top: 10px;
+      width: 100%;
+      justify-content: center;
+      padding: 14px 24px;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      letter-spacing: 0.12em;
+    }
+    .portal-feedback {
+      padding: 12px 16px;
+      border-radius: 2px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .portal-feedback.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34D399;
+    }
+    .portal-feedback.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #F87171;
+    }
+    .portal-profile {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .portal-profile.active {
+      display: flex;
+    }
+  </style>
+</head>
+<body data-route="login">
+  <div class="scroll-tracker" aria-hidden="true"></div>
+
+  <!-- Global Navigation Topbar -->
+  <header class="topbar" id="topbar">
+    <a class="brand" href="/home/" aria-label="Vinastra Aerospace home">
+      <img class="brand-symbol" src="/public/favicon_io/android-chrome-512x512.png" alt="Vinastra Aerospace emblem" width="32" height="32">
+      <span class="brand-text">
+        <span class="brand-name">VINASTRA</span>
+        <span class="brand-sub">AEROSPACE</span>
+      </span>
+    </a>
+    <div class="nav-meta">
+      <span class="status-dot"></span>
+      <span>EARLY-STAGE SPACETECH / INDIA</span>
+    </div>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span class="sr-only">Menu</span>
+    </button>
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation"></nav>
+    <div class="topbar-auth" id="topbar-auth">
+      <button type="button" class="auth-btn auth-btn-login" id="nav-btn-login">Login</button>
+      <button type="button" class="auth-btn auth-btn-signup" id="nav-btn-signup">Create Account</button>
+    </div>
+  </header>
+
+  <main class="site-main route-page" id="top">
+    <!-- Visual Backdrop -->
+    <div class="route-backdrop" data-parallax="0.08">
+      <img src="/public/nasa-canadarm2.jpg" alt="Space telemetry and robotics in orbit" loading="lazy">
+    </div>
+    <div class="route-vignette" aria-hidden="true"></div>
+
+    <section class="auth-portal-section">
+      <div class="auth-portal-card reveal visible">
+        <div class="auth-portal-header">
+          <div class="auth-portal-badge">
+            <span class="status-dot"></span>
+            <span>ASCS REGISTRY &amp; CLIENT TERMINAL</span>
+          </div>
+          <h1 class="auth-portal-title" id="portal-title">Access Telemetry Terminal</h1>
+          <p class="auth-portal-desc" id="portal-desc">
+            Sign in or register an identity for students, aerospace engineers, and ecosystem investors.
+          </p>
+        </div>
+
+        <!-- TABS -->
+        <div class="portal-tabs" id="portal-tabs" role="tablist">
+          <button type="button" role="tab" class="portal-tab-btn active" id="portal-tab-login" aria-selected="true">
+            [1] Sign In
+          </button>
+          <button type="button" role="tab" class="portal-tab-btn" id="portal-tab-signup" aria-selected="false">
+            [2] Create Account
+          </button>
+        </div>
+
+        <!-- FEEDBACK ALERTS -->
+        <div class="portal-feedback" id="page-portal-feedback"></div>
+
+        <!-- LOGIN FORM -->
+        <form class="portal-form" id="page-login-form">
+          <div class="portal-form-group">
+            <label for="page-login-email">OFFICIAL EMAIL ADDRESS</label>
+            <input type="email" id="page-login-email" name="email" required autocomplete="username" placeholder="flight-ops@organization.com">
+          </div>
+          <div class="portal-form-group">
+            <label for="page-login-password">ACCESS KEY / PASSWORD</label>
+            <input type="password" id="page-login-password" name="password" required autocomplete="current-password" placeholder="••••••••••••">
+          </div>
+          <button type="submit" class="action action-primary portal-submit-btn" id="page-login-submit">
+            AUTHENTICATE &amp; ENTER <span class="action-arrow">→</span>
+          </button>
+        </form>
+
+        <!-- CREATE ACCOUNT FORM -->
+        <form class="portal-form" id="page-signup-form" style="display: none;">
+          <div class="portal-form-group">
+            <label for="page-signup-name">FULL NAME / PRINCIPAL RESEARCHER</label>
+            <input type="text" id="page-signup-name" name="name" required autocomplete="name" placeholder="Dr. Vikram Sarabhai">
+          </div>
+          <div class="portal-form-group">
+            <label for="page-signup-email">OFFICIAL / ACADEMIC EMAIL</label>
+            <input type="email" id="page-signup-email" name="email" required autocomplete="username" placeholder="name@institution.org">
+          </div>
+          <div class="portal-form-group">
+            <label for="page-signup-password">SECURE PASSWORD (MIN 6 CHARACTERS)</label>
+            <input type="password" id="page-signup-password" name="password" required minlength="6" autocomplete="new-password" placeholder="••••••••••••">
+          </div>
+          <div class="portal-form-group">
+            <label for="page-signup-role">COMMUNITY ROLE &amp; AFFILIATION</label>
+            <div class="auth-select-wrap">
+              <select id="page-signup-role" name="role" required>
+                <option value="students">Student / Academic Researcher</option>
+                <option value="professional">Aerospace Professional / Engineer</option>
+                <option value="investor">Institutional / Angel Investor</option>
+              </select>
+            </div>
+            <span class="portal-field-hint">Recorded in Firestore database users collection with unique user ID</span>
+          </div>
+          <button type="submit" class="action action-primary portal-submit-btn" id="page-signup-submit">
+            CREATE ACCOUNT &amp; REGISTER TO DATABASE <span class="action-arrow">→</span>
+          </button>
+        </form>
+
+        <!-- PROFILE VIEW (When logged in) -->
+        <div class="portal-profile" id="page-profile-view">
+          <div class="profile-badge-row">
+            <div class="profile-avatar">
+              <span class="avatar-letter" id="page-avatar-letter">V</span>
+            </div>
+            <div>
+              <h3 class="profile-name" id="page-profile-name">User Name</h3>
+              <span class="profile-role-tag" id="page-profile-role-tag">ROLE</span>
+            </div>
+          </div>
+
+          <div class="profile-telemetry-box">
+            <div class="telemetry-row">
+              <span class="label">DATABASE ID (UID):</span>
+              <span class="val monospace" id="page-profile-id">ascs-uid</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="label">EMAIL REGISTER:</span>
+              <span class="val" id="page-profile-email">email@domain.com</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="label">COMMUNITY ROLE:</span>
+              <span class="val" id="page-profile-role-val">Professional</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="label">DATABASE STATUS:</span>
+              <span class="val status-green">● FIRESTORE CLOUD STORED</span>
+            </div>
+          </div>
+
+          <div class="profile-actions" style="display: flex; gap: 12px; justify-content: space-between;">
+            <a href="/research/" class="action action-line">Browse R&amp;D Roadmap <span class="action-arrow">↗</span></a>
+            <button type="button" class="action action-line" id="page-profile-logout">Sign Out (Terminate Session) ⏏</button>
+          </div>
+        </div>
+
+        <div class="auth-modal-footer" style="margin-top: 24px;">
+          <span>POWERED BY GOOGLE FIREBASE AUTH &amp; FIRESTORE DATABASE</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand">
+            <img src="/public/favicon_io/android-chrome-512x512.png" alt="Vinastra logo" width="36" height="36">
+            <span>VINASTRA AEROSPACE</span>
+          </div>
+          <p class="footer-tagline">
+            Autonomous Space Construction Systems (ASCS) for sustainable in-space manufacturing and assembly beyond Earth.
+          </p>
+        </div>
+        <div>
+          <div class="footer-heading">COMMUNICATIONS</div>
+          <div class="footer-contact-item">
+            <span>OFFICIAL CONTACT EMAIL</span>
+            <a href="mailto:thesparkofwisdom@gmail.com">thesparkofwisdom@gmail.com</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-disclaimer">
+        <strong>HONEST POSITIONING &amp; DISCLOSURE STATEMENT:</strong> Vinastra Aerospace Pvt. Ltd. is an early-stage DeepTech startup founded in 2026 by Vinay Jeedi. Current work comprises conceptual design, mathematical modeling, simulation environments, and early-stage prototype planning.
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 VINASTRA AEROSPACE PVT. LTD. ALL RIGHTS RESERVED.</div>
+        <div><a href="#top">BACK TO TOP ↑</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="/script.js"></script>
+  <script type="module" src="/firebase-auth.js"></script>
+  <script type="module">
+    import { createAccount, loginUser, logoutUser } from "/firebase-auth.js";
+
+    const tabLogin = document.getElementById("portal-tab-login");
+    const tabSignup = document.getElementById("portal-tab-signup");
+    const formLogin = document.getElementById("page-login-form");
+    const formSignup = document.getElementById("page-signup-form");
+    const profileView = document.getElementById("page-profile-view");
+    const feedback = document.getElementById("page-portal-feedback");
+    const portalTitle = document.getElementById("portal-title");
+    const portalTabs = document.getElementById("portal-tabs");
+
+    // Check query params (?mode=signup)
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialMode = "signup";
+
+    const setTab = (mode) => {
+      feedback.className = "portal-feedback";
+      feedback.style.display = "none";
+      if (mode === "signup") {
+        tabSignup.classList.add("active");
+        tabSignup.setAttribute("aria-selected", "true");
+        tabLogin.classList.remove("active");
+        tabLogin.setAttribute("aria-selected", "false");
+        formSignup.style.display = "flex";
+        formLogin.style.display = "none";
+        portalTitle.textContent = "Create ASCS Registry Account";
+      } else {
+        tabLogin.classList.add("active");
+        tabLogin.setAttribute("aria-selected", "true");
+        tabSignup.classList.remove("active");
+        tabSignup.setAttribute("aria-selected", "false");
+        formLogin.style.display = "flex";
+        formSignup.style.display = "none";
+        portalTitle.textContent = "Access Telemetry Terminal";
+      }
+    };
+
+    tabLogin.addEventListener("click", () => setTab("login"));
+    tabSignup.addEventListener("click", () => setTab("signup"));
+    setTab(initialMode);
+
+    formLogin.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("page-login-submit");
+      const email = document.getElementById("page-login-email").value.trim();
+      const password = document.getElementById("page-login-password").value;
+
+      btn.disabled = true;
+      btn.innerHTML = `AUTHENTICATING… <span class="action-arrow">⟳</span>`;
+      feedback.style.display = "none";
+
+      try {
+        await loginUser({ email, password });
+        feedback.className = "portal-feedback success";
+        feedback.textContent = "✓ Authentication successful. Welcome to Vinastra Aerospace!";
+        updateProfileUI();
+      } catch (err) {
+        feedback.className = "portal-feedback error";
+        feedback.textContent = `✗ ${err.message}`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `AUTHENTICATE &amp; ENTER <span class="action-arrow">→</span>`;
+      }
+    });
+
+    formSignup.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("page-signup-submit");
+      const name = document.getElementById("page-signup-name").value.trim();
+      const email = document.getElementById("page-signup-email").value.trim();
+      const password = document.getElementById("page-signup-password").value;
+      const role = document.getElementById("page-signup-role").value;
+
+      btn.disabled = true;
+      btn.innerHTML = `REGISTERING TO DATABASE… <span class="action-arrow">⟳</span>`;
+      feedback.style.display = "none";
+
+      try {
+        await createAccount({ name, email, password, role });
+        feedback.className = "portal-feedback success";
+        feedback.textContent = `✓ Account registered! Profile record for ${name} (${role}) stored to Firestore database.`;
+        updateProfileUI();
+      } catch (err) {
+        feedback.className = "portal-feedback error";
+        feedback.textContent = `✗ ${err.message}`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `CREATE ACCOUNT &amp; REGISTER TO DATABASE <span class="action-arrow">→</span>`;
+      }
+    });
+
+    document.getElementById("page-profile-logout")?.addEventListener("click", async () => {
+      await logoutUser();
+      setTab("login");
+      portalTabs.style.display = "flex";
+      profileView.classList.remove("active");
+      feedback.className = "portal-feedback";
+      feedback.style.display = "none";
+    });
+
+    function updateProfileUI() {
+      const user = window.VinastraAuth?.getUser();
+      if (user) {
+        portalTabs.style.display = "none";
+        formLogin.style.display = "none";
+        formSignup.style.display = "none";
+        profileView.classList.add("active");
+        portalTitle.textContent = "Verified Registry Session";
+
+        document.getElementById("page-profile-name").textContent = user.name || "Member";
+        document.getElementById("page-profile-role-tag").textContent = (user.role || "Member").toUpperCase();
+        document.getElementById("page-profile-role-val").textContent = user.role || "General";
+        document.getElementById("page-avatar-letter").textContent = (user.name || "V")[0].toUpperCase();
+        document.getElementById("page-profile-id").textContent = user.id || "N/A";
+        document.getElementById("page-profile-email").textContent = user.email || "N/A";
+      }
+    }
+
+    // Check periodically or on auth update
+    window.addEventListener("load", () => {
+      setTimeout(updateProfileUI, 300);
+    });
+  </script>
+</body>
+</html>

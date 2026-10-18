@@ -1201,6 +1201,24 @@ p.lead {
 
 @media (max-width: 960px) {
   .topbar-auth {
+    margin-left: auto;
+    margin-right: 12px;
+    gap: 8px;
+  }
+  .nav-meta {
     display: none;
+  }
+  .auth-btn {
+    padding: 6px 10px;
+    font-size: 0.625rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .auth-btn-signup {
+    display: none;
+  }
+  .topbar-auth {
+    margin-right: 8px;
   }
 }

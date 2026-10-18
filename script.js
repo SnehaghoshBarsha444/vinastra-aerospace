@@ -17,7 +17,8 @@ const navItems = [
   ['News', '/news/'],
   ['Investors', '/investors/'],
   ['Collaborate', '/collaborate/'],
-  ['Contact', '/contact/']
+  ['Contact', '/contact/'],
+  ['Login / Register', '/login/']
 ];
 
 document.querySelectorAll('.primary-nav').forEach((nav) => {

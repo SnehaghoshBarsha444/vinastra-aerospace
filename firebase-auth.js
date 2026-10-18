@@ -35,18 +35,16 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+let analytics = null;
+try {
+  analytics = getAnalytics(app);
+} catch (e) {
+  console.warn("Analytics notice:", e.message);
+}
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Initialize Analytics if supported
-let analytics = null;
-if (typeof window !== "undefined") {
-  isAnalyticsSupported()
-    .then((supported) => {
-      if (supported) analytics = getAnalytics(app);
-    })
-    .catch(() => {});
-}
+export { app, analytics, auth, db };
 
 // Local cache keys
 const USER_CACHE_KEY = "vinastra_user_session";
@@ -572,12 +570,22 @@ export function renderAuthNav() {
       authContainer.querySelector("#btn-quick-signout")?.addEventListener("click", () => logoutUser());
     } else {
       authContainer.innerHTML = `
-        <button type="button" class="auth-btn auth-btn-login" id="nav-btn-login">Sign In</button>
-        <button type="button" class="auth-btn auth-btn-signup" id="nav-btn-signup">Create Account</button>
+        <a href="/login/" class="auth-btn auth-btn-login" id="nav-btn-login">Login</a>
+        <a href="/login/?mode=signup" class="auth-btn auth-btn-signup" id="nav-btn-signup">Create Account</a>
       `;
 
-      authContainer.querySelector("#nav-btn-login")?.addEventListener("click", () => openAuthModal("login"));
-      authContainer.querySelector("#nav-btn-signup")?.addEventListener("click", () => openAuthModal("signup"));
+      authContainer.querySelector("#nav-btn-login")?.addEventListener("click", (e) => {
+        if (!window.location.pathname.includes("/login")) {
+          e.preventDefault();
+          openAuthModal("login");
+        }
+      });
+      authContainer.querySelector("#nav-btn-signup")?.addEventListener("click", (e) => {
+        if (!window.location.pathname.includes("/login")) {
+          e.preventDefault();
+          openAuthModal("signup");
+        }
+      });
     }
   });
 
@@ -612,17 +620,23 @@ export function renderAuthNav() {
     } else {
       mobileAuth.innerHTML = `
         <div class="mobile-auth-actions">
-          <button type="button" class="action action-line" id="mobile-btn-login">Sign In</button>
-          <button type="button" class="action action-primary" id="mobile-btn-signup">Create Account</button>
+          <a href="/login/" class="action action-line" id="mobile-btn-login">Login</a>
+          <a href="/login/?mode=signup" class="action action-primary" id="mobile-btn-signup">Create Account</a>
         </div>
       `;
-      mobileAuth.querySelector("#mobile-btn-login")?.addEventListener("click", () => {
-        nav.classList.remove("open");
-        openAuthModal("login");
+      mobileAuth.querySelector("#mobile-btn-login")?.addEventListener("click", (e) => {
+        if (!window.location.pathname.includes("/login")) {
+          e.preventDefault();
+          nav.classList.remove("open");
+          openAuthModal("login");
+        }
       });
-      mobileAuth.querySelector("#mobile-btn-signup")?.addEventListener("click", () => {
-        nav.classList.remove("open");
-        openAuthModal("signup");
+      mobileAuth.querySelector("#mobile-btn-signup")?.addEventListener("click", (e) => {
+        if (!window.location.pathname.includes("/login")) {
+          e.preventDefault();
+          nav.classList.remove("open");
+          openAuthModal("signup");
+        }
       });
     }
   });
