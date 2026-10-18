@@ -367,7 +367,7 @@
   <script src="/script.js"></script>
   <script type="module" src="/firebase-auth.js"></script>
   <script type="module">
-    import { createAccount, loginUser, logoutUser } from "/firebase-auth.js";
+    import { createAccount, loginUser, logoutUser, formatAuthError, isValidEmail } from "/firebase-auth.js";
 
     const tabLogin = document.getElementById("portal-tab-login");
     const tabSignup = document.getElementById("portal-tab-signup");
@@ -414,6 +414,13 @@
       const email = document.getElementById("page-login-email").value.trim();
       const password = document.getElementById("page-login-password").value;
 
+      if (!isValidEmail(email)) {
+        feedback.className = "portal-feedback error";
+        feedback.textContent = "✗ Valid email address is required (e.g. name@organization.com). Entry cannot proceed with invalid email.";
+        feedback.style.display = "block";
+        return;
+      }
+
       btn.disabled = true;
       btn.innerHTML = `AUTHENTICATING… <span class="action-arrow">⟳</span>`;
       feedback.style.display = "none";
@@ -422,10 +429,12 @@
         await loginUser({ email, password });
         feedback.className = "portal-feedback success";
         feedback.textContent = "✓ Authentication successful. Welcome to Vinastra Aerospace!";
+        feedback.style.display = "block";
         updateProfileUI();
       } catch (err) {
         feedback.className = "portal-feedback error";
-        feedback.textContent = `✗ ${err.message}`;
+        feedback.textContent = `✗ ${formatAuthError(err)}`;
+        feedback.style.display = "block";
       } finally {
         btn.disabled = false;
         btn.innerHTML = `AUTHENTICATE &amp; ENTER <span class="action-arrow">→</span>`;
@@ -440,6 +449,13 @@
       const password = document.getElementById("page-signup-password").value;
       const role = document.getElementById("page-signup-role").value;
 
+      if (!isValidEmail(email)) {
+        feedback.className = "portal-feedback error";
+        feedback.textContent = "✗ Valid email address is required (e.g. name@organization.com). Entry cannot proceed with invalid email.";
+        feedback.style.display = "block";
+        return;
+      }
+
       btn.disabled = true;
       btn.innerHTML = `REGISTERING TO DATABASE… <span class="action-arrow">⟳</span>`;
       feedback.style.display = "none";
@@ -448,10 +464,12 @@
         await createAccount({ name, email, password, role });
         feedback.className = "portal-feedback success";
         feedback.textContent = `✓ Account registered! Profile record for ${name} (${role}) stored to Firestore database.`;
+        feedback.style.display = "block";
         updateProfileUI();
       } catch (err) {
         feedback.className = "portal-feedback error";
-        feedback.textContent = `✗ ${err.message}`;
+        feedback.textContent = `✗ ${formatAuthError(err)}`;
+        feedback.style.display = "block";
       } finally {
         btn.disabled = false;
         btn.innerHTML = `CREATE ACCOUNT &amp; REGISTER TO DATABASE <span class="action-arrow">→</span>`;

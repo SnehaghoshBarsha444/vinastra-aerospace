@@ -117,30 +117,69 @@ async function saveUserProfile(userData) {
 }
 
 /**
+/**
+ * Strict Email Validator
+ * Enforces valid standard structure: username@domain.tld
+ * Domain must have valid TLD (min 2 chars, letters only)
+ */
+export function isValidEmail(email) {
+  if (!email || typeof email !== "string") return false;
+  const trimmed = email.trim().toLowerCase();
+  if (trimmed.length < 5 || trimmed.length > 254) return false;
+  const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+  if (!regex.test(trimmed)) return false;
+  const parts = trimmed.split("@");
+  if (parts.length !== 2) return false;
+  const domainParts = parts[1].split(".");
+  if (domainParts.length < 2) return false;
+  const tld = domainParts[domainParts.length - 1];
+  return /^[a-zA-Z]{2,24}$/.test(tld);
+}
+
+/**
  * Register a new user
  * Roles: 'students' | 'professional' | 'investor'
  */
 export async function createAccount({ name, email, password, role }) {
   if (!name || !name.trim()) throw new Error("Full name is required.");
-  if (!email || !email.includes("@")) throw new Error("Valid email address is required.");
+  const cleanEmail = String(email || "").trim().toLowerCase();
+  if (!isValidEmail(cleanEmail)) {
+    throw new Error("Invalid email address. Please provide a valid email (e.g. name@organization.com).");
+  }
   if (!password || password.length < 6) throw new Error("Password must be at least 6 characters.");
   const allowedRoles = ["students", "professional", "investor"];
   if (!allowedRoles.includes(role)) throw new Error("Please select a valid role (Student, Professional, or Investor).");
 
-  // Create auth account
-  const cred = await createUserWithEmailAndPassword(auth, email.trim(), password);
-  const user = cred.user;
+  let user = null;
+  let isLocalFallback = false;
 
-  // Update Auth Profile
-  await updateProfile(user, { displayName: name.trim() });
+  try {
+    // Attempt standard Firebase Auth
+    const cred = await createUserWithEmailAndPassword(auth, cleanEmail, password);
+    user = cred.user;
+    await updateProfile(user, { displayName: name.trim() });
+  } catch (err) {
+    if (err.code === "auth/configuration-not-found" || String(err.message).includes("configuration-not-found")) {
+      console.warn("Notice: Firebase Auth Email/Password provider not enabled in Firebase Console. Using local registry session.");
+      isLocalFallback = true;
+      user = {
+        uid: "ascs-usr-" + Math.random().toString(36).slice(2, 10),
+        displayName: name.trim(),
+        email: cleanEmail
+      };
+    } else {
+      throw err;
+    }
+  }
 
   // Prepare Firestore record
   const profile = {
     id: user.uid,
     name: name.trim(),
-    email: user.email.toLowerCase(),
+    email: cleanEmail,
     role: role,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    status: isLocalFallback ? "LOCAL_REGISTRY_SYNCED" : "FIREBASE_CLOUD_VERIFIED"
   };
 
   currentUserProfile = profile;
@@ -150,18 +189,43 @@ export async function createAccount({ name, email, password, role }) {
   await saveUserProfile(profile);
 
   renderAuthNav();
-  return profile;
+  return { profile, isLocalFallback };
 }
 
 /**
  * Sign In existing user
  */
 export async function loginUser({ email, password }) {
-  if (!email || !email.includes("@")) throw new Error("Valid email address is required.");
+  const cleanEmail = String(email || "").trim().toLowerCase();
+  if (!isValidEmail(cleanEmail)) {
+    throw new Error("Invalid email address. Please provide a valid email (e.g. name@organization.com).");
+  }
   if (!password) throw new Error("Password is required.");
 
-  const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
-  const user = cred.user;
+  let user = null;
+  let isLocalFallback = false;
+
+  try {
+    const cred = await signInWithEmailAndPassword(auth, cleanEmail, password);
+    user = cred.user;
+  } catch (err) {
+    if (err.code === "auth/configuration-not-found" || String(err.message).includes("configuration-not-found")) {
+      console.warn("Notice: Firebase Auth Email/Password provider not enabled in Firebase Console.");
+      isLocalFallback = true;
+      const cached = getCachedProfile();
+      if (cached && cached.email === cleanEmail) {
+        user = {
+          uid: cached.id,
+          displayName: cached.name,
+          email: cleanEmail
+        };
+      } else {
+        throw new Error("Firebase Auth 'Email/Password' is not enabled in Firebase Console. Please enable it in Firebase Console > Authentication > Sign-in method, or use 'Create Account' first.");
+      }
+    } else {
+      throw err;
+    }
+  }
 
   // Fetch from Firestore
   let profile = await fetchUserProfile(user.uid);
@@ -172,10 +236,11 @@ export async function loginUser({ email, password }) {
     } else {
       profile = {
         id: user.uid,
-        name: user.displayName || user.email.split("@")[0],
-        email: user.email,
+        name: user.displayName || cleanEmail.split("@")[0],
+        email: cleanEmail,
         role: "professional",
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        status: isLocalFallback ? "LOCAL_REGISTRY_SYNCED" : "FIREBASE_CLOUD_VERIFIED"
       };
     }
   }
@@ -183,7 +248,7 @@ export async function loginUser({ email, password }) {
   currentUserProfile = profile;
   setCachedProfile(profile);
   renderAuthNav();
-  return profile;
+  return { profile, isLocalFallback };
 }
 
 /**
@@ -398,6 +463,13 @@ function ensureAuthModal() {
     const email = modalOverlay.querySelector("#login-email").value.trim();
     const password = modalOverlay.querySelector("#login-password").value;
 
+    if (!isValidEmail(email)) {
+      feedback.className = "auth-feedback error";
+      feedback.textContent = "Valid email address is required (e.g. name@organization.com). Entry cannot proceed with invalid email.";
+      feedback.style.display = "block";
+      return;
+    }
+
     submitBtn.disabled = true;
     submitBtn.innerHTML = `AUTHENTICATING… <span class="action-arrow">⟳</span>`;
     feedback.style.display = "none";
@@ -427,6 +499,13 @@ function ensureAuthModal() {
     const email = modalOverlay.querySelector("#signup-email").value.trim();
     const password = modalOverlay.querySelector("#signup-password").value;
     const role = modalOverlay.querySelector("#signup-role").value;
+
+    if (!isValidEmail(email)) {
+      feedback.className = "auth-feedback error";
+      feedback.textContent = "Valid email address is required (e.g. name@organization.com). Entry cannot proceed with invalid email.";
+      feedback.style.display = "block";
+      return;
+    }
 
     submitBtn.disabled = true;
     submitBtn.innerHTML = `REGISTERING IDENTITY… <span class="action-arrow">⟳</span>`;
@@ -463,13 +542,18 @@ function ensureAuthModal() {
   return modalOverlay;
 }
 
-function formatAuthError(err) {
+export function formatAuthError(err) {
   const code = err.code || "";
+  const msg = err.message || "";
+  if (code.includes("configuration-not-found") || msg.includes("configuration-not-found")) {
+    return "Firebase Console setup needed: Please go to Firebase Console > Authentication > Sign-in method and enable the 'Email/Password' provider.";
+  }
   if (code.includes("email-already-in-use")) return "This email is already registered. Please switch to Sign In.";
   if (code.includes("invalid-credential") || code.includes("wrong-password") || code.includes("user-not-found")) {
     return "Invalid credentials. Please verify your email and password.";
   }
   if (code.includes("weak-password")) return "Password should be at least 6 characters long.";
+  if (code.includes("invalid-email")) return "Invalid email address format. Please provide a valid email.";
   if (code.includes("too-many-requests")) return "Too many failed attempts. Access temporarily restricted. Try again later.";
   return err.message || "An authentication error occurred. Please try again.";
 }

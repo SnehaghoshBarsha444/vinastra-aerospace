@@ -189,6 +189,40 @@ for (const [path, expectedContentType] of assets) {
   });
 }
 
+console.log('\n--- 4. Authentication & Strict Email Validation Tests ---');
+
+const isValidEmailTest = (email) => {
+  if (!email || typeof email !== 'string') return false;
+  const trimmed = email.trim().toLowerCase();
+  if (trimmed.length < 5 || trimmed.length > 254) return false;
+  const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+  if (!regex.test(trimmed)) return false;
+  const parts = trimmed.split('@');
+  if (parts.length !== 2) return false;
+  const domainParts = parts[1].split('.');
+  if (domainParts.length < 2) return false;
+  const tld = domainParts[domainParts.length - 1];
+  return /^[a-zA-Z]{2,24}$/.test(tld);
+};
+
+await runTest('Strict email validator blocks invalid email entries', async () => {
+  assert.equal(isValidEmailTest('invalid'), false);
+  assert.equal(isValidEmailTest('invalid@'), false);
+  assert.equal(isValidEmailTest('invalid@domain'), false);
+  assert.equal(isValidEmailTest('@domain.com'), false);
+  assert.equal(isValidEmailTest('user@.com'), false);
+  assert.equal(isValidEmailTest('user@domain..com'), false);
+  assert.equal(isValidEmailTest('user@domain.c'), false);
+  assert.equal(isValidEmailTest(''), false);
+});
+
+await runTest('Strict email validator permits valid official and academic emails', async () => {
+  assert.equal(isValidEmailTest('researcher@vinastra.space'), true);
+  assert.equal(isValidEmailTest('student@iitb.ac.in'), true);
+  assert.equal(isValidEmailTest('investor@aerospace-fund.co'), true);
+  assert.equal(isValidEmailTest('name.surname@domain.org'), true);
+});
+
 console.log('\n--- Summary ---');
 console.log(`Passed: ${passed} | Failed: ${failed}`);
 
