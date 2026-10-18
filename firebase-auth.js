@@ -5,7 +5,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics, isSupported as isAnalyticsSupported } from "firebase/analytics";
+import { getAnalytics, initializeAnalytics, isSupported as isAnalyticsSupported } from "firebase/analytics";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -33,13 +33,36 @@ const firebaseConfig = {
   measurementId: "G-T0YSY506WX"
 };
 
+// Pre-configure dataLayer and gtag to bind cookies to current hostname on public suffix platforms (e.g. vercel.app)
+if (typeof window !== "undefined") {
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () {
+    window.dataLayer.push(arguments);
+  };
+  const isPublicSuffix = window.location.hostname.endsWith(".vercel.app") || window.location.hostname.endsWith(".github.io");
+  window.gtag("set", {
+    cookie_domain: isPublicSuffix ? window.location.hostname : "auto",
+    cookie_flags: "SameSite=Lax;Secure"
+  });
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 let analytics = null;
 try {
-  analytics = getAnalytics(app);
+  if (typeof window !== "undefined" && window.location.protocol.startsWith("http")) {
+    const isPublicSuffix = window.location.hostname.endsWith(".vercel.app") || window.location.hostname.endsWith(".github.io");
+    analytics = initializeAnalytics(app, {
+      config: {
+        cookie_domain: isPublicSuffix ? window.location.hostname : "auto",
+        cookie_flags: "SameSite=Lax;Secure"
+      }
+    });
+  }
 } catch (e) {
-  console.warn("Analytics notice:", e.message);
+  try {
+    analytics = getAnalytics(app);
+  } catch (err) {}
 }
 const auth = getAuth(app);
 const db = getFirestore(app);

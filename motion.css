@@ -29,7 +29,6 @@
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
-  will-change: opacity, transform;
 }
 
 .reveal.visible {
@@ -45,7 +44,6 @@
 
 /* Parallax handling */
 [data-parallax] {
-  will-change: transform;
   transform: translate3d(0, var(--parallax-y, 0px), 0);
   transition: transform 0.1s linear;
 }
