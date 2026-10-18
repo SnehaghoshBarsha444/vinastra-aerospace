@@ -37,7 +37,11 @@ const serveFile = async (request, response, pathname) => {
   try {
     const content = await fs.readFile(filePath);
     const extension = path.extname(filePath);
+<<<<<<< HEAD
     const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json' };
+=======
+    const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json' };
+>>>>>>> 5e6f757 (Cinematic redesign, added graceful port fallback, updated script, added tests, converted missing asset, updated documentation)
     response.writeHead(200, { 'Content-Type': types[extension] || 'application/octet-stream' });
     response.end(content);
   } catch {
@@ -72,7 +76,26 @@ const server = createServer(async (request, response) => {
 });
 
 if (process.env.VERCEL !== '1') {
+<<<<<<< HEAD
   server.listen(port, () => console.log(`Vinastra Aerospace listening on http://localhost:${port}`));
+=======
+  let activePort = port;
+  server.on('listening', () => {
+    const addr = server.address();
+    const actualPort = typeof addr === 'object' && addr ? addr.port : activePort;
+    console.log(`Vinastra Aerospace listening on http://localhost:${actualPort}`);
+  });
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      activePort += 1;
+      console.warn(`Port ${activePort - 1} is currently in use. Falling back to port ${activePort}...`);
+      server.listen(activePort);
+    } else {
+      throw err;
+    }
+  });
+  server.listen(port);
+>>>>>>> 5e6f757 (Cinematic redesign, added graceful port fallback, updated script, added tests, converted missing asset, updated documentation)
 }
 
 export default server;

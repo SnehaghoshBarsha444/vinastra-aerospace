@@ -6,7 +6,12 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
+<<<<<<< HEAD
     "dev": "node --watch server.js"
+=======
+    "dev": "node --watch server.js",
+    "test": "node tests/verify-site.js"
+>>>>>>> 5e6f757 (Cinematic redesign, added graceful port fallback, updated script, added tests, converted missing asset, updated documentation)
   },
   "engines": {
     "node": ">=20"

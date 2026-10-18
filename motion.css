@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 :root{--scroll-progress:0}
 
 .brand-logo{width:34px;height:34px;object-fit:contain;display:block;margin-right:11px;mix-blend-mode:screen;filter:saturate(.85)}
@@ -40,3 +41,137 @@ body:after{content:"";position:fixed;left:0;top:0;width:2px;height:100vh;backgro
 
 @media(max-width:800px){.hero-visual{transform:none}.hero-visual:after{animation-duration:9s}.domain:after{transform:none;opacity:.5}.domain:nth-child(2),.domain:nth-child(3),.domain:nth-child(4),.domain:nth-child(5),.domain:nth-child(6){transition-delay:0}}
 @media(prefers-reduced-motion:reduce){body:after{transform:none;opacity:0}.hero-visual:after,.orbit-one,.orbit-two,.visual-center,.trajectory-point,.crosshair-a,.crosshair-b,.hero-foot i,.loader:after,.loader-status i,.chart-lines b,.milestone i{animation:none}.hero-visual{transform:none!important}.button-primary span,.text-link span{transition:none}}
+=======
+/* ==========================================================================
+   VINASTRA AEROSPACE — MOTION & INTERACTION SYSTEM
+   Specification: design.md, skill.md
+   ========================================================================== */
+
+:root {
+  --scroll-progress: 0;
+  --pointer-x: 0;
+  --pointer-y: 0;
+}
+
+/* Scroll Progress Line at top of screen */
+.scroll-tracker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-blue), var(--color-accent));
+  transform: scaleX(var(--scroll-progress));
+  transform-origin: left;
+  z-index: 101;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+/* Scroll-triggered reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+.delay-5 { transition-delay: 0.5s; }
+
+/* Parallax handling */
+[data-parallax] {
+  will-change: transform;
+  transform: translate3d(0, var(--parallax-y, 0px), 0);
+  transition: transform 0.1s linear;
+}
+
+/* Orbital Rotations & Radar Pulses */
+.orbit-ring-slow {
+  animation: orbit-rotate 60s linear infinite;
+}
+
+.orbit-ring-reverse {
+  animation: orbit-rotate-rev 45s linear infinite;
+}
+
+@keyframes orbit-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-rotate-rev {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+/* Radar ping */
+.radar-ping {
+  position: relative;
+}
+
+.radar-ping::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--color-accent);
+  animation: ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* Telemetry pulse */
+.telemetry-pulse {
+  animation: telemetry-glow 3s ease-in-out infinite;
+}
+
+@keyframes telemetry-glow {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.35; }
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  [data-parallax] {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .scroll-tracker {
+    display: none;
+  }
+
+  .orbit-ring-slow,
+  .orbit-ring-reverse,
+  .radar-ping::after,
+  .status-dot,
+  .telemetry-pulse {
+    animation: none !important;
+  }
+}
+>>>>>>> 5e6f757 (Cinematic redesign, added graceful port fallback, updated script, added tests, converted missing asset, updated documentation)

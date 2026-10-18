@@ -12,6 +12,11 @@
           "**/*.jpeg",
           "**/*.jpg",
           "**/*.png",
+<<<<<<< HEAD
+=======
+          "**/*.webp",
+          "**/*.svg",
+>>>>>>> 5e6f757 (Cinematic redesign, added graceful port fallback, updated script, added tests, converted missing asset, updated documentation)
           "**/*.ico",
           "**/*.webmanifest"
         ]
