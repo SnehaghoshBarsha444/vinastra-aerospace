@@ -694,13 +694,16 @@ p.lead {
     top: var(--header-height);
     left: 0;
     right: 0;
+    max-height: calc(100vh - var(--header-height));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     background: rgba(7, 9, 13, 0.98);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--color-line);
     flex-direction: column;
-    padding: 30px var(--gutter);
-    gap: 20px;
+    padding: 24px var(--gutter) 36px;
+    gap: 16px;
     align-items: flex-start;
     opacity: 0;
     visibility: hidden;
@@ -885,8 +888,18 @@ p.lead {
   width: 100%;
 }
 
-.mobile-auth-actions button {
+.mobile-auth-actions button,
+.mobile-auth-actions a {
   flex: 1;
+  text-align: center;
+  justify-content: center;
+  padding: 10px 14px;
+}
+
+@media (min-width: 861px) {
+  .mobile-nav-auth {
+    display: none !important;
+  }
 }
 
 /* Auth Modal Dialog */
@@ -1199,26 +1212,11 @@ p.lead {
   padding-top: 14px;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 860px) {
   .topbar-auth {
-    margin-left: auto;
-    margin-right: 12px;
-    gap: 8px;
+    display: none !important;
   }
   .nav-meta {
     display: none;
-  }
-  .auth-btn {
-    padding: 6px 10px;
-    font-size: 0.625rem;
-  }
-}
-
-@media (max-width: 520px) {
-  .auth-btn-signup {
-    display: none;
-  }
-  .topbar-auth {
-    margin-right: 8px;
   }
 }
