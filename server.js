@@ -1,21 +1,22 @@
+/**
+ * VINASTRA AEROSPACE — PRODUCTION SERVER & GATEWAY
+ * Integrates Mission Control APIs, RBAC authentication, and secure static asset delivery.
+ */
+
 import { createServer } from 'node:http';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { handleApiRequest } from './backend/api.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT) || 4174;
-const inquiryStore = path.join(root, 'data', 'inquiries.json');
-// The public register carries only source-supported development statements.
-// It intentionally avoids invented dates, launches, customers, or partnerships.
-const stories = [
-  { date: 'CURRENT', category: 'COMPANY STAGE', title: 'ASCS concept and development pathway', summary: 'VINASTRA is an early-stage company focused on concept development, engineering research, simulation, and planned prototype work.' },
-  { date: 'PLANNED', category: 'PROTOTYPE-1', title: 'Ground-based demonstrator objective', summary: 'The proposed objective is to demonstrate blueprint-led assembly, inspection, and corrective workflows before any space mission.' },
-  { date: 'OPEN', category: 'COLLABORATION', title: 'Research and technology conversations', summary: 'Universities, laboratories, agencies, and industry partners can discuss relevant work in robotics, simulation, sensors, and manufacturing.' }
-];
 
 const sendJson = (response, status, payload) => {
-  response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' });
+  response.writeHead(status, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'X-Content-Type-Options': 'nosniff'
+  });
   response.end(JSON.stringify(payload));
 };
 
@@ -23,22 +24,62 @@ const readBody = async (request) => {
   let body = '';
   for await (const chunk of request) {
     body += chunk;
-    if (body.length > 64 * 1024) throw new Error('Request body too large');
+    if (body.length > 512 * 1024) throw new Error('Request body too large'); // 512KB limit
   }
   return JSON.parse(body || '{}');
 };
 
 const serveFile = async (request, response, pathname) => {
+  // Security: Disallow serving data directory or hidden files
+  if (
+    pathname.startsWith('/data/') ||
+    pathname.startsWith('/.git') ||
+    pathname.startsWith('/.env') ||
+    pathname.includes('..')
+  ) {
+    return sendJson(response, 403, { error: 'Access to internal system files is forbidden' });
+  }
+
   let requested = pathname;
   if (pathname === '/') requested = '/index.html';
   if (pathname.endsWith('/')) requested = `${pathname}index.html`;
+
+  // Clean trailing URLs without trailing slash (e.g. /mission-control -> /mission-control/index.html)
+  if (requested === '/mission-control') requested = '/mission-control/index.html';
+  if (requested === '/mission-control/admin') requested = '/mission-control/admin/index.html';
+
   const filePath = path.resolve(root, `.${requested}`);
   if (!filePath.startsWith(root)) return sendJson(response, 403, { error: 'Forbidden' });
+
   try {
-    const content = await fs.readFile(filePath);
-    const extension = path.extname(filePath);
-    const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json', '.mp4': 'video/mp4' };
-    response.writeHead(200, { 'Content-Type': types[extension] || 'application/octet-stream' });
+    const stats = await fs.stat(filePath);
+    let finalPath = filePath;
+    if (stats.isDirectory()) {
+      finalPath = path.join(filePath, 'index.html');
+    }
+
+    const content = await fs.readFile(finalPath);
+    const extension = path.extname(finalPath);
+    const types = {
+      '.html': 'text/html',
+      '.css': 'text/css',
+      '.js': 'text/javascript',
+      '.json': 'application/json',
+      '.png': 'image/png',
+      '.jpeg': 'image/jpeg',
+      '.jpg': 'image/jpeg',
+      '.webp': 'image/webp',
+      '.svg': 'image/svg+xml',
+      '.ico': 'image/x-icon',
+      '.webmanifest': 'application/manifest+json',
+      '.mp4': 'video/mp4',
+      '.pdf': 'application/pdf'
+    };
+
+    response.writeHead(200, {
+      'Content-Type': types[extension] || 'application/octet-stream',
+      'X-Content-Type-Options': 'nosniff'
+    });
     response.end(content);
   } catch {
     sendJson(response, 404, { error: 'Not found' });
@@ -46,28 +87,31 @@ const serveFile = async (request, response, pathname) => {
 };
 
 const server = createServer(async (request, response) => {
-  const url = new URL(request.url, `http://${request.headers.host}`);
-  if (url.pathname === '/api/health' && request.method === 'GET') return sendJson(response, 200, { status: 'ok', service: 'vinastra-aerospace' });
-  if (url.pathname === '/api/news' && request.method === 'GET') return sendJson(response, 200, stories);
-  if (url.pathname === '/api/contact' && request.method === 'POST') {
+  const url = new URL(request.url, `http://${request.headers.host || 'localhost'}`);
+
+  // Route API requests through backend API dispatcher
+  if (url.pathname.startsWith('/api/')) {
     try {
-      if (!request.headers['content-type']?.includes('application/json')) {
-        return sendJson(response, 415, { error: 'JSON content type required' });
+      let body = {};
+      if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
+        const contentType = request.headers['content-type'] || '';
+        if (contentType.includes('application/json')) {
+          body = await readBody(request);
+        } else {
+          // If content type is not JSON for POST /api/contact, check header for contract parity
+          if (url.pathname === '/api/contact' && !contentType.includes('application/json')) {
+            return sendJson(response, 415, { error: 'JSON content type required' });
+          }
+        }
       }
-      const inquiry = await readBody(request);
-      const emailParts = String(inquiry.email || '').split('@');
-      const hasValidEmail = emailParts.length === 2 && emailParts[0].length > 0 && emailParts[1].includes('.');
-      if (inquiry.website || !inquiry.name || !inquiry.message || !hasValidEmail) {
-        return sendJson(response, 400, { error: 'Name, email, and message are required' });
-      }
-      await fs.mkdir(path.dirname(inquiryStore), { recursive: true });
-      let entries = [];
-      try { entries = JSON.parse(await fs.readFile(inquiryStore, 'utf8')); } catch {}
-      entries.push({ id: crypto.randomUUID(), ...inquiry, receivedAt: new Date().toISOString() });
-      await fs.writeFile(inquiryStore, JSON.stringify(entries, null, 2));
-      return sendJson(response, 201, { received: true });
-    } catch { return sendJson(response, 400, { error: 'Invalid request' }); }
+      return await handleApiRequest(request, response, url, body);
+    } catch (err) {
+      console.error('API Error:', err);
+      return sendJson(response, 400, { error: err.message || 'Invalid request' });
+    }
   }
+
+  // Serve static files
   return serveFile(request, response, url.pathname);
 });
 

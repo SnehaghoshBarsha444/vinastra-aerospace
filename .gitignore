@@ -1,5 +1,7 @@
 node_modules/
 data/inquiries.json
+data/db.json
+data/secure_vault/
 .env
 .env.*
 !.env.example

@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07090D">
+  <title>Mission Control Terminal | Vinastra Aerospace</title>
+  <link rel="icon" href="/public/favicon_io/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/motion.css">
+  <link rel="stylesheet" href="/mission-control/dashboard.css">
+  <style>
+    .mc-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .mc-modal {
+      background: var(--mc-surface);
+      border: 1px solid var(--mc-border-bright);
+      border-radius: 4px;
+      width: 100%;
+      max-width: 560px;
+      padding: 28px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.8);
+    }
+    .mc-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--mc-border);
+      padding-bottom: 12px;
+    }
+    .mc-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--mc-text-dim);
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+    .mc-modal-close:hover {
+      color: var(--mc-text);
+    }
+  </style>
+</head>
+<body class="mission-control-body">
+
+  <!-- TOPBAR -->
+  <header class="mc-topbar">
+    <div style="display: flex; align-items: center; gap: 24px;">
+      <a href="/" class="mc-brand">
+        <img src="/public/favicon_io/android-chrome-512x512.png" alt="Vinastra Aerospace Logo">
+        <div class="mc-brand-text">
+          <span>VINASTRA AEROSPACE</span>
+          <span class="mc-brand-tag">ASCS MISSION CONTROL // TERMINAL</span>
+        </div>
+      </a>
+      <div class="mc-telemetry-status">
+        <span class="mc-status-indicator"></span>
+        <span>TELEMETRY: SYNCHRONIZED</span>
+      </div>
+    </div>
+
+    <div class="mc-user-ctrl">
+      <span class="mc-role-badge" id="user-role-badge">ROLE</span>
+      <span style="font-weight: 600; font-size: 0.875rem;" id="user-display-name">Operative</span>
+      <a href="/mission-control/admin/" class="mc-btn-primary" id="admin-nav-link" style="display: none;">ADMIN PORTAL ⚡</a>
+      <button class="mc-btn-ghost" id="btn-logout">Sign Out ⏏</button>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <div class="mc-layout">
+    <!-- SIDEBAR -->
+    <aside class="mc-sidebar">
+      <div class="mc-nav-section-title">MISSION OPERATIONS</div>
+      <a class="mc-nav-item active" data-tab="overview">
+        <span class="mc-nav-icon">⬚</span> Overview
+      </a>
+      <a class="mc-nav-item" data-tab="projects">
+        <span class="mc-nav-icon">⌬</span> Projects &amp; R&amp;D
+      </a>
+      <a class="mc-nav-item" data-tab="tasks">
+        <span class="mc-nav-icon">☑</span> Subsystem Tasks
+      </a>
+
+      <div class="mc-nav-section-title">DEEPTECH LABS</div>
+      <a class="mc-nav-item" data-tab="research">
+        <span class="mc-nav-icon">⚗</span> University Research
+      </a>
+      <a class="mc-nav-item" data-tab="engineering">
+        <span class="mc-nav-icon">⚙</span> Prototype-1 Reviews
+      </a>
+      <a class="mc-nav-item" data-tab="documents">
+        <span class="mc-nav-icon">☷</span> Technical Vault
+      </a>
+
+      <div class="mc-nav-section-title">COMMERCIAL &amp; GOVERNANCE</div>
+      <a class="mc-nav-item" data-tab="investor">
+        <span class="mc-nav-icon">◈</span> Seed Investor Brief
+      </a>
+      <a href="/" class="mc-nav-item" style="margin-top: auto; border-top: 1px solid var(--mc-border);">
+        <span class="mc-nav-icon">←</span> Public Website
+      </a>
+    </aside>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="mc-content">
+      <!-- ROLE SWITCHER TOOLBAR -->
+      <div class="mc-role-switcher-banner">
+        <div class="mc-role-switcher-title">
+          <span>● ROLE PERSPECTIVE SWITCHER:</span>
+          <span style="color: var(--mc-text-muted); font-size: 0.6875rem;">Switch views to verify permissions and workflows</span>
+        </div>
+        <div class="mc-role-pills">
+          <button class="mc-role-pill active" data-role="ADMIN">Admin (Founder)</button>
+          <button class="mc-role-pill" data-role="ENGINEER">Aerospace Engineer</button>
+          <button class="mc-role-pill" data-role="RESEARCHER">Academic Researcher</button>
+          <button class="mc-role-pill" data-role="STUDENT">Student Fellow</button>
+          <button class="mc-role-pill" data-role="INVESTOR">Angel Investor</button>
+        </div>
+      </div>
+
+      <!-- PAGE HEADER -->
+      <div class="mc-page-header">
+        <div>
+          <div class="mc-page-eyebrow">ASCS FLIGHT DIRECTORY</div>
+          <h1 class="mc-page-title" id="mc-section-title">Mission Operations &amp; Telemetry Overview</h1>
+        </div>
+      </div>
+
+      <!-- TAB 1: OVERVIEW -->
+      <div class="mc-tab-pane" id="tab-overview"></div>
+
+      <!-- TAB 2: PROJECTS -->
+      <div class="mc-tab-pane" id="tab-projects" style="display: none;"></div>
+
+      <!-- TAB 3: TASKS -->
+      <div class="mc-tab-pane" id="tab-tasks" style="display: none;"></div>
+
+      <!-- TAB 4: RESEARCH -->
+      <div class="mc-tab-pane" id="tab-research" style="display: none;"></div>
+
+      <!-- TAB 5: ENGINEERING -->
+      <div class="mc-tab-pane" id="tab-engineering" style="display: none;"></div>
+
+      <!-- TAB 6: DOCUMENTS -->
+      <div class="mc-tab-pane" id="tab-documents" style="display: none;"></div>
+
+      <!-- TAB 7: INVESTOR -->
+      <div class="mc-tab-pane" id="tab-investor" style="display: none;"></div>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- 1. NEW PROJECT MODAL -->
+  <div class="mc-modal-overlay" id="modal-project">
+    <div class="mc-modal">
+      <div class="mc-modal-header">
+        <h3 style="font-size: 1.125rem;">Create New ASCS Program / Project</h3>
+        <button type="button" class="mc-modal-close">✕</button>
+      </div>
+      <form id="form-new-project">
+        <div class="mc-form-group">
+          <label class="mc-form-label">PROJECT CODE (e.g. ASCS-KIN-02)</label>
+          <input type="text" name="code" class="mc-input" required placeholder="ASCS-MOD-01">
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">PROJECT TITLE</label>
+          <input type="text" name="title" class="mc-input" required placeholder="Robotic Assembler Torque Decoupling">
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">CATEGORY</label>
+          <select name="category" class="mc-select" required>
+            <option value="ROBOTICS">Robotics &amp; Kinematics</option>
+            <option value="METROLOGY">Metrology &amp; Machine Vision</option>
+            <option value="MATERIALS">Novel Space Materials</option>
+            <option value="FACTORY">Space Factory Modular Systems</option>
+          </select>
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">CONFIDENTIALITY ACCESS LEVEL</label>
+          <select name="confidentiality" class="mc-select" required>
+            <option value="INTERNAL">Internal Confidential</option>
+            <option value="INSTITUTIONAL">Institutional / University Collaboration</option>
+            <option value="PUBLIC">Public</option>
+          </select>
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">DESCRIPTION</label>
+          <textarea name="description" class="mc-textarea" placeholder="Objectives, scope, and target hardware..."></textarea>
+        </div>
+        <button type="submit" class="mc-btn-primary" style="width: 100%; padding: 10px;">Initialize Program →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. NEW TASK MODAL -->
+  <div class="mc-modal-overlay" id="modal-task">
+    <div class="mc-modal">
+      <div class="mc-modal-header">
+        <h3 style="font-size: 1.125rem;">Assign Subsystem Action Directive</h3>
+        <button type="button" class="mc-modal-close">✕</button>
+      </div>
+      <form id="form-new-task">
+        <div class="mc-form-group">
+          <label class="mc-form-label">TASK TITLE</label>
+          <input type="text" name="title" class="mc-input" required placeholder="Calibrate photogrammetry camera rig">
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">PRIORITY</label>
+          <select name="priority" class="mc-select" required>
+            <option value="MEDIUM">Medium</option>
+            <option value="HIGH">High</option>
+            <option value="CRITICAL">Critical</option>
+          </select>
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">DEADLINE</label>
+          <input type="date" name="deadline" class="mc-input">
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">SPECIFICATIONS</label>
+          <textarea name="description" class="mc-textarea" placeholder="Detailed engineering instructions..."></textarea>
+        </div>
+        <button type="submit" class="mc-btn-primary" style="width: 100%; padding: 10px;">Dispatch Task →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. NEW RESEARCH SUBMISSION MODAL -->
+  <div class="mc-modal-overlay" id="modal-submission">
+    <div class="mc-modal">
+      <div class="mc-modal-header">
+        <h3 style="font-size: 1.125rem;">Submit Academic Research Paper</h3>
+        <button type="button" class="mc-modal-close">✕</button>
+      </div>
+      <form id="form-new-submission">
+        <div class="mc-form-group">
+          <label class="mc-form-label">RESEARCH TITLE</label>
+          <input type="text" name="title" class="mc-input" required placeholder="Multi-Spectral Vision Defect Analysis in Vacuum">
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">CATEGORY</label>
+          <select name="category" class="mc-select" required>
+            <option value="ROBOTICS_AND_CONTROL">Robotics &amp; Autonomous Control</option>
+            <option value="MATERIALS_SCIENCE">Novel Space Materials &amp; Composites</option>
+            <option value="METROLOGY">Optical Metrology &amp; Vision</option>
+            <option value="MANUFACTURING">In-Space Additive Manufacturing</option>
+          </select>
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">ABSTRACT</label>
+          <textarea name="abstract" class="mc-textarea" required placeholder="Executive summary of research problem and proposed solution..."></textarea>
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">METHODOLOGY &amp; NOVELTY</label>
+          <textarea name="methodology" class="mc-textarea" placeholder="Experimental design, simulation parameters, and novel findings..."></textarea>
+        </div>
+        <button type="submit" class="mc-btn-primary" style="width: 100%; padding: 10px;">Transmit to Review Queue →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. NEW ENGINEERING REVIEW MODAL -->
+  <div class="mc-modal-overlay" id="modal-review">
+    <div class="mc-modal">
+      <div class="mc-modal-header">
+        <h3 style="font-size: 1.125rem;">Register Prototype-1 Component Review</h3>
+        <button type="button" class="mc-modal-close">✕</button>
+      </div>
+      <form id="form-new-review">
+        <div class="mc-form-group">
+          <label class="mc-form-label">COMPONENT NAME</label>
+          <input type="text" name="componentName" class="mc-input" required placeholder="End-Effector Magnetic Quick-Release Mechanism">
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">SUBSYSTEM</label>
+          <select name="subsystem" class="mc-select" required>
+            <option value="KINEMATICS">Robotic Kinematics</option>
+            <option value="VISION_METROLOGY">Vision &amp; Metrology</option>
+            <option value="POWER_THERMAL">Power &amp; Thermal Dissipation</option>
+            <option value="BLUEPRINT_PARSER">Blueprint Parsing &amp; Digital Twin</option>
+          </select>
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">DESIGN REVISION</label>
+          <input type="text" name="designRevision" class="mc-input" value="Rev 1.0">
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">FAILURE MODES IDENTIFIED</label>
+          <textarea name="failureModes" class="mc-textarea" placeholder="Potential thermal locking, contact jitter, electrical arcing..."></textarea>
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">TESTING PARAMETERS</label>
+          <input type="text" name="testingParameters" class="mc-input" placeholder="Tolerances: ±0.1mm | Max cycles: 5,000">
+        </div>
+        <button type="submit" class="mc-btn-primary" style="width: 100%; padding: 10px;">Register Technical Review →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. REGISTER DOCUMENT MODAL -->
+  <div class="mc-modal-overlay" id="modal-doc">
+    <div class="mc-modal">
+      <div class="mc-modal-header">
+        <h3 style="font-size: 1.125rem;">Register Technical Vault Document</h3>
+        <button type="button" class="mc-modal-close">✕</button>
+      </div>
+      <form id="form-new-doc">
+        <div class="mc-form-group">
+          <label class="mc-form-label">DOCUMENT TITLE</label>
+          <input type="text" name="title" class="mc-input" required placeholder="Prototype-1 Ground Test Cell Kinematics Report">
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">FILE NAME</label>
+          <input type="text" name="fileName" class="mc-input" required placeholder="ASCS_P1_Kinematics_Report_2026.pdf">
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">CATEGORY</label>
+          <select name="fileCategory" class="mc-select" required>
+            <option value="ENGINEERING_REPORT">Engineering Report</option>
+            <option value="CAD_MODEL">CAD Model Archive (.step / .iges)</option>
+            <option value="RESEARCH_PAPER">Research Paper</option>
+            <option value="FACTORY_BLUEPRINT">Space Factory Blueprint</option>
+            <option value="PRESENTATION">Investor Presentation</option>
+          </select>
+        </div>
+        <div class="mc-form-group">
+          <label class="mc-form-label">SECURITY ACCESS BOUNDARY</label>
+          <select name="accessLevel" class="mc-select" required>
+            <option value="INTERNAL_CONFIDENTIAL">Internal Confidential (Engineers &amp; Leads)</option>
+            <option value="INSTITUTIONAL">Institutional / University Partner</option>
+            <option value="INVESTOR_SAFE">Investor Safe (Vetted external)</option>
+            <option value="PUBLIC">Public</option>
+          </select>
+        </div>
+        <button type="submit" class="mc-btn-primary" style="width: 100%; padding: 10px;">Encrypt &amp; Save to Vault →</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/mission-control/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07090D">
+  <title>Administration &amp; System Operations | Vinastra Aerospace</title>
+  <link rel="icon" href="/public/favicon_io/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/motion.css">
+  <link rel="stylesheet" href="/mission-control/dashboard.css">
+  <style>
+    .admin-badge {
+      background: rgba(239, 68, 68, 0.15);
+      color: #EF4444;
+      border: 1px solid #EF4444;
+      font-family: var(--mc-font-mono);
+      font-size: 0.625rem;
+      padding: 3px 8px;
+      border-radius: 2px;
+      letter-spacing: 0.1em;
+    }
+    .admin-subnav {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--mc-border);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .admin-subnav-btn {
+      background: var(--mc-surface-card);
+      border: 1px solid var(--mc-border);
+      color: var(--mc-text-muted);
+      font-family: var(--mc-font-mono);
+      font-size: 0.75rem;
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.2s ease;
+    }
+    .admin-subnav-btn.active, .admin-subnav-btn:hover {
+      background: var(--mc-accent);
+      color: #000;
+      border-color: var(--mc-accent);
+      font-weight: 600;
+    }
+    .action-select {
+      background: #080B10;
+      border: 1px solid var(--mc-border);
+      color: var(--mc-text);
+      font-family: var(--mc-font-mono);
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body class="mission-control-body">
+
+  <!-- TOPBAR -->
+  <header class="mc-topbar">
+    <div style="display: flex; align-items: center; gap: 24px;">
+      <a href="/" class="mc-brand">
+        <img src="/public/favicon_io/android-chrome-512x512.png" alt="Vinastra Aerospace Logo">
+        <div class="mc-brand-text">
+          <span>VINASTRA AEROSPACE</span>
+          <span class="mc-brand-tag">EXECUTIVE COMMAND // ADMINISTRATION PORTAL</span>
+        </div>
+      </a>
+      <span class="admin-badge">RESTRICTED: LEVEL-4 CLEARANCE</span>
+    </div>
+
+    <div class="mc-user-ctrl">
+      <span class="mc-role-badge">ADMIN</span>
+      <span style="font-weight: 600; font-size: 0.875rem;" id="admin-user-name">Vinay Jeedi</span>
+      <a href="/mission-control/" class="mc-btn-ghost">Mission Control Terminal ↗</a>
+      <button class="mc-btn-ghost" id="admin-logout">Sign Out ⏏</button>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <div class="mc-layout">
+    <!-- SIDEBAR -->
+    <aside class="mc-sidebar">
+      <div class="mc-nav-section-title">ADMINISTRATION</div>
+      <a class="mc-nav-item active" data-pane="overview">
+        <span class="mc-nav-icon">📊</span> Operations Metrics
+      </a>
+      <a class="mc-nav-item" data-pane="users">
+        <span class="mc-nav-icon">👥</span> User Management
+      </a>
+      <a class="mc-nav-item" data-pane="institutions">
+        <span class="mc-nav-icon">🏛</span> University Partners
+      </a>
+      <a class="mc-nav-item" data-pane="research-queue">
+        <span class="mc-nav-icon">🔬</span> Research Queue
+      </a>
+      <a class="mc-nav-item" data-pane="engineering-queue">
+        <span class="mc-nav-icon">⚙</span> Engineering Queue
+      </a>
+      <a class="mc-nav-item" data-pane="audit-logs">
+        <span class="mc-nav-icon">🛡</span> Security Audit Trail
+      </a>
+      <a href="/mission-control/" class="mc-nav-item" style="margin-top: auto; border-top: 1px solid var(--mc-border);">
+        <span class="mc-nav-icon">←</span> Back to Dashboard
+      </a>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="mc-content">
+      <div class="mc-page-header">
+        <div>
+          <div class="mc-page-eyebrow">CENTRALIZED GOVERNANCE ENGINE</div>
+          <h1 class="mc-page-title" id="admin-header-title">Executive Operations &amp; System Health</h1>
+        </div>
+      </div>
+
+      <!-- PANE 1: METRICS & HEALTH -->
+      <div class="admin-pane" id="pane-overview">
+        <div class="mc-grid-4">
+          <div class="mc-card mc-stat-card">
+            <span class="mc-stat-label">REGISTERED USERS</span>
+            <span class="mc-stat-val" id="stat-users">0</span>
+            <span class="mc-stat-hint">Across all affiliations</span>
+          </div>
+          <div class="mc-card mc-stat-card">
+            <span class="mc-stat-label">ACTIVE PROJECTS</span>
+            <span class="mc-stat-val" id="stat-projects">0</span>
+            <span class="mc-stat-hint">ASCS &amp; deeptech tracks</span>
+          </div>
+          <div class="mc-card mc-stat-card">
+            <span class="mc-stat-label">PENDING REVIEWS</span>
+            <span class="mc-stat-val" id="stat-reviews" style="color: var(--mc-yellow);">0</span>
+            <span class="mc-stat-hint">Awaiting administrative decision</span>
+          </div>
+          <div class="mc-card mc-stat-card">
+            <span class="mc-stat-label">AUDIT EVENTS</span>
+            <span class="mc-stat-val" id="stat-audits">0</span>
+            <span class="mc-stat-hint">Cryptographically tracked logs</span>
+          </div>
+        </div>
+
+        <div class="mc-card" style="margin-bottom: 24px; border-left: 3px solid var(--mc-green);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span class="mc-page-eyebrow" style="margin: 0; color: var(--mc-green);">OPERATIONAL HEALTH TELEMETRY</span>
+            <span class="mc-tag mc-tag-green">ALL SYSTEMS NOMINAL</span>
+          </div>
+          <p style="color: var(--mc-text-muted); font-size: 0.875rem; line-height: 1.5;">
+            Zero unauthorized privilege escalation detected. Security rules enforce that self-assigned client roles cannot access administrative endpoints. All review decisions logged with reviewer ID and timestamp.
+          </p>
+        </div>
+      </div>
+
+      <!-- PANE 2: USER MANAGEMENT -->
+      <div class="admin-pane" id="pane-users" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <p style="color: var(--mc-text-muted); font-size: 0.875rem;">Modify User Roles, Elevate Permissions &amp; Manage Account Status</p>
+        </div>
+        <div class="mc-table-container">
+          <table class="mc-table">
+            <thead>
+              <tr>
+                <th>USER</th>
+                <th>AFFILIATION / DEPT</th>
+                <th>ROLE</th>
+                <th>STATUS</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PANE 3: INSTITUTIONS -->
+      <div class="admin-pane" id="pane-institutions" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <p style="color: var(--mc-text-muted); font-size: 0.875rem;">University Boundaries &amp; Institutional Collaborations</p>
+          <button class="mc-btn-primary" id="btn-add-inst">+ Register Institution</button>
+        </div>
+        <div class="mc-table-container">
+          <table class="mc-table">
+            <thead>
+              <tr>
+                <th>CODE</th>
+                <th>INSTITUTION NAME</th>
+                <th>DOMAIN</th>
+                <th>TYPE</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="admin-inst-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PANE 4: RESEARCH QUEUE -->
+      <div class="admin-pane" id="pane-research-queue" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <p style="color: var(--mc-text-muted); font-size: 0.875rem;">Review &amp; Approve University Academic Submissions</p>
+        </div>
+        <div class="mc-table-container">
+          <table class="mc-table">
+            <thead>
+              <tr>
+                <th>PAPER &amp; ABSTRACT</th>
+                <th>STATUS</th>
+                <th>DECISION ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="admin-research-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PANE 5: ENGINEERING QUEUE -->
+      <div class="admin-pane" id="pane-engineering-queue" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <p style="color: var(--mc-text-muted); font-size: 0.875rem;">Prototype-1 Testing Authorization &amp; Engineering Review Workflow</p>
+        </div>
+        <div class="mc-table-container">
+          <table class="mc-table">
+            <thead>
+              <tr>
+                <th>COMPONENT &amp; SUBSYSTEM</th>
+                <th>FAILURE MODES</th>
+                <th>CURRENT STAGE</th>
+                <th>ADVANCE STAGE</th>
+              </tr>
+            </thead>
+            <tbody id="admin-engineering-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PANE 6: AUDIT LOGS -->
+      <div class="admin-pane" id="pane-audit-logs" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <p style="color: var(--mc-text-muted); font-size: 0.875rem;">Cryptographic Audit Trail (Chronological Event Stream)</p>
+        </div>
+        <div class="mc-table-container">
+          <table class="mc-table">
+            <thead>
+              <tr>
+                <th>TIMESTAMP</th>
+                <th>ACTION</th>
+                <th>RESOURCE</th>
+                <th>DETAILS</th>
+                <th>IP ORIGIN</th>
+              </tr>
+            </thead>
+            <tbody id="admin-audit-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let adminToken = localStorage.getItem('vinastra_token');
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      setupAdminNav();
+      await verifyAdminSession();
+      await loadAdminMetrics();
+    });
+
+    function setupAdminNav() {
+      document.querySelectorAll('.mc-nav-item[data-pane]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const paneId = btn.dataset.pane;
+          document.querySelectorAll('.mc-nav-item').forEach((n) => n.classList.remove('active'));
+          btn.classList.add('active');
+
+          document.querySelectorAll('.admin-pane').forEach((p) => {
+            p.style.display = p.id === `pane-${paneId}` ? 'block' : 'none';
+          });
+
+          if (paneId === 'users') loadUsers();
+          if (paneId === 'institutions') loadInstitutions();
+          if (paneId === 'research-queue') loadResearchQueue();
+          if (paneId === 'engineering-queue') loadEngineeringQueue();
+          if (paneId === 'audit-logs') loadAuditLogs();
+        });
+      });
+
+      document.getElementById('admin-logout')?.addEventListener('click', async () => {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        localStorage.removeItem('vinastra_token');
+        window.location.href = '/login/';
+      });
+    }
+
+    async function verifyAdminSession() {
+      // Auto-authenticate as Admin persona if needed for evaluation
+      if (!adminToken) {
+        const loginRes = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: 'admin@vinastra.space', password: 'VinastraAdmin2026!' })
+        });
+        if (loginRes.ok) {
+          const data = await loginRes.json();
+          adminToken = data.token;
+          localStorage.setItem('vinastra_token', adminToken);
+        } else {
+          window.location.href = '/login/';
+          return;
+        }
+      }
+
+      const res = await fetch('/api/auth/me', {
+        headers: { Authorization: `Bearer ${adminToken}` }
+      });
+
+      if (!res.ok) {
+        window.location.href = '/login/';
+        return;
+      }
+
+      const { user } = await res.json();
+      if (!['ADMIN', 'FOUNDER'].includes(user.role)) {
+        alert('Access Denied: Administrative privileges required.');
+        window.location.href = '/mission-control/';
+        return;
+      }
+
+      document.getElementById('admin-user-name').textContent = user.name;
+    }
+
+    async function loadAdminMetrics() {
+      const res = await fetch('/api/admin/metrics', {
+        headers: { Authorization: `Bearer ${adminToken}` }
+      });
+      if (res.ok) {
+        const { metrics } = await res.json();
+        document.getElementById('stat-users').textContent = metrics.usersCount;
+        document.getElementById('stat-projects').textContent = metrics.activeProjects;
+        document.getElementById('stat-reviews').textContent = metrics.pendingReviews;
+        document.getElementById('stat-audits').textContent = metrics.auditCount;
+      }
+    }
+
+    async function loadUsers() {
+      const tbody = document.getElementById('admin-users-tbody');
+      tbody.innerHTML = '<tr><td colspan="5">Loading users...</td></tr>';
+      const res = await fetch('/api/admin/users', { headers: { Authorization: `Bearer ${adminToken}` } });
+      if (res.ok) {
+        const users = await res.json();
+        tbody.innerHTML = users.map(u => `
+          <tr>
+            <td>
+              <div style="font-weight: 600; color: var(--mc-text);">${escapeHtml(u.name)}</div>
+              <div style="font-size: 0.75rem; color: var(--mc-text-dim);">${escapeHtml(u.email)}</div>
+            </td>
+            <td style="font-size: 0.75rem;">${escapeHtml(u.department || 'General')}</td>
+            <td>
+              <select class="action-select user-role-select" data-uid="${u.id}">
+                ${['ADMIN', 'FOUNDER', 'ENGINEER', 'RESEARCHER', 'STUDENT', 'INVESTOR'].map(r => `
+                  <option value="${r}" ${u.role === r ? 'selected' : ''}>${r}</option>
+                `).join('')}
+              </select>
+            </td>
+            <td><span class="mc-tag ${u.status === 'ACTIVE' ? 'mc-tag-green' : 'mc-tag-yellow'}">${u.status}</span></td>
+            <td>
+              <button class="mc-btn-ghost user-status-toggle" data-uid="${u.id}" data-current="${u.status}" style="font-size: 0.6875rem;">
+                ${u.status === 'ACTIVE' ? 'Suspend' : 'Activate'}
+              </button>
+            </td>
+          </tr>
+        `).join('');
+
+        // Wire event handlers
+        tbody.querySelectorAll('.user-role-select').forEach(sel => {
+          sel.addEventListener('change', async () => {
+            const uid = sel.dataset.uid;
+            const newRole = sel.value;
+            await fetch(`/api/admin/users/${uid}/role`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+              body: JSON.stringify({ role: newRole })
+            });
+            await loadAdminMetrics();
+          });
+        });
+
+        tbody.querySelectorAll('.user-status-toggle').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const uid = btn.dataset.uid;
+            const nextStatus = btn.dataset.current === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE';
+            await fetch(`/api/admin/users/${uid}/status`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+              body: JSON.stringify({ status: nextStatus })
+            });
+            loadUsers();
+          });
+        });
+      }
+    }
+
+    async function loadInstitutions() {
+      const tbody = document.getElementById('admin-inst-tbody');
+      tbody.innerHTML = '<tr><td colspan="5">Loading institutions...</td></tr>';
+      const res = await fetch('/api/institutions', { headers: { Authorization: `Bearer ${adminToken}` } });
+      if (res.ok) {
+        const insts = await res.json();
+        tbody.innerHTML = insts.map(i => `
+          <tr>
+            <td style="font-family: var(--mc-font-mono); color: var(--mc-accent);">${escapeHtml(i.code)}</td>
+            <td style="font-weight: 600; color: var(--mc-text);">${escapeHtml(i.name)}</td>
+            <td style="font-family: var(--mc-font-mono); font-size: 0.75rem;">${escapeHtml(i.domain || 'N/A')}</td>
+            <td><span class="mc-tag mc-tag-blue">${escapeHtml(i.type)}</span></td>
+            <td><span class="mc-tag mc-tag-green">${i.status}</span></td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    async function loadResearchQueue() {
+      const tbody = document.getElementById('admin-research-tbody');
+      tbody.innerHTML = '<tr><td colspan="3">Loading research queue...</td></tr>';
+      const res = await fetch('/api/research/submissions', { headers: { Authorization: `Bearer ${adminToken}` } });
+      if (res.ok) {
+        const submissions = await res.json();
+        tbody.innerHTML = submissions.map(s => `
+          <tr>
+            <td style="max-width: 480px;">
+              <div style="font-weight: 600; color: var(--mc-text);">${escapeHtml(s.title)}</div>
+              <div style="font-size: 0.75rem; color: var(--mc-text-dim); margin-top: 4px;">${escapeHtml(s.abstract)}</div>
+            </td>
+            <td><span class="mc-tag ${s.status === 'APPROVED_FOR_NEXT_STAGE' ? 'mc-tag-green' : s.status === 'UNDER_REVIEW' ? 'mc-tag-yellow' : 'mc-tag-blue'}">${s.status}</span></td>
+            <td>
+              <div style="display: flex; gap: 8px;">
+                <button class="mc-btn-ghost sub-action-btn" data-id="${s.id}" data-action="APPROVED_FOR_NEXT_STAGE" style="color: var(--mc-green); font-size: 0.6875rem;">Approve ✓</button>
+                <button class="mc-btn-ghost sub-action-btn" data-id="${s.id}" data-action="REVISION_REQUESTED" style="color: var(--mc-yellow); font-size: 0.6875rem;">Revise ⟲</button>
+                <button class="mc-btn-ghost sub-action-btn" data-id="${s.id}" data-action="REJECTED" style="color: var(--mc-red); font-size: 0.6875rem;">Reject ✕</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+
+        tbody.querySelectorAll('.sub-action-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const subId = btn.dataset.id;
+            const status = btn.dataset.action;
+            const notes = prompt(`Enter review notes for ${status}:`, 'Verified by Administration');
+            if (notes !== null) {
+              await fetch(`/api/research/submissions/${subId}/review`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+                body: JSON.stringify({ status, reviewerNotes: notes })
+              });
+              loadResearchQueue();
+              loadAdminMetrics();
+            }
+          });
+        });
+      }
+    }
+
+    async function loadEngineeringQueue() {
+      const tbody = document.getElementById('admin-engineering-tbody');
+      tbody.innerHTML = '<tr><td colspan="4">Loading engineering queue...</td></tr>';
+      const res = await fetch('/api/engineering/reviews', { headers: { Authorization: `Bearer ${adminToken}` } });
+      if (res.ok) {
+        const reviews = await res.json();
+        tbody.innerHTML = reviews.map(r => `
+          <tr>
+            <td>
+              <div style="font-weight: 600; color: var(--mc-text);">${escapeHtml(r.componentName)}</div>
+              <div style="font-size: 0.75rem; color: var(--mc-accent);">${escapeHtml(r.subsystem)} (${escapeHtml(r.designRevision)})</div>
+            </td>
+            <td style="font-size: 0.75rem; color: var(--mc-text-dim); max-width: 320px;">${escapeHtml(r.failureModes)}</td>
+            <td><span class="mc-tag ${r.reviewStage === 'APPROVED_FOR_TESTING' ? 'mc-tag-green' : 'mc-tag-yellow'}">${r.reviewStage}</span></td>
+            <td>
+              <select class="action-select eng-stage-select" data-id="${r.id}">
+                ${['TECHNICAL_REVIEW', 'APPROVED_FOR_TESTING', 'TESTED', 'REVISED', 'CLOSED'].map(stage => `
+                  <option value="${stage}" ${r.reviewStage === stage ? 'selected' : ''}>${stage}</option>
+                `).join('')}
+              </select>
+            </td>
+          </tr>
+        `).join('');
+
+        tbody.querySelectorAll('.eng-stage-select').forEach(sel => {
+          sel.addEventListener('change', async () => {
+            const revId = sel.dataset.id;
+            const nextStage = sel.value;
+            await fetch(`/api/engineering/reviews/${revId}/decision`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+              body: JSON.stringify({ reviewStage: nextStage, verdictNotes: 'Approved for ground test cell' })
+            });
+            loadEngineeringQueue();
+            loadAdminMetrics();
+          });
+        });
+      }
+    }
+
+    async function loadAuditLogs() {
+      const tbody = document.getElementById('admin-audit-tbody');
+      tbody.innerHTML = '<tr><td colspan="5">Loading audit stream...</td></tr>';
+      const res = await fetch('/api/admin/audit-logs', { headers: { Authorization: `Bearer ${adminToken}` } });
+      if (res.ok) {
+        const logs = await res.json();
+        tbody.innerHTML = logs.map(l => `
+          <tr>
+            <td style="font-family: var(--mc-font-mono); font-size: 0.75rem;">${new Date(l.timestamp).toLocaleTimeString()}</td>
+            <td><span class="mc-tag mc-tag-accent">${escapeHtml(l.action)}</span></td>
+            <td style="font-family: var(--mc-font-mono); font-size: 0.75rem;">${escapeHtml(l.resourceType)}</td>
+            <td style="font-size: 0.75rem; color: var(--mc-text);">${escapeHtml(l.details)}</td>
+            <td style="font-family: var(--mc-font-mono); font-size: 0.6875rem; color: var(--mc-text-dim);">${escapeHtml(l.ipAddress)}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>

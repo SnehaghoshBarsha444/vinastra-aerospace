@@ -225,6 +225,237 @@ await runTest('Strict email validator permits valid official and academic emails
   assert.equal(isValidEmailTest('name.surname@domain.org'), true);
 });
 
+console.log('\n--- 5. Mission Control & Administration Portal Verification ---');
+
+await runTest('Route Mission Control (/mission-control/) serves 200 with dashboard shell', async () => {
+  const res = await fetch(`${BASE_URL}/mission-control/`);
+  assert.equal(res.status, 200);
+  const html = await res.text();
+  assert.ok(html.includes('Mission Control Terminal | Vinastra Aerospace'));
+  assert.ok(html.includes('/mission-control/dashboard.css'));
+  assert.ok(html.includes('/mission-control/dashboard.js'));
+});
+
+await runTest('Route Admin Portal (/mission-control/admin/) serves 200 with admin shell', async () => {
+  const res = await fetch(`${BASE_URL}/mission-control/admin/`);
+  assert.equal(res.status, 200);
+  const html = await res.text();
+  assert.ok(html.includes('Administration &amp; System Operations | Vinastra Aerospace'));
+});
+
+console.log('\n--- 6. Security Boundaries & Path Traversal Prevention ---');
+
+await runTest('Direct request to /data/inquiries.json is blocked with 403 Forbidden', async () => {
+  const res = await fetch(`${BASE_URL}/data/inquiries.json`);
+  assert.equal(res.status, 403);
+});
+
+await runTest('Direct request to /.env is blocked with 403 Forbidden', async () => {
+  const res = await fetch(`${BASE_URL}/.env`);
+  assert.equal(res.status, 403);
+});
+
+console.log('\n--- 7. Full-Stack Backend API & RBAC Suite ---');
+
+let testUserToken = null;
+let adminToken = null;
+let investorToken = null;
+let engineerToken = null;
+
+const runId = Date.now();
+const testEmail = `cadence_${runId}@orbital-lab.org`;
+const hackerEmail = `hacker_${runId}@hostile.org`;
+
+await runTest('POST /api/auth/register creates user and generates cryptographic session token', async () => {
+  const res = await fetch(`${BASE_URL}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: 'Dr. Test Cadence',
+      email: testEmail,
+      password: 'SecureTestingPassword123!',
+      role: 'students' // Self-selected role
+    })
+  });
+  assert.equal(res.status, 201);
+  const data = await res.json();
+  assert.ok(data.token);
+  assert.equal(data.user.email, testEmail);
+  assert.equal(data.user.role, 'STUDENT');
+  testUserToken = data.token;
+});
+
+await runTest('POST /api/auth/register rejects privileged role injection (Admin/Founder self-assignment)', async () => {
+  const res = await fetch(`${BASE_URL}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: 'Malicious Infiltrator',
+      email: hackerEmail,
+      password: 'HackerPassword123!',
+      role: 'ADMIN' // Malicious attempt to self-grant Admin
+    })
+  });
+  assert.equal(res.status, 201);
+  const data = await res.json();
+  assert.notEqual(data.user.role, 'ADMIN', 'Privileged role injection was not prevented!');
+  assert.equal(data.user.role, 'STUDENT', 'Did not default to safe unprivileged role');
+});
+
+await runTest('POST /api/auth/login authenticates registered users and verifies passwords', async () => {
+  const res = await fetch(`${BASE_URL}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: 'admin@vinastra.space',
+      password: 'VinastraAdmin2026!'
+    })
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.ok(data.token);
+  assert.equal(data.user.role, 'ADMIN');
+  adminToken = data.token;
+});
+
+await runTest('POST /api/auth/login rejects incorrect password with 401 Unauthorized', async () => {
+  const res = await fetch(`${BASE_URL}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: 'admin@vinastra.space',
+      password: 'WrongPasswordAttempt!'
+    })
+  });
+  assert.equal(res.status, 401);
+});
+
+// Authenticate other personas for RBAC boundary testing
+const invRes = await fetch(`${BASE_URL}/api/auth/login`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email: 'investor@aerospace-fund.co', password: 'Investor2026!' })
+});
+investorToken = (await invRes.json()).token;
+
+const engRes = await fetch(`${BASE_URL}/api/auth/login`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email: 'engineer@vinastra.space', password: 'Engineer2026!' })
+});
+engineerToken = (await engRes.json()).token;
+
+await runTest('GET /api/auth/me returns authenticated telemetry profile', async () => {
+  const res = await fetch(`${BASE_URL}/api/auth/me`, {
+    headers: { Authorization: `Bearer ${adminToken}` }
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.user.role, 'ADMIN');
+  assert.ok(data.telemetry);
+});
+
+await runTest('GET /api/dashboard/overview returns role-tailored viewport data', async () => {
+  const res = await fetch(`${BASE_URL}/api/dashboard/overview`, {
+    headers: { Authorization: `Bearer ${engineerToken}` }
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.profile.role, 'ENGINEER');
+  assert.ok(Array.isArray(data.projects));
+  assert.ok(data.roleSpecific.engineeringReviews);
+});
+
+await runTest('RBAC: Non-admin users cannot access /api/admin/metrics (403 Forbidden)', async () => {
+  const res = await fetch(`${BASE_URL}/api/admin/metrics`, {
+    headers: { Authorization: `Bearer ${testUserToken}` }
+  });
+  assert.equal(res.status, 403);
+});
+
+await runTest('RBAC: Admin user can access /api/admin/metrics with real database metrics', async () => {
+  const res = await fetch(`${BASE_URL}/api/admin/metrics`, {
+    headers: { Authorization: `Bearer ${adminToken}` }
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.ok(data.metrics.usersCount >= 5);
+  assert.ok(data.metrics.activeProjects >= 1);
+});
+
+await runTest('RBAC: Investor cannot access internal engineering reviews (403 Forbidden)', async () => {
+  const res = await fetch(`${BASE_URL}/api/engineering/reviews`, {
+    headers: { Authorization: `Bearer ${investorToken}` }
+  });
+  assert.equal(res.status, 403);
+});
+
+let testSubId = null;
+
+await runTest('Research Workflow: Submit proposal and advance through review queue', async () => {
+  // 1. Submit proposal as student
+  const subRes = await fetch(`${BASE_URL}/api/research/submissions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${testUserToken}` },
+    body: JSON.stringify({
+      title: 'Automated Test: Sub-Millimeter Edge Calibration',
+      abstract: 'Testing automated workflow state transitions for academic submissions.',
+      methodology: 'Unit test harness integration.',
+      findings: 'Deterministic status progression.',
+      category: 'METROLOGY'
+    })
+  });
+  assert.equal(subRes.status, 201);
+  const subData = await subRes.json();
+  assert.equal(subData.status, 'SUBMITTED');
+  testSubId = subData.id;
+
+  // 2. Admin approves proposal for next stage
+  const reviewRes = await fetch(`${BASE_URL}/api/research/submissions/${testSubId}/review`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+    body: JSON.stringify({
+      status: 'APPROVED_FOR_NEXT_STAGE',
+      reviewerNotes: 'Validated in automated test suite.'
+    })
+  });
+  assert.equal(reviewRes.status, 200);
+  const reviewData = await reviewRes.json();
+  assert.equal(reviewData.status, 'APPROVED_FOR_NEXT_STAGE');
+});
+
+await runTest('Engineering Workflow: Advance review stage and enforce aerospace disclaimer', async () => {
+  // 1. Register review
+  const revRes = await fetch(`${BASE_URL}/api/engineering/reviews`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${engineerToken}` },
+    body: JSON.stringify({
+      componentName: 'Automated Test: End-Effector Gripper Finger Pin',
+      subsystem: 'KINEMATICS',
+      designRevision: 'Rev 1.0',
+      failureModes: 'Vacuum micro-fretting.',
+      testingParameters: 'Tolerances: ±0.05mm'
+    })
+  });
+  assert.equal(revRes.status, 201);
+  const revData = await revRes.json();
+  assert.equal(revData.reviewStage, 'TECHNICAL_REVIEW');
+
+  // 2. Advance stage to APPROVED_FOR_TESTING
+  const decisionRes = await fetch(`${BASE_URL}/api/engineering/reviews/${revData.id}/decision`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+    body: JSON.stringify({
+      reviewStage: 'APPROVED_FOR_TESTING',
+      verdictNotes: 'Approved for test cell rig.'
+    })
+  });
+  assert.equal(decisionRes.status, 200);
+  const decisionData = await decisionRes.json();
+  assert.equal(decisionData.reviewStage, 'APPROVED_FOR_TESTING');
+  assert.ok(decisionData.verdictNotes.includes('does not constitute flight qualification'));
+});
+
 console.log('\n--- Summary ---');
 console.log(`Passed: ${passed} | Failed: ${failed}`);
 
@@ -236,3 +467,4 @@ if (failed > 0) {
   console.log('\n🌟 All site verification checks passed successfully!\n');
   process.exit(0);
 }
+

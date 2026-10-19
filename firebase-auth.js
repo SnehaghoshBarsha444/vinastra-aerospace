@@ -211,6 +211,21 @@ export async function createAccount({ name, email, password, role }) {
   // Write to Firestore database
   await saveUserProfile(profile);
 
+  // Sync to Backend Server API
+  try {
+    const apiRes = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name.trim(), email: cleanEmail, password, role })
+    });
+    if (apiRes.ok) {
+      const apiData = await apiRes.json();
+      if (apiData.token) localStorage.setItem("vinastra_token", apiData.token);
+    }
+  } catch (err) {
+    console.warn("Backend server API sync note:", err.message);
+  }
+
   renderAuthNav();
   return { profile, isLocalFallback };
 }
@@ -270,6 +285,22 @@ export async function loginUser({ email, password }) {
 
   currentUserProfile = profile;
   setCachedProfile(profile);
+
+  // Sync session with backend server API
+  try {
+    const apiRes = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: cleanEmail, password })
+    });
+    if (apiRes.ok) {
+      const apiData = await apiRes.json();
+      if (apiData.token) localStorage.setItem("vinastra_token", apiData.token);
+    }
+  } catch (err) {
+    console.warn("Backend server API login note:", err.message);
+  }
+
   renderAuthNav();
   return { profile, isLocalFallback };
 }
@@ -278,6 +309,10 @@ export async function loginUser({ email, password }) {
  * Sign Out
  */
 export async function logoutUser() {
+  try {
+    await fetch("/api/auth/logout", { method: "POST" });
+  } catch {}
+  localStorage.removeItem("vinastra_token");
   await signOut(auth);
   currentUserProfile = null;
   setCachedProfile(null);
@@ -420,7 +455,10 @@ function ensureAuthModal() {
           </div>
         </div>
 
-        <div class="profile-actions">
+        <div class="profile-actions" style="display: flex; flex-direction: column; gap: 8px;">
+          <a href="/mission-control/" class="action action-primary" style="text-align: center; justify-content: center;">
+            ENTER MISSION CONTROL DASHBOARD <span class="action-arrow">→</span>
+          </a>
           <button type="button" class="action action-line" id="profile-logout-btn">
             TERMINATE SESSION (SIGN OUT) <span class="action-arrow">⏏</span>
           </button>
