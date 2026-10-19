@@ -15,7 +15,8 @@
           "**/*.webp",
           "**/*.svg",
           "**/*.ico",
-          "**/*.webmanifest"
+          "**/*.webmanifest",
+          "**/*.mp4"
         ]
       }
     }

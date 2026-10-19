@@ -361,7 +361,7 @@ const initGSAPScrollEffects = () => {
       });
       archTL
         .from('.ascs-architecture-wrapper', { opacity: 0, y: 20, duration: 0.6 })
-        .from('.ascs-embed-side', { opacity: 0, x: -25, duration: 0.6 }, '-=0.3')
+        .from('.ascs-video-side, .ascs-embed-side', { opacity: 0, x: -25, duration: 0.6 }, '-=0.3')
         .from('.ascs-visual-side', { opacity: 0, x: 25, duration: 0.6 }, '-=0.4')
         .from('.ascs-layers-grid .ascs-layer-card', { opacity: 0, y: 25, stagger: 0.08, duration: 0.5 }, '-=0.2');
     }
@@ -565,3 +565,33 @@ const hydrateNewsFeed = async () => {
 };
 
 window.addEventListener('DOMContentLoaded', hydrateNewsFeed);
+
+// Continuous Video Looping for Satellite Element
+const initSatelliteVideo = () => {
+  const satVideo = document.querySelector('.ascs-satellite-video');
+  if (!satVideo) return;
+
+  // Ensure continuous replay when playback finishes
+  satVideo.addEventListener('ended', () => {
+    satVideo.currentTime = 0;
+    satVideo.play().catch(() => {});
+  });
+
+  // Re-trigger playback if tab visibility returns or autoplay was deferred
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && satVideo.paused) {
+      satVideo.play().catch(() => {});
+    }
+  });
+
+  // Initial play reassurance
+  if (satVideo.paused) {
+    satVideo.play().catch(() => {});
+  }
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSatelliteVideo);
+} else {
+  initSatelliteVideo();
+}
