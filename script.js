@@ -24,11 +24,12 @@ const navItems = [
 
 if (routeName !== 'home') {
   document.querySelectorAll('.primary-nav').forEach((nav) => {
-    nav.innerHTML = navItems.map(([label, href]) => {
+    const linksHtml = navItems.map(([label, href]) => {
       const isActive = currentPath === href.replace(/\/$/, '');
       const activeClass = isActive ? ' class="active-route" aria-current="page"' : '';
       return `<a href="${href}"${activeClass}>${label}</a>`;
     }).join('');
+    nav.innerHTML = `${linksHtml}<div class="mobile-nav-auth"><a href="/login/" class="auth-btn auth-btn-login">Login</a><a href="/login/?mode=signup" class="auth-btn auth-btn-signup">Create Account</a></div>`;
   });
 }
 
@@ -295,20 +296,21 @@ const initGSAPScrollEffects = () => {
       if (targets.length > 0) {
         gsap.from(targets, {
           opacity: 0,
-          y: 28,
-          stagger: 0.14,
-          duration: 0.8,
+          y: 20,
+          stagger: 0.1,
+          duration: 0.6,
           ease: 'power2.out',
+          clearProps: 'all',
           scrollTrigger: {
             trigger: container,
-            start: 'top 85%',
+            start: 'top 95%',
             toggleActions: 'play none none none'
           }
         });
       }
     });
 
-    // 4. Staggered Card Reveals for all APHELION grid sections
+    // 4. Staggered Card Reveals for all APHELION grid sections (retaining full visibility)
     const cardGridSelectors = [
       '.bottleneck-grid',
       '.construction-sequence-grid',
@@ -334,14 +336,14 @@ const initGSAPScrollEffects = () => {
         const cards = Array.from(grid.children);
         if (cards.length > 0) {
           gsap.from(cards, {
-            opacity: 0,
-            y: 35,
-            stagger: 0.12,
-            duration: 0.75,
+            y: 20,
+            stagger: 0.05,
+            duration: 0.5,
             ease: 'power2.out',
+            clearProps: 'transform',
             scrollTrigger: {
               trigger: grid,
-              start: 'top 85%',
+              start: 'top 92%',
               toggleActions: 'play none none none'
             }
           });
@@ -355,15 +357,15 @@ const initGSAPScrollEffects = () => {
       const archTL = gsap.timeline({
         scrollTrigger: {
           trigger: ascsSection,
-          start: 'top 75%',
+          start: 'top 85%',
           toggleActions: 'play none none none'
         }
       });
       archTL
-        .from('.ascs-architecture-wrapper', { opacity: 0, y: 20, duration: 0.6 })
-        .from('.ascs-video-side, .ascs-embed-side', { opacity: 0, x: -25, duration: 0.6 }, '-=0.3')
-        .from('.ascs-visual-side', { opacity: 0, x: 25, duration: 0.6 }, '-=0.4')
-        .from('.ascs-layers-grid .ascs-layer-card', { opacity: 0, y: 25, stagger: 0.08, duration: 0.5 }, '-=0.2');
+        .from('.ascs-architecture-wrapper', { y: 20, duration: 0.5, ease: 'power2.out', clearProps: 'transform' })
+        .from('.ascs-video-side, .ascs-embed-side', { x: -20, duration: 0.5, ease: 'power2.out', clearProps: 'transform' }, '-=0.3')
+        .from('.ascs-visual-side', { x: 20, duration: 0.5, ease: 'power2.out', clearProps: 'transform' }, '-=0.4')
+        .from('.ascs-layers-grid .ascs-layer-card', { y: 15, stagger: 0.05, duration: 0.4, ease: 'power2.out', clearProps: 'transform' }, '-=0.2');
     }
 
     // 6. Mission Control Console entrance

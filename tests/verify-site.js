@@ -146,7 +146,9 @@ const routes = [
   ['Contact page (/contact/)', '/contact/', 'Contact &amp; Inquiries | Vinastra Aerospace'],
   ['Login portal (/login/)', '/login/', 'Client &amp; User Registry | Vinastra Aerospace'],
   ['Register portal (/register/)', '/register/', 'Client &amp; User Registry | Vinastra Aerospace'],
-  ['Create Account portal (/create-account/)', '/create-account/', 'Client &amp; User Registry | Vinastra Aerospace']
+  ['Create Account portal (/create-account/)', '/create-account/', 'Client &amp; User Registry | Vinastra Aerospace'],
+  ['Terms & Conditions page (/terms/)', '/terms/', 'Terms &amp; Conditions | Vinastra Aerospace'],
+  ['Privacy Policy page (/privacy/)', '/privacy/', 'Privacy Policy | Vinastra Aerospace']
 ];
 
 for (const [label, path, expectedTitle] of routes) {

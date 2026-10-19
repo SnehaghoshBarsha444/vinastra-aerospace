@@ -1215,11 +1215,32 @@ p.lead {
   padding-top: 14px;
 }
 
+.mobile-nav-auth {
+  display: none;
+}
+
 @media (max-width: 860px) {
   .topbar-auth {
     display: none !important;
   }
   .nav-meta {
     display: none;
+  }
+  .mobile-nav-auth {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-line);
+  }
+  .mobile-nav-auth .auth-btn {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 14px;
+    font-size: 0.75rem;
+    text-align: center;
   }
 }
