@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#07090D">
-  <meta name="description" content="Vinastra Aerospace is an early-stage Indian SpaceTech company developing the Autonomous Space Construction System (ASCS) for building and servicing infrastructure beyond Earth.">
+  <meta name="theme-color" content="#08090B">
+  <meta name="description" content="VINASTRA AEROSPACE PRIVATE LIMITED is an Indian SpaceTech & DeepTech company developing autonomous robotics, artificial intelligence, and advanced space manufacturing systems for building industrial infrastructure beyond Earth.">
   <title>Vinastra Aerospace | Engineering The Next Frontier</title>
+  <link rel="canonical" href="https://vinastra-aerospace.vercel.app/home/">
   <link rel="icon" href="/public/favicon_io/favicon.ico">
   <link rel="apple-touch-icon" href="/public/favicon_io/apple-touch-icon.png">
-  <link rel="preload" as="image" href="/public/nasa-capstone-spacecraft.webp" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/motion.css">
   <link rel="stylesheet" href="/home-redesign.css">
@@ -48,694 +48,931 @@
       <span></span>
       <span class="sr-only">Menu</span>
     </button>
-    <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation"></nav>
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation">
+      <a href="#technology">VEHICLE / TECHNOLOGY</a>
+      <a href="#systems">SYSTEMS</a>
+      <a href="#space-factory">SPACE FACTORY</a>
+      <a href="#roadmap">ROADMAP</a>
+      <a href="#research">RESEARCH</a>
+    </nav>
     <div class="topbar-auth" id="topbar-auth">
+      <a href="#contact" class="action action-primary" style="padding: 8px 16px; font-size: 0.6875rem;">CONTACT / INVESTOR →</a>
       <a href="/login/" class="auth-btn auth-btn-login" id="nav-btn-login">Login</a>
       <a href="/login/?mode=signup" class="auth-btn auth-btn-signup" id="nav-btn-signup">Create Account</a>
     </div>
   </header>
 
   <main class="site-main" id="top">
-    <!-- HERO SECTION -->
-    <section class="hero-section" id="hero">
-      <div class="hero-backdrop" data-parallax="0.12">
-        <img src="/public/nasa-capstone-spacecraft.webp" alt="NASA CAPSTONE spacecraft during cleanroom integration, representing precision aerospace systems engineering" fetchpriority="high">
+    <!-- 00. HERO SECTION: BUILDING INDUSTRY BEYOND EARTH -->
+    <section class="aphelion-hero" id="hero">
+      <div class="hero-backdrop-layer" aria-hidden="true">
+        <img src="/public/deck/slide-1.jpg" alt="Orbital modular industrial space infrastructure under construction" loading="eager" fetchpriority="high">
+        <div class="hero-vignette-overlay"></div>
+        <div class="hero-grid-overlay"></div>
       </div>
-      <div class="hero-vignette" aria-hidden="true"></div>
-      <div class="hero-grid-lines" aria-hidden="true"></div>
 
-      <div class="hero-container">
-        <div class="hero-copy reveal">
-          <div class="eyebrow">
-            <span>01 / AUTONOMOUS INDUSTRIAL INFRASTRUCTURE FOR SPACE</span>
+      <div class="hero-content-wrapper">
+        <div class="hero-left-column">
+          <div class="hero-eyebrow">
+            <span class="hero-eyebrow-indicator"></span>
+            <span>VINASTRA AEROSPACE / AUTONOMOUS INDUSTRIAL INFRASTRUCTURE</span>
           </div>
-          <h1 class="hero-headline">
-            ENGINEERING<br>
-            <span class="gradient-word">THE NEXT</span>
-            <em>FRONTIER.</em>
+
+          <h1 class="hero-main-headline">
+            BUILDING<br>
+            INDUSTRY<br>
+            BEYOND EARTH<span class="hero-highlight">.</span>
           </h1>
-          <p class="hero-desc">
-            Vinastra Aerospace is an early-stage Indian SpaceTech venture developing the Autonomous Space Construction System (ASCS) — the robotics, AI, and digital-twin layer required to assemble, service, and manufacture factory-scale infrastructure beyond Earth.
+
+          <p class="hero-supporting-copy">
+            Building the autonomous robotic systems that will construct, maintain and expand the factories of tomorrow, beyond Earth.
           </p>
-          <div class="hero-actions">
-            <a class="action action-primary" href="#vision">
-              EXPLORE OUR VISION <span class="action-arrow">↓</span>
-            </a>
-            <a class="action action-line" href="/research/">
-              DISCOVER OUR RESEARCH <span class="action-arrow">↗</span>
-            </a>
-          </div>
-          <div class="hero-scroll-cue">
-            <span>SCROLL TO BRIEF</span><i>↓</i>
+
+          <div class="hero-cta-group">
+            <a href="#technology" class="btn-aphelion-primary">EXPLORE OUR TECHNOLOGY →</a>
+            <a href="#space-factory" class="btn-aphelion-secondary">DISCOVER THE SPACE FACTORY</a>
           </div>
         </div>
+      </div>
 
-        <!-- Mission Console HUD Card -->
-        <aside class="mission-console reveal" aria-label="Mission console telemetry">
-          <div class="console-header">
-            <span>ASCS / ARCHITECTURAL OVERVIEW</span>
-            <strong>PROPOSED · 2026</strong>
-          </div>
-          <div class="console-radar" aria-hidden="true">
-            <div class="radar-circle radar-circle-1"></div>
-            <div class="radar-circle radar-circle-2"></div>
-            <div class="radar-circle radar-circle-3"></div>
-            <div class="radar-sweep"></div>
-            <div class="radar-beacon beacon-center"></div>
-            <div class="radar-beacon beacon-satellite"></div>
-          </div>
-          <div class="console-telemetry-grid">
-            <div class="telemetry-item">
-              <span class="telemetry-label">PLATFORM ARCHITECTURE</span>
-              <span class="telemetry-val">AI + ROBOTICS</span>
-            </div>
-            <div class="telemetry-item">
-              <span class="telemetry-label">GROUND DEMONSTRATOR</span>
-              <span class="telemetry-val accent">PROTOTYPE-1</span>
-            </div>
-            <div class="telemetry-item">
-              <span class="telemetry-label">PROPOSED SEED RUNWAY</span>
-              <span class="telemetry-val">₹2.5 CR / 18 MO</span>
-            </div>
-            <div class="telemetry-item">
-              <span class="telemetry-label">GLOBAL SPACE ECONOMY</span>
-              <span class="telemetry-val accent">$630B → $1.8T</span>
-            </div>
-          </div>
-        </aside>
+      <!-- Hero Metrics Strip -->
+      <div class="hero-metrics-strip">
+        <div class="hero-metric-item">
+          <div class="hero-metric-label">PLATFORM</div>
+          <div class="hero-metric-value">ASCS</div>
+        </div>
+        <div class="hero-metric-item">
+          <div class="hero-metric-label">DEVELOPMENT</div>
+          <div class="hero-metric-value">GROUND PROTOTYPE</div>
+        </div>
+        <div class="hero-metric-item">
+          <div class="hero-metric-label">VISION</div>
+          <div class="hero-metric-value">AUTONOMOUS SPACE FACTORY</div>
+        </div>
       </div>
     </section>
 
-    <!-- SECTION 1: THE BOTTLENECK -->
-    <section class="section-wrapper" id="vision">
-      <div class="editorial-container">
-        <div class="section-header reveal">
-          <div class="section-kicker">
-            <span>02 / THE BOTTLENECK</span> · INDUSTRIAL REALITY BEYOND EARTH
-          </div>
-          <h2 class="editorial-statement">
-            Space infrastructure cannot scale if every structure must arrive <em>complete from Earth.</em>
-          </h2>
-          <p class="lead" style="margin-top: 20px;">
-            Payload mass constraints, fairing dimensions, human endurance limits, and speed-of-light communication latency make traditional terrestrial manufacturing incapable of supporting long-term orbital habitation, planetary outposts, and deep-space factories.
-          </p>
+    <!-- 01. SECTION 01: THE INDUSTRIAL BOTTLENECK -->
+    <section class="tech-section" id="challenge">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>01 / THE CHALLENGE</span>
         </div>
+        <h2 class="section-title">SPACE CANNOT SCALE<br>WITHOUT INDUSTRY<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          Space infrastructure cannot scale if every factory, station and structure must be launched complete from Earth.
+        </p>
 
         <div class="bottleneck-grid">
-          <article class="bottleneck-card reveal">
-            <div class="bottleneck-num">01 / FAIRING LIMITATION</div>
-            <h3 class="bottleneck-title">Launch Volume Ceilings</h3>
-            <p class="bottleneck-desc">
-              Rocket fairings constrain payloads to mere meters in diameter. Assembling kilometer-scale solar collectors, orbital antenna arrays, and modular space habitats requires fabricating and joining structural trusses directly in microgravity.
-            </p>
-          </article>
+          <div class="bottleneck-card corner-ticks">
+            <div class="bottleneck-num">01 // CONSTRAINT</div>
+            <h3>Launch Dependence</h3>
+            <p>Large orbital structures are fundamentally constrained by payload mass, fairing volume, structural acoustic loads, and prohibitive recurring launch costs.</p>
+          </div>
+          <div class="bottleneck-card corner-ticks">
+            <div class="bottleneck-num">02 // CONSTRAINT</div>
+            <h3>Human Construction Limits</h3>
+            <p>Deep-space industrial construction cannot depend on astronauts for hazardous, high-radiation, microgravity assembly, continuous inspection, maintenance, and repair tasks.</p>
+          </div>
+          <div class="bottleneck-card corner-ticks">
+            <div class="bottleneck-num">03 // CONSTRAINT</div>
+            <h3>Missing Local Industry</h3>
+            <p>Future lunar, Martian, asteroid, and deep-space missions require local manufacturing, in-situ materials processing, spacecraft servicing, and autonomous infrastructure expansion.</p>
+          </div>
+        </div>
 
-          <article class="bottleneck-card reveal">
-            <div class="bottleneck-num">02 / HUMAN CAPACITY</div>
-            <h3 class="bottleneck-title">Astronaut EVA Constraints</h3>
-            <p class="bottleneck-desc">
-              Spacewalks are physically exhausting, perilous, and exceptionally expensive. Autonomous multi-agent robotic fleets must take over heavy structural assembly, high-temperature welding, and continuous external maintenance.
-            </p>
-          </article>
-
-          <article class="bottleneck-card reveal">
-            <div class="bottleneck-num">03 / LOGISTICS CHAIN</div>
-            <h3 class="bottleneck-title">Earth Supply Dependence</h3>
-            <p class="bottleneck-desc">
-              Launching spare parts and finished modules from Earth creates an insurmountable economic barrier. The permanent expansion of humanity into deep space demands in-situ resource processing, additive fabrication, and autonomous closed-loop maintenance.
-            </p>
-          </article>
+        <div class="bottleneck-statement corner-ticks">
+          <p>“The next leap is not only reaching space. It is building, repairing and manufacturing there.”</p>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 2: ASCS CORE PRODUCT ARCHITECTURE -->
-    <section class="section-wrapper ascs-section" id="ascs">
-      <div class="editorial-container">
-        <div class="section-header reveal">
-          <div class="section-kicker">
-            <span>03 / CORE PRODUCT ARCHITECTURE</span> · PROPOSED ASCS SYSTEM
-          </div>
-          <h2 class="editorial-statement">
-            The autonomous intelligence behind <em>orbital manufacturing.</em>
-          </h2>
-          <p class="lead" style="margin-top: 20px;">
-            The Autonomous Space Construction System (ASCS) is Vinastra's core platform thesis: a unified software, robotics, and machine-vision stack engineered to execute precision structural assembly, automated 3D printing, and remote anomaly recovery.
-          </p>
+    <!-- 02. SECTION 02: THE ASCS PLATFORM -->
+    <section class="tech-section tech-section-alt" id="technology">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>02 / CORE TECHNOLOGY</span>
         </div>
+        <h2 class="section-title">THE MACHINES<br>THAT BUILD THE FACTORY<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          Vinastra is developing the Autonomous Space Construction System, an AI, robotics and digital-twin platform designed to support the construction of factory modules beyond Earth.
+        </p>
 
-        <div class="ascs-explorer reveal">
-          <!-- Interactive Subsystem Navigation List -->
-          <div class="ascs-subsystem-nav" role="tablist" aria-label="ASCS Subsystem Explorer">
-            <button class="ascs-subsystem-btn active" role="tab" aria-selected="true" data-subsystem-key="planner">
-              <div class="ascs-btn-info">
-                <span class="ascs-btn-num">01</span>
-                <span class="ascs-btn-title">Autonomous Mission Planner</span>
+        <div class="ascs-architecture-wrapper">
+          <div class="ascs-exploded-stack">
+            <div class="ascs-layer-card active" data-layer="1">
+              <div class="ascs-layer-header">
+                <span class="ascs-layer-id">LAYER 01 // AUTONOMY</span>
+                <span class="tech-tag">AI CORE</span>
               </div>
-              <span class="ascs-btn-arrow">→</span>
-            </button>
-            <button class="ascs-subsystem-btn" role="tab" aria-selected="false" data-subsystem-key="twin">
-              <div class="ascs-btn-info">
-                <span class="ascs-btn-num">02</span>
-                <span class="ascs-btn-title">Digital Twin & Kinematic Sim</span>
-              </div>
-              <span class="ascs-btn-arrow">→</span>
-            </button>
-            <button class="ascs-subsystem-btn" role="tab" aria-selected="false" data-subsystem-key="robotics">
-              <div class="ascs-btn-info">
-                <span class="ascs-btn-num">03</span>
-                <span class="ascs-btn-title">Robotic Manipulators & End-Effectors</span>
-              </div>
-              <span class="ascs-btn-arrow">→</span>
-            </button>
-            <button class="ascs-subsystem-btn" role="tab" aria-selected="false" data-subsystem-key="vision">
-              <div class="ascs-btn-info">
-                <span class="ascs-btn-num">04</span>
-                <span class="ascs-btn-title">Closed-Loop Machine Vision & Metrology</span>
-              </div>
-              <span class="ascs-btn-arrow">→</span>
-            </button>
-            <button class="ascs-subsystem-btn" role="tab" aria-selected="false" data-subsystem-key="ground">
-              <div class="ascs-btn-info">
-                <span class="ascs-btn-num">05</span>
-                <span class="ascs-btn-title">Supervisory Ground Control & HUD</span>
-              </div>
-              <span class="ascs-btn-arrow">→</span>
-            </button>
-          </div>
-
-          <!-- ASCS Detail Display Panel (Hydrated by script.js) -->
-          <div class="ascs-display-panel" role="tabpanel" aria-live="polite">
-            <span class="panel-watermark" id="ascs-panel-watermark" aria-hidden="true" data-subsystem-index>01</span>
-            <div class="panel-kicker" id="ascs-panel-num" data-subsystem-tag>01 / ASCS SUBSYSTEM</div>
-            <h3 class="panel-title" id="ascs-panel-title" data-subsystem-title>Autonomous Mission Planner</h3>
-            <p class="panel-desc" id="ascs-panel-desc" data-subsystem-desc>
-              Translates high-level digital factory blueprints into deterministic robotic task graphs, trajectory paths, dynamic torque allocations, and automated fault recovery procedures.
-            </p>
-            <div class="panel-specs" id="ascs-panel-specs" data-subsystem-specs>
-              <div class="panel-spec-item">
-                <strong>CORE ARCHITECTURE</strong>
-                <span>Hierarchical Task Network (HTN) Planner</span>
-              </div>
-              <div class="panel-spec-item">
-                <strong>FAULT TOLERANCE</strong>
-                <span>Sub-second autonomous replanning</span>
-              </div>
-              <div class="panel-spec-item">
-                <strong>INTERFACE</strong>
-                <span>Direct CAD-to-Robotics path compiler</span>
-              </div>
-              <div class="panel-spec-item">
-                <strong>DEPLOYMENT</strong>
-                <span>Edge compute node with ground arbitration</span>
+              <div class="ascs-layer-title">AI Mission Planner</div>
+              <p class="ascs-layer-subtext">Task sequencing, dynamic construction path planning, autonomous anomaly response, and multi-agent decision support.</p>
+              <div class="ascs-layer-tags">
+                <span class="ascs-layer-tag">Task Sequencing</span>
+                <span class="ascs-layer-tag">Replanning</span>
+                <span class="ascs-layer-tag">Fault Recovery</span>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div style="margin-top: 36px; padding: 18px 24px; border: 1px solid var(--color-line-subtle); border-radius: var(--radius-sm); background: rgba(16, 23, 34, 0.5);" class="reveal">
-          <p style="font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--color-accent); margin: 0;">
-            PROPOSED ARCHITECTURE — THIS SYSTEM IS AN ACTIVE RESEARCH &amp; DEVELOPMENT THESIS UNDER CONCEPT DESIGN, NOT YET DEPLOYED SPACE HARDWARE.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 3: SPACE FACTORY CONCEPT & OPERATIONAL FLOW -->
-    <section class="section-wrapper" id="factory">
-      <div class="editorial-container">
-        <div class="section-header reveal">
-          <div class="section-kicker">
-            <span>04 / LONG-TERM CONCEPT</span> · THE VINASTRA SPACE FACTORY (ASF-01)
-          </div>
-          <h2 class="editorial-statement">
-            Modular industrial platform for <em>deep-space operations.</em>
-          </h2>
-          <p class="lead" style="margin-top: 20px;">
-            The Vinastra Space Factory is our multi-decade engineering vision: a permanent orbital and cislunar industrial platform configured to receive raw materials, refine space-grade alloys, 3D print critical aerospace components, and service commercial spacecraft.
-          </p>
-        </div>
-
-        <!-- Interactive Concept Visualizer (Blueprint vs Render Toggle) -->
-        <div class="factory-showcase reveal">
-          <div style="display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap;">
-            <button class="action action-line active" data-factory-view="blueprint" type="button">
-              VIEW REV-A BLUEPRINT (12 SUBSYSTEMS)
-            </button>
-            <button class="action action-line" data-factory-view="render" type="button">
-              VIEW CINEMATIC CONCEPT RENDER
-            </button>
-          </div>
-
-          <div class="factory-visual-frame">
-            <div class="factory-visual-bar">
-              <span id="factory-view-status" data-factory-label>ASF-01 REV A ARCHITECTURAL BLUEPRINT</span>
-              <strong>12 NUMBERED SUBSYSTEMS DETAILED</strong>
+            <div class="ascs-layer-card" data-layer="2">
+              <div class="ascs-layer-header">
+                <span class="ascs-layer-id">LAYER 02 // SIMULATION</span>
+                <span class="tech-tag">VIRTUAL-TO-PHYSICAL</span>
+              </div>
+              <div class="ascs-layer-title">Digital Twin</div>
+              <p class="ascs-layer-subtext">Factory blueprints, real-time kinematic simulation, virtual-to-physical comparison, assembly progress verification, and anomaly tracking.</p>
+              <div class="ascs-layer-tags">
+                <span class="ascs-layer-tag">CAD Blueprints</span>
+                <span class="ascs-layer-tag">Kinematic Sim</span>
+                <span class="ascs-layer-tag">Verification</span>
+              </div>
             </div>
-            <img id="factory-main-image" data-factory-image src="/public/vinastra-space-factory-blueprint.webp" alt="Vinastra Space Factory ASF-01 Rev A technical blueprint drawing depicting 12 numbered subsystems" width="1280" height="720">
-            <div style="padding: 16px 24px; background: rgba(16, 23, 34, 0.9); border-top: 1px solid var(--color-line-subtle);">
-              <p id="factory-caption" data-factory-caption style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-muted); margin: 0; line-height: 1.5;">
-                ASF-01 preliminary blueprint draft illustrating module docking bays, solar wings, robotic gantries, and additive manufacturing chambers.
-              </p>
+
+            <div class="ascs-layer-card" data-layer="3">
+              <div class="ascs-layer-header">
+                <span class="ascs-layer-id">LAYER 03 // HARDWARE</span>
+                <span class="tech-tag">MANIPULATION</span>
+              </div>
+              <div class="ascs-layer-title">Robotic Builders</div>
+              <p class="ascs-layer-subtext">Multi-DOF robotic arms, mobile robotic platforms, additive manufacturing print-heads, structural component positioning, and autonomous joining.</p>
+              <div class="ascs-layer-tags">
+                <span class="ascs-layer-tag">Robotic Arms</span>
+                <span class="ascs-layer-tag">3D Printing</span>
+                <span class="ascs-layer-tag">Joining Mechanisms</span>
+              </div>
+            </div>
+
+            <div class="ascs-layer-card" data-layer="4">
+              <div class="ascs-layer-header">
+                <span class="ascs-layer-id">LAYER 04 // SENSING</span>
+                <span class="tech-tag">METROLOGY</span>
+              </div>
+              <div class="ascs-layer-title">Machine Vision &amp; Inspection</div>
+              <p class="ascs-layer-subtext">Sub-millimeter optical metrology, LiDAR structural alignment, visual defect inspection, closed-loop quality assurance, and real-time fault detection.</p>
+              <div class="ascs-layer-tags">
+                <span class="ascs-layer-tag">Optical Metrology</span>
+                <span class="ascs-layer-tag">LiDAR Scanning</span>
+                <span class="ascs-layer-tag">QA Feedback</span>
+              </div>
+            </div>
+
+            <div class="ascs-layer-card" data-layer="5">
+              <div class="ascs-layer-header">
+                <span class="ascs-layer-id">LAYER 05 // SUPERVISION</span>
+                <span class="tech-tag">GROUND CONTROL</span>
+              </div>
+              <div class="ascs-layer-title">Ground Supervision</div>
+              <p class="ascs-layer-subtext">Mission health monitoring, high-level supervisory commands, secure telemetry downlinks, exception review, and ground recovery instructions.</p>
+              <div class="ascs-layer-tags">
+                <span class="ascs-layer-tag">Telemetry HUD</span>
+                <span class="ascs-layer-tag">Command Downlink</span>
+                <span class="ascs-layer-tag">Safety State</span>
+              </div>
+            </div>
+
+            <div class="ascs-principle-banner">
+              OPERATING PRINCIPLE: AUTONOMOUS-FIRST // HUMAN-SUPERVISED // REMOTELY RECOVERABLE
             </div>
           </div>
 
-          <!-- Staged 7-Step Operational Flow -->
-          <div class="flow-rail reveal" style="margin-top: 48px;">
-            <div class="flow-step">
-              <span class="flow-step-num">STEP 01</span>
-              <span class="flow-step-title">Digital Blueprint Ingestion</span>
-            </div>
-            <div class="flow-step">
-              <span class="flow-step-num">STEP 02</span>
-              <span class="flow-step-title">Autonomous Path Planning</span>
-            </div>
-            <div class="flow-step">
-              <span class="flow-step-num">STEP 03</span>
-              <span class="flow-step-title">Automated Docking &amp; Feed</span>
-            </div>
-            <div class="flow-step">
-              <span class="flow-step-num">STEP 04</span>
-              <span class="flow-step-title">In-Situ Additive Printing</span>
-            </div>
-            <div class="flow-step">
-              <span class="flow-step-num">STEP 05</span>
-              <span class="flow-step-title">Robotic Truss Assembly</span>
-            </div>
-            <div class="flow-step">
-              <span class="flow-step-num">STEP 06</span>
-              <span class="flow-step-title">Optical Metrology &amp; QA</span>
-            </div>
-            <div class="flow-step">
-              <span class="flow-step-num">STEP 07</span>
-              <span class="flow-step-title">Autonomous Commissioning</span>
-            </div>
-          </div>
-
-          <!-- 12 Subsystem Badges from Blueprint -->
-          <div style="margin-top: 36px;" class="reveal">
-            <div style="font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.12em; color: var(--color-muted); text-transform: uppercase; margin-bottom: 14px;">
-              ASF-01 BLUEPRINT ARCHITECTURAL SUBSYSTEMS (CONCEPTUAL SPECIFICATION)
-            </div>
-            <div class="subsystem-cloud">
-              <div class="subsystem-badge"><span>01</span> Central Hub &amp; Docking Port</div>
-              <div class="subsystem-badge"><span>02</span> Photovoltaic Power Arrays</div>
-              <div class="subsystem-badge"><span>03</span> Thermal Radiator Panels</div>
-              <div class="subsystem-badge"><span>04</span> Additive Fabrication Chamber</div>
-              <div class="subsystem-badge"><span>05</span> Articulated Robotic Manipulator</div>
-              <div class="subsystem-badge"><span>06</span> Material Feedstock Hopper</div>
-              <div class="subsystem-badge"><span>07</span> Microgravity Metallurgy Lab</div>
-              <div class="subsystem-badge"><span>08</span> In-Situ Resource Storage Tanks</div>
-              <div class="subsystem-badge"><span>09</span> Autonomous Telemetry &amp; Avionics</div>
-              <div class="subsystem-badge"><span>10</span> Attitude Control &amp; Reaction Jets</div>
-              <div class="subsystem-badge"><span>11</span> Optical Metrology LIDAR Suite</div>
-              <div class="subsystem-badge"><span>12</span> Ground Relay High-Gain Antenna</div>
+          <div class="ascs-visual-side corner-ticks">
+            <img src="/public/vinastra-space-factory-blueprint.webp" alt="ASCS autonomous space construction exploded schematic and architecture" loading="lazy">
+            <div class="ascs-visual-caption">
+              <span class="mono-meta">ASCS-ARCH-EXPLODED // REV 2026.1</span>
+              <span class="tech-tag">CONCEPT BLUEPRINT</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 4: PROTOTYPE-1 GROUND DEMONSTRATOR -->
-    <section class="section-wrapper prototype-section" id="prototype">
-      <div class="editorial-container">
-        <div class="section-header reveal">
-          <div class="section-kicker">
-            <span>05 / NEAR-TERM MILESTONE</span> · PROTOTYPE-1 GROUND DEMONSTRATOR
-          </div>
-          <h2 class="editorial-statement">
-            Prove the autonomous loop on <em>Earth first.</em>
-          </h2>
-          <p class="lead" style="margin-top: 20px;">
-            Before executing orbital flights, Vinastra is focused on proving the complete autonomous assembly loop in a controlled terrestrial environment. Prototype-1 is an 18-month engineering demonstrator designed to validate CAD ingestion, robotic positioning, additive joining, and vision-based fault recovery.
-          </p>
+    <!-- 03. SECTION 03: HOW AUTONOMOUS CONSTRUCTION WORKS -->
+    <section class="tech-section" id="systems">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>03 / CONSTRUCTION SEQUENCE</span>
         </div>
+        <h2 class="section-title">FROM DIGITAL BLUEPRINT<br>TO PHYSICAL INFRASTRUCTURE<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          The robot fleet follows a pre-installed construction plan, executing coordinated workflows while retaining AI-assisted replanning and ground-supervised recovery.
+        </p>
 
-        <div class="prototype-pillars-grid">
-          <article class="pillar-card reveal">
-            <div class="pillar-num">01 / MANIPULATION</div>
-            <h3 class="pillar-title">Autonomous Assembly</h3>
-            <p class="pillar-desc">
-              Multi-axis robotic arms executing deterministic sequence commands from digital CAD blueprints without human manual joint control.
-            </p>
-          </article>
-
-          <article class="pillar-card reveal">
-            <div class="pillar-num">02 / FABRICATION</div>
-            <h3 class="pillar-title">Robotic Additive Printing</h3>
-            <p class="pillar-desc">
-              Continuous extrusion and additive joining of structural nodes using aerospace-grade polymers and carbon composite materials.
-            </p>
-          </article>
-
-          <article class="pillar-card reveal">
-            <div class="pillar-num">03 / SYNCHRONIZATION</div>
-            <h3 class="pillar-title">Digital Twin Calibration</h3>
-            <p class="pillar-desc">
-              Sub-millimeter bidirectional sync between physical testbed robotics and simulated kinematics in high-fidelity simulation physics.
-            </p>
-          </article>
-
-          <article class="pillar-card reveal">
-            <div class="pillar-num">04 / RESILIENCE</div>
-            <h3 class="pillar-title">Vision Fault Recovery</h3>
-            <p class="pillar-desc">
-              Real-time computer vision detecting structural misalignments, deflection, or joint errors, autonomously triggering corrective re-planning.
-            </p>
-          </article>
-
-          <article class="pillar-card reveal">
-            <div class="pillar-num">05 / TELEMETRY</div>
-            <h3 class="pillar-title">Ground Control HUD</h3>
-            <p class="pillar-desc">
-              Low-latency telemetry console giving human operators real-time state visualization with supervisory intervention capabilities.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 5: 6-PHASE DEVELOPMENT ROADMAP -->
-    <section class="section-wrapper" id="roadmap">
-      <div class="editorial-container">
-        <div class="section-header reveal">
-          <div class="section-kicker">
-            <span>06 / DEVELOPMENT TRAJECTORY</span> · 6-PHASE ROADMAP
+        <div class="construction-sequence-grid">
+          <div class="sequence-stage-card corner-ticks">
+            <div class="stage-step-num">01 // SEQUENCE</div>
+            <div class="stage-name">PLAN</div>
+            <p class="stage-desc">Load verified factory CAD blueprints, establish task sequences, and compute collision-free robotic trajectory paths.</p>
           </div>
-          <h2 class="editorial-statement">
-            From architectural thesis to <em>in-orbit industrial infrastructure.</em>
-          </h2>
-          <p class="lead" style="margin-top: 20px;">
-            Our phased roadmap outlines realistic technical milestones from foundational software engineering to eventual orbital deployment.
-          </p>
-        </div>
-
-        <div class="roadmap-timeline reveal">
-          <div class="roadmap-phase-item phase-active">
-            <div class="phase-meta">
-              <span class="phase-number">PHASE 01 · CURRENT ACTIVE STAGE</span>
-              <span class="status-pill status-active"><i></i> ACTIVE IN 2026</span>
-            </div>
-            <h3 class="phase-title">Foundation, Architecture &amp; Simulation</h3>
-            <p class="phase-desc">
-              Formalizing the ASCS architectural specification, establishing the digital twin kinematics pipeline, conducting algorithmic task-planning simulations, and publishing core research briefs.
-            </p>
+          <div class="sequence-stage-card corner-ticks">
+            <div class="stage-step-num">02 // SEQUENCE</div>
+            <div class="stage-name">POSITION</div>
+            <p class="stage-desc">Navigate robotic mobility platforms, dock structural nodes, position components, and align assembly fixtures.</p>
           </div>
-
-          <div class="roadmap-phase-item">
-            <div class="phase-meta">
-              <span class="phase-number">PHASE 02 · NEAR-TERM TARGET</span>
-              <span class="status-pill status-proposed"><i></i> PROPOSED (MONTHS 1–18)</span>
-            </div>
-            <h3 class="phase-title">Prototype-1 Ground Demonstrator</h3>
-            <p class="phase-desc">
-              Procuring multi-axis laboratory manipulators, implementing closed-loop machine vision metrology, building the supervisory ground control HUD, and proving end-to-end autonomous truss assembly.
-            </p>
+          <div class="sequence-stage-card corner-ticks">
+            <div class="stage-step-num">03 // SEQUENCE</div>
+            <div class="stage-name">PRINT</div>
+            <p class="stage-desc">Demonstrate additive manufacturing and feedstock handling for structural connectors, brackets, and test trusses.</p>
           </div>
-
-          <div class="roadmap-phase-item">
-            <div class="phase-meta">
-              <span class="phase-number">PHASE 03 · PROPOSED TARGET</span>
-              <span class="status-pill status-proposed"><i></i> PROPOSED (MONTHS 18–36)</span>
-            </div>
-            <h3 class="phase-title">Integrated In-Situ Manufacturing Cell</h3>
-            <p class="phase-desc">
-              Integrating additive manufacturing extruders with robotic handling, environmental chamber testing (thermal-vacuum simulation), and qualifying automated defect detection algorithms.
-            </p>
+          <div class="sequence-stage-card corner-ticks">
+            <div class="stage-step-num">04 // SEQUENCE</div>
+            <div class="stage-name">ASSEMBLE</div>
+            <p class="stage-desc">Position, join, lock, and integrate modular structural elements using multi-axis coordinated robotic end-effectors.</p>
           </div>
-
-          <div class="roadmap-phase-item">
-            <div class="phase-meta">
-              <span class="phase-number">PHASE 04 · PROPOSED TARGET</span>
-              <span class="status-pill status-proposed"><i></i> PROPOSED TARGET</span>
-            </div>
-            <h3 class="phase-title">Orbital Spaceflight Demonstration</h3>
-            <p class="phase-desc">
-              Partnering with commercial launch providers and space agencies to deploy an orbital tech-demo payload validating microgravity robotic manipulation and structural joining.
-            </p>
+          <div class="sequence-stage-card corner-ticks">
+            <div class="stage-step-num">05 // SEQUENCE</div>
+            <div class="stage-name">INSPECT</div>
+            <p class="stage-desc">Deploy machine-vision cameras, sensor arrays, and optical metrology to compare physical assemblies against digital twin tolerances.</p>
           </div>
-
-          <div class="roadmap-phase-item">
-            <div class="phase-meta">
-              <span class="phase-number">PHASE 05 · LONG-TERM TARGET</span>
-              <span class="status-pill status-proposed"><i></i> LONG-TERM TARGET</span>
-            </div>
-            <h3 class="phase-title">Commercial In-Space Assembly (ISAM)</h3>
-            <p class="phase-desc">
-              Providing commercial satellite servicing, robotic structural expansion, solar array refurbishment, and orbital infrastructure assembly under commercial aerospace contracts.
-            </p>
-          </div>
-
-          <div class="roadmap-phase-item">
-            <div class="phase-meta">
-              <span class="phase-number">PHASE 06 · MULTI-DECADE VISION</span>
-              <span class="status-pill status-proposed"><i></i> VISION</span>
-            </div>
-            <h3 class="phase-title">Autonomous Space Factory (ASF-01)</h3>
-            <p class="phase-desc">
-              Commissioning a modular, autonomous industrial station configured for deep-space resource refining, semiconductor crystal growth, and large-scale spacecraft assembly.
-            </p>
+          <div class="sequence-stage-card corner-ticks">
+            <div class="stage-step-num">06 // SEQUENCE</div>
+            <div class="stage-name">CORRECT</div>
+            <p class="stage-desc">Trigger AI-assisted replanning or ground-control supervisory recovery action whenever a geometric anomaly is flagged.</p>
           </div>
         </div>
 
-        <div style="margin-top: 30px; font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--color-muted-dim);">
-          TIMELINES AND TARGETS ARE PROPOSED ENGINEERING PROJECTIONS SUBJECT TO R&amp;D AND CAPITAL MILESTONES.
+        <div class="operational-modes-panel corner-ticks">
+          <div class="mode-item mode-normal">
+            <div class="mode-name">Normal Mode // Autonomous Construction</div>
+            <p class="mode-desc">Onboard AI robots execute planned assembly, joining, and metrology sequences independently without communication latency dependencies.</p>
+          </div>
+          <div class="mode-item mode-anomaly">
+            <div class="mode-name">Anomaly Mode // AI-Assisted Recovery</div>
+            <p class="mode-desc">If minor misalignment occurs, onboard computer vision calculates corrective trajectories and replans assembly steps autonomously.</p>
+          </div>
+          <div class="mode-item mode-critical">
+            <div class="mode-name">Critical Mode // Ground-Supervised Safe State</div>
+            <p class="mode-desc">For unresolvable variances, robotic units enter a safe holding state, transmitting full diagnostic telemetry to Earth mission control for evaluation.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 6: PUBLIC REGISTER & NEWS FEED -->
-    <section class="section-wrapper" id="news">
-      <div class="editorial-container">
-        <div class="section-header reveal">
-          <div class="section-kicker">
-            <span>07 / PUBLIC REGISTER</span> · TECHNICAL DISPATCHES &amp; COMPANY UPDATES
+    <!-- 04. SECTION 04: THE VINASTRA SPACE FACTORY -->
+    <section class="tech-section tech-section-alt" id="space-factory">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>04 / LONG-TERM VISION</span>
+        </div>
+        <h2 class="section-title">A FACTORY<br>BEYOND EARTH<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          A proposed modular, autonomous industrial platform designed to process resources, manufacture useful products, support spacecraft servicing, and expand future space infrastructure.
+        </p>
+
+        <div class="factory-hero-visual corner-ticks">
+          <img src="/color_img.jpeg" alt="Vinastra Aerospace Autonomous Space Factory modular rendering with solar arrays and processing modules" loading="lazy">
+          <div class="factory-visual-bar">
+            <span class="mono-meta">ASF-01 // MODULAR DEEP-SPACE INDUSTRIAL FACILITY CONCEPT</span>
+            <span class="tech-tag">PROPOSED LONG-TERM ARCHITECTURE</span>
           </div>
-          <h2 class="editorial-statement">
-            Engineering dispatches and <em>verified public disclosures.</em>
-          </h2>
-          <p class="lead" style="margin-top: 20px;">
-            Explore our latest technical architecture notes, public statements, and engineering milestone updates directly from the Vinastra dispatch register.
-          </p>
         </div>
 
-        <!-- News Feed Container (Hydrated by script.js from /api/news with static fallback) -->
-        <div class="news-cards-grid reveal" data-news-feed>
-          <article class="news-card">
-            <div>
-              <div class="news-meta">
-                <span>01 / DISPATCH</span> · <span>2026-03-15</span>
-              </div>
-              <h3 class="news-title">ASCS Architectural Specification Published</h3>
-              <p class="news-desc">
-                Vinastra Aerospace completes the foundational architecture documentation for the Autonomous Space Construction System, formalizing robotics and digital-twin control logic.
-              </p>
-            </div>
-            <a class="news-link" href="/news/">READ FULL REGISTER <span>→</span></a>
-          </article>
-
-          <article class="news-card">
-            <div>
-              <div class="news-meta">
-                <span>02 / R&amp;D NOTE</span> · <span>2026-02-28</span>
-              </div>
-              <h3 class="news-title">Prototype-1 Ground Demonstrator Roadmap Finalized</h3>
-              <p class="news-desc">
-                Detailed 18-month engineering plan established for the ground-based robotics testbed validating autonomous CAD-to-structure assembly and machine vision inspection.
-              </p>
-            </div>
-            <a class="news-link" href="/news/">READ FULL REGISTER <span>→</span></a>
-          </article>
-
-          <article class="news-card">
-            <div>
-              <div class="news-meta">
-                <span>03 / BRIEFING</span> · <span>2026-01-10</span>
-              </div>
-              <h3 class="news-title">Seed Capital Brief: ₹2.5 Cr Target for 18-Month Runway</h3>
-              <p class="news-desc">
-                Vinastra releases its investor memorandum outlining allocation of proceeds for hardware procurement, simulation infrastructure, and core engineering talent.
-              </p>
-            </div>
-            <a class="news-link" href="/news/">READ FULL REGISTER <span>→</span></a>
-          </article>
+        <div class="factory-capabilities-grid">
+          <div class="capability-card corner-ticks">
+            <div class="capability-card-num">01 // CAPABILITY</div>
+            <h4>In-Space Manufacturing</h4>
+            <p>Robotic 3D printing and advanced additive manufacturing of structural components, replacement parts, tooling, and large space infrastructure elements.</p>
+          </div>
+          <div class="capability-card corner-ticks">
+            <div class="capability-card-num">02 // CAPABILITY</div>
+            <h4>Asteroid Resource Processing</h4>
+            <p>Receiving materials from future asteroid-mining missions, separating mineral volatiles, and refining usable metals into manufacturing feedstock.</p>
+          </div>
+          <div class="capability-card corner-ticks">
+            <div class="capability-card-num">03 // CAPABILITY</div>
+            <h4>Spacecraft Servicing</h4>
+            <p>Robotic inspection, modular component replacement, structural refurbishment, and life-extension servicing for satellites and interplanetary transfer vehicles.</p>
+          </div>
+          <div class="capability-card corner-ticks">
+            <div class="capability-card-num">04 // CAPABILITY</div>
+            <h4>Logistics &amp; Fuel Depot</h4>
+            <p>Exploring deep-space propellant storage, cryogenic fuel transfer infrastructure, standardized docking interfaces, and orbital logistics coordination.</p>
+          </div>
+          <div class="capability-card corner-ticks">
+            <div class="capability-card-num">05 // CAPABILITY</div>
+            <h4>Space R&amp;D Laboratories</h4>
+            <p>Enclosed pressurized and unpressurized laboratories supporting microgravity materials science, crystal growth, and autonomous robotics validation.</p>
+          </div>
+          <div class="capability-card corner-ticks">
+            <div class="capability-card-num">06 // CAPABILITY</div>
+            <h4>Moon &amp; Mars Mission Support</h4>
+            <p>Supplying manufactured structural trusses, replacement components, and logistics payloads for lunar base outposts and Martian transit architectures.</p>
+          </div>
+          <div class="capability-card corner-ticks">
+            <div class="capability-card-num">07 // CAPABILITY</div>
+            <h4>Autonomous Infrastructure</h4>
+            <p>Deploying coordinated robotic builder platforms to assemble additional factory modules and expand orbital platforms without human EVA risks.</p>
+          </div>
+          <div class="capability-card corner-ticks">
+            <div class="capability-card-num">08 // CAPABILITY</div>
+            <h4>Future Commercial Infrastructure</h4>
+            <p>Exploring commercial research platforms, orbital manufacturing services, and industrial infrastructure support for future space economy participants.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 7: CAPITAL BRIEF & MARKET HORIZON -->
-    <section class="section-wrapper" id="investors">
-      <div class="editorial-container">
-        <div class="section-header reveal">
-          <div class="section-kicker">
-            <span>08 / CAPITAL BRIEF</span> · SEED OPPORTUNITY &amp; MARKET HORIZON
-          </div>
-          <h2 class="editorial-statement">
-            A focused beachhead in the <em>$1.8 Trillion space economy.</em>
-          </h2>
-          <p class="lead" style="margin-top: 20px;">
-            The commercialization of launch vehicles has lowered orbital access costs, creating unprecedented demand for in-space servicing, assembly, and manufacturing (ISAM). Vinastra is positioning itself at the foundational robotics and software infrastructure layer.
-          </p>
+    <!-- 05. SECTION 05: RESOURCE-TO-PRODUCT ECONOMY -->
+    <section class="tech-section" id="economy">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>05 / SPACE RESOURCE ECONOMY</span>
+        </div>
+        <h2 class="section-title">FROM ASTEROID DUST<br>TO INDUSTRIAL FEEDSTOCK<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          The long-term vision explores how extraterrestrial resources could become useful feedstock for manufacturing infrastructure in space.
+        </p>
+
+        <div class="resource-chain-hero corner-ticks">
+          <img src="/public/deck/slide-7.jpg" alt="Asteroid mining resource extraction to manufacturing products flow diagram" loading="lazy">
         </div>
 
-        <div class="market-stat-banner reveal">
+        <div class="resource-stages-grid">
+          <div class="resource-stage-item corner-ticks">
+            <div class="resource-stage-num">STAGE 01</div>
+            <div class="resource-stage-title">Asteroid Resources</div>
+            <p class="resource-stage-desc">In-situ material prospecting and surface extraction by proposed future robotic mining systems.</p>
+          </div>
+          <div class="resource-stage-item corner-ticks">
+            <div class="resource-stage-num">STAGE 02</div>
+            <div class="resource-stage-title">Collection</div>
+            <p class="resource-stage-desc">Autonomous containment, preparation, and mass stabilization of recovered asteroid regolith.</p>
+          </div>
+          <div class="resource-stage-item corner-ticks">
+            <div class="resource-stage-num">STAGE 03</div>
+            <div class="resource-stage-title">Transport</div>
+            <p class="resource-stage-desc">Transfer of resource containers to future orbital refining and factory processing modules.</p>
+          </div>
+          <div class="resource-stage-item corner-ticks">
+            <div class="resource-stage-num">STAGE 04</div>
+            <div class="resource-stage-title">Purification</div>
+            <p class="resource-stage-desc">Sorting, magnetic separation, thermal extraction of volatiles, and metal refining into feedstock.</p>
+          </div>
+          <div class="resource-stage-item corner-ticks">
+            <div class="resource-stage-num">STAGE 05</div>
+            <div class="resource-stage-title">Manufacturing</div>
+            <p class="resource-stage-desc">Robotic wire-arc additive manufacturing, cold-spray printing, and precision CNC fabrication.</p>
+          </div>
+          <div class="resource-stage-item corner-ticks">
+            <div class="resource-stage-num">STAGE 06</div>
+            <div class="resource-stage-title">Industrial Products</div>
+            <p class="resource-stage-desc">Integration into spacecraft trusses, solar supports, orbital habitats, and deep-space infrastructure.</p>
+          </div>
+        </div>
+
+        <div class="resource-milestone-callout corner-ticks">
+          <strong>DEVELOPMENT STRATEGY MILESTONE:</strong> First milestone: demonstrate autonomous ground construction capability through ASCS Prototype-1. Later milestone: investigate integrating space-resource feedstock into the modular factory.
+        </div>
+      </div>
+    </section>
+
+    <!-- 06. SECTION 06: PROTOTYPE-1 AND RESEARCH -->
+    <section class="tech-section tech-section-alt" id="prototype">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>06 / ENGINEERING VALIDATION</span>
+        </div>
+        <h2 class="section-title">PROVE IT ON EARTH.<br>PREPARE FOR SPACE<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          Before attempting a space mission, Vinastra plans to develop a ground-based demonstrator of its Autonomous Space Construction System.
+        </p>
+
+        <div class="prototype-showcase-grid">
+          <div class="prototype-image-box corner-ticks">
+            <img src="/public/deck/slide-4.jpg" alt="Vinastra engineering laboratory for Prototype-1 ASCS testing" loading="lazy">
+          </div>
+
+          <div class="prototype-objectives-list">
+            <div class="objective-item corner-ticks">
+              <h4>Autonomous Robotic Assembly</h4>
+              <p>Demonstrate coordinated multi-axis robotic positioning, mechanical fastening, and joining of modular structural space elements.</p>
+            </div>
+            <div class="objective-item corner-ticks">
+              <h4>Robotic Additive Manufacturing</h4>
+              <p>Demonstrate 3D printing of structural test components and custom brackets directly integrated into the modular truss framework.</p>
+            </div>
+            <div class="objective-item corner-ticks">
+              <h4>Digital-Twin Verification</h4>
+              <p>Compare the physical ground assembly against the approved digital blueprint in real time with laser metrology and optical sensors.</p>
+            </div>
+            <div class="objective-item corner-ticks">
+              <h4>Closed-Loop Fault Recovery</h4>
+              <p>Detect intentional mechanical misalignment, trigger automated computer vision replanning, and execute corrective joining workflows.</p>
+            </div>
+            <div class="objective-item corner-ticks">
+              <h4>Mission Control Console</h4>
+              <p>Build a comprehensive ground-based monitoring and supervision interface for live telemetry, construction tracking, and human intervention.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07. SECTION 07: DIGITAL TWIN AND MISSION CONTROL -->
+    <section class="tech-section" id="mission-control">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>07 / INTELLIGENT OPERATIONS</span>
+        </div>
+        <h2 class="section-title">AUTONOMOUS BY DESIGN.<br>SUPERVISED FROM EARTH<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          Autonomous systems handle time-critical operations. Ground control supervises mission objectives, reviews exceptions, and provides recovery instructions when communication conditions permit.
+        </p>
+
+        <div class="mission-console-container corner-ticks">
+          <div class="console-header-bar">
+            <span class="mono-meta">ASCS MISSION OPERATIONS CONSOLE // SIMULATED TELEMETRY</span>
+            <div class="console-status-live">
+              <span class="live-pulse"></span>
+              <span>SIMULATION ACTIVE // 100% NOMINAL</span>
+            </div>
+          </div>
+
+          <div class="console-main-layout">
+            <div class="console-viewport">
+              <img src="/public/deck/slide-12.jpg" alt="Vinastra Mission Control Operations HUD with multi-screen orbital telemetry" loading="lazy">
+              <div class="viewport-hud-overlay">
+                <div class="hud-telemetry-tag">DIGITAL TWIN KINEMATIC MODEL: ACTIVE</div>
+                <div class="hud-coordinates">MODULE: TRUSS-04B // TOLERANCE: ±0.18mm // CYCLE: NOMINAL</div>
+              </div>
+            </div>
+
+            <div class="console-sidebar">
+              <div class="sidebar-data-block">
+                <div class="sidebar-label">AUTONOMY SUBSYSTEM STATUS</div>
+                <div class="sidebar-value">AI PLANNER: NOMINAL (AUTONOMOUS)</div>
+              </div>
+              <div class="sidebar-data-block">
+                <div class="sidebar-label">METROLOGY TOLERANCE</div>
+                <div class="sidebar-value">0.12 mm (TARGET: &lt; 0.50 mm)</div>
+              </div>
+              <div class="sidebar-data-block">
+                <div class="sidebar-label">GROUND LINK LATENCY BUFFER</div>
+                <div class="sidebar-value">3.8 SEC (DEEP-SPACE SIMULATOR)</div>
+              </div>
+              <div class="sidebar-data-block">
+                <div class="sidebar-label">LIVE EVENT LOG</div>
+                <div class="sidebar-telemetry-log">
+                  &gt; [00:14:22] Blueprint loaded: TRUSS-04B<br>
+                  &gt; [00:14:28] Robotic Arm 1 locked node A<br>
+                  &gt; [00:14:35] Metrology scan: 0.12mm variance<br>
+                  &gt; [00:14:40] Sequence step 04 complete<br>
+                  &gt; [00:14:42] Next sequence: WELD-INSPECT
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08. SECTION 08: DEVELOPMENT ROADMAP -->
+    <section class="tech-section tech-section-alt" id="roadmap">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>08 / ROADMAP</span>
+        </div>
+        <h2 class="section-title">FROM RESEARCH<br>TO SPACE INFRASTRUCTURE<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          Technology milestones that translate the long-term vision into an investable, staged engineering progression.
+        </p>
+
+        <div class="roadmap-phases-container">
+          <div class="roadmap-phase-card corner-ticks">
+            <div class="phase-number">PHASE 01 // PRESENT</div>
+            <div class="phase-title">Concept &amp; Feasibility</div>
+            <p class="phase-desc">Space factory concept design, feasibility studies, AI robotics R&amp;D, preliminary CAD models, and kinematic simulation.</p>
+          </div>
+          <div class="roadmap-phase-card corner-ticks">
+            <div class="phase-number">PHASE 02 // PROTOTYPES</div>
+            <div class="phase-title">Ground Prototypes</div>
+            <p class="phase-desc">Robotic assembly systems, autonomous optical inspection, additive manufacturing test-cells, and control software.</p>
+          </div>
+          <div class="roadmap-phase-card corner-ticks">
+            <div class="phase-number">PHASE 03 // VALIDATION</div>
+            <div class="phase-title">Technology Validation</div>
+            <p class="phase-desc">Integrated ground demonstrations, environmental testing, thermal-vacuum simulations, and potential orbital payload planning.</p>
+          </div>
+          <div class="roadmap-phase-card corner-ticks">
+            <div class="phase-number">PHASE 04 // INFRASTRUCTURE</div>
+            <div class="phase-title">Initial Space Infrastructure</div>
+            <p class="phase-desc">Investigate robotic assembly and small-scale manufacturing demonstrations on partner orbital test flights.</p>
+          </div>
+          <div class="roadmap-phase-card corner-ticks">
+            <div class="phase-number">PHASE 05 // EXPANSION</div>
+            <div class="phase-title">Industrial Expansion</div>
+            <p class="phase-desc">Explore resource processing, larger modular factory platforms, satellite servicing, and space logistics hubs.</p>
+          </div>
+          <div class="roadmap-phase-card corner-ticks">
+            <div class="phase-number">PHASE 06 // DEEP-SPACE</div>
+            <div class="phase-title">Deep-Space Factory</div>
+            <p class="phase-desc">Pursue scalable autonomous manufacturing and industrial infrastructure beyond Earth orbit.</p>
+          </div>
+        </div>
+
+        <!-- Mapped Investor Milestones -->
+        <div class="milestones-deck-grid">
+          <div class="milestone-year-card corner-ticks">
+            <div class="milestone-year">2026</div>
+            <div class="milestone-focus">Architecture &amp; Team</div>
+            <p class="milestone-details">ASCS concept, preliminary CAD assets, Research Fellowship setup, and academic/industry partner mapping.</p>
+          </div>
+          <div class="milestone-year-card corner-ticks">
+            <div class="milestone-year">2027</div>
+            <div class="milestone-focus">Ground Demonstrator</div>
+            <p class="milestone-details">Factory-module autonomous construction demonstrator proving robotic positioning and joining.</p>
+          </div>
+          <div class="milestone-year-card corner-ticks">
+            <div class="milestone-year">2028</div>
+            <div class="milestone-focus">Integrated Cell</div>
+            <p class="milestone-details">Robotic 3D printing, closed-loop optical metrology, automated replanning, and supervisory mission UI.</p>
+          </div>
+          <div class="milestone-year-card corner-ticks">
+            <div class="milestone-year">2029</div>
+            <div class="milestone-focus">Relevant Testing</div>
+            <p class="milestone-details">Thermal, vacuum, and analog environment testing; partner payload flight proposals.</p>
+          </div>
+          <div class="milestone-year-card corner-ticks">
+            <div class="milestone-year">2030+</div>
+            <div class="milestone-focus">Space Demonstration</div>
+            <p class="milestone-details">Small-scale in-space robotic construction, structural inspection, and modular assembly experiment.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-disclaimer corner-ticks">
+          <strong>DEVELOPMENT NOTE:</strong> Timelines and implementation depend on engineering validation, funding, strategic partnerships, mission approvals, and feasibility studies.
+        </div>
+      </div>
+    </section>
+
+    <!-- 09. SECTION 09: MARKET AND BUSINESS MODEL -->
+    <section class="tech-section" id="market">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>09 / INDUSTRIAL OPPORTUNITY</span>
+        </div>
+        <h2 class="section-title">ENABLING THE<br>NEXT SPACE ECONOMY<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          Vinastra initiates commercial operations through a focused beachhead in space robotics and digital-twin control systems before scaling toward orbital industrial infrastructure.
+        </p>
+
+        <div class="market-context-banner corner-ticks">
           <div>
-            <div class="market-figure">$630B</div>
-            <div class="market-label">Global Space Economy (2023) — Source: WEF / McKinsey</div>
+            <div class="macro-stat-number">30B</div>
+            <div class="macro-stat-label">GLOBAL SPACE ECONOMY (2023 BASELINE)</div>
           </div>
           <div>
-            <div class="market-figure">$1.8T</div>
-            <div class="market-label">Projected Global Space Economy by 2035</div>
+            <div class="macro-stat-number">.8T</div>
+            <div class="macro-stat-label">PROJECTED SPACE ECONOMY BY 2035 (WEF / MCKINSEY)</div>
           </div>
         </div>
 
-        <div class="editorial-split reveal" style="margin-top: 50px;">
-          <div style="background: rgba(16, 23, 34, 0.7); border: 1px solid var(--color-line); border-radius: var(--radius-sm); padding: 36px;">
-            <div style="font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px;">
-              PROPOSED SEED CAPITAL ASK
-            </div>
-            <h3 style="font-size: 1.75rem; letter-spacing: -0.03em; margin-bottom: 16px;">
-              ₹2.5 Cr / 18-Month Runway
-            </h3>
-            <p style="font-size: 0.9375rem; line-height: 1.65; color: var(--color-muted); margin-bottom: 24px;">
-              Structured to fund the completion of the Prototype-1 Ground Demonstrator, establish the physical robotics lab in India, acquire precision optical metrology hardware, and prepare for institutional aerospace grant programs.
-            </p>
-            <a class="action action-accent" href="/investors/">
-              VIEW INVESTOR DOSSIER <span class="action-arrow">↗</span>
-            </a>
+        <div class="market-beachhead-grid">
+          <div class="beachhead-card corner-ticks">
+            <h4>Space Robotics</h4>
+            <p>High-dexterity robotic manipulators, autonomous docking end-effectors, component joining tools, and robotic servicing systems.</p>
           </div>
+          <div class="beachhead-card corner-ticks">
+            <h4>ISAM Systems</h4>
+            <p>In-space servicing, assembly, and manufacturing platforms supporting satellite life-extension and modular spacecraft assembly.</p>
+          </div>
+          <div class="beachhead-card corner-ticks">
+            <h4>Digital Twin &amp; Autonomy</h4>
+            <p>Autonomous task planning, kinematic simulation, metrology inspection software, and ground mission supervision suites.</p>
+          </div>
+          <div class="beachhead-card corner-ticks">
+            <h4>Space Resources</h4>
+            <p>Long-term extraterrestrial mineral processing, purification technology, and space-based manufacturing feedstock systems.</p>
+          </div>
+        </div>
 
-          <div style="background: rgba(16, 23, 34, 0.7); border: 1px solid var(--color-line); border-radius: var(--radius-sm); padding: 36px;">
-            <div style="font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px;">
-              USE OF PROCEEDS ALLOCATION
-            </div>
-            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; font-family: var(--font-mono); font-size: 0.8125rem;">
-              <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-line-subtle); padding-bottom: 8px;">
-                <span style="color: var(--color-text);">35% Hardware &amp; Robotic Manipulators</span>
-                <span style="color: var(--color-accent);">₹87.5 L</span>
-              </li>
-              <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-line-subtle); padding-bottom: 8px;">
-                <span style="color: var(--color-text);">25% AI, Software &amp; Digital Twin Sim</span>
-                <span style="color: var(--color-accent);">₹62.5 L</span>
-              </li>
-              <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-line-subtle); padding-bottom: 8px;">
-                <span style="color: var(--color-text);">20% Core Engineering Talent (Robotics / AI)</span>
-                <span style="color: var(--color-accent);">₹50.0 L</span>
-              </li>
-              <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-line-subtle); padding-bottom: 8px;">
-                <span style="color: var(--color-text);">10% Laboratory Testbeds &amp; Sensors</span>
-                <span style="color: var(--color-accent);">₹25.0 L</span>
-              </li>
-              <li style="display: flex; justify-content: space-between;">
-                <span style="color: var(--color-text);">10% IP Filings, Legal &amp; Operations</span>
-                <span style="color: var(--color-accent);">₹25.0 L</span>
-              </li>
+        <div class="business-stages-grid">
+          <div class="business-stage-box corner-ticks">
+            <div class="business-stage-tag">NOW // PHASE 1</div>
+            <div class="business-stage-title">R&amp;D &amp; Prototyping</div>
+            <ul class="business-stage-items">
+              <li>Research &amp; development contracts</li>
+              <li>Ground prototype development</li>
+              <li>Simulation software licensing</li>
+            </ul>
+          </div>
+          <div class="business-stage-box corner-ticks">
+            <div class="business-stage-tag">NEXT // PHASE 2</div>
+            <div class="business-stage-title">Proprietary Tech</div>
+            <ul class="business-stage-items">
+              <li>Robotic construction subsystems</li>
+              <li>Digital-twin autonomy platform</li>
+              <li>Construction-control software</li>
+            </ul>
+          </div>
+          <div class="business-stage-box corner-ticks">
+            <div class="business-stage-tag">SPACE DEMO // PHASE 3</div>
+            <div class="business-stage-title">Partnerships</div>
+            <ul class="business-stage-items">
+              <li>Orbital payload partnerships</li>
+              <li>ISAM mission collaborations</li>
+              <li>Joint technology testbeds</li>
+            </ul>
+          </div>
+          <div class="business-stage-box corner-ticks">
+            <div class="business-stage-tag">LONG TERM // PHASE 4</div>
+            <div class="business-stage-title">Factory Services</div>
+            <ul class="business-stage-items">
+              <li>In-space contract manufacturing</li>
+              <li>Asteroid resource processing</li>
+              <li>Spacecraft servicing &amp; logistics</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 8: CLOSING CALLOUT CTA -->
-    <section class="closing-cta" id="collaborate">
-      <div class="cta-bg" data-parallax="0.08">
-        <img src="/public/nasa-rocket-launch.webp" alt="High-thrust rocket launch ascending into the atmosphere, representing the expansion of human aerospace capability" loading="lazy">
-      </div>
-      <div class="cta-shade" aria-hidden="true"></div>
-      <div class="cta-inner reveal">
-        <div class="section-kicker">
-          <span>09 / PARTNERSHIPS &amp; COLLABORATION</span>
+    <!-- 10. SECTION 10: RESEARCH, COLLABORATIONS, AND TALENT -->
+    <section class="tech-section tech-section-alt" id="research">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>10 / RESEARCH ECOSYSTEM</span>
         </div>
-        <h2 class="cta-title">
-          BUILD THE FUTURE OF<br>
-          <span style="color: var(--color-accent);">SPACE INFRASTRUCTURE.</span>
-        </h2>
-        <p class="cta-desc">
-          We invite academic research departments, national space labs, hardware suppliers, and forward-looking deep-tech investors to join us in turning autonomous space construction from thesis into operational reality.
+        <h2 class="section-title">ENGINEERING THE<br>FUTURE TOGETHER<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          Building autonomous space infrastructure requires interdisciplinary engineering, institutional collaboration, and world-class DeepTech talent.
         </p>
-        <div style="display: flex; justify-content: center; gap: 18px; flex-wrap: wrap;">
-          <a class="action action-primary" href="/contact/">
-            INITIATE PARTNERSHIP DISCUSSION <span class="action-arrow">↗</span>
-          </a>
-          <a class="action action-line" href="/collaborate/">
-            VIEW COLLABORATION PATHWAYS <span class="action-arrow">→</span>
-          </a>
+
+        <div class="research-split-layout">
+          <div>
+            <div class="mono-meta" style="margin-bottom: 16px;">RESEARCH DOMAINS // INTERDISCIPLINARY CORES</div>
+            <div class="research-domains-grid">
+              <div class="domain-pill-card corner-ticks">
+                <span class="domain-indicator"></span>
+                <span class="domain-name">Autonomous Robotics &amp; Mechatronics</span>
+              </div>
+              <div class="domain-pill-card corner-ticks">
+                <span class="domain-indicator"></span>
+                <span class="domain-name">AI &amp; Closed-Loop Machine Vision</span>
+              </div>
+              <div class="domain-pill-card corner-ticks">
+                <span class="domain-indicator"></span>
+                <span class="domain-name">Mechanical, CAD &amp; Structural CAE</span>
+              </div>
+              <div class="domain-pill-card corner-ticks">
+                <span class="domain-indicator"></span>
+                <span class="domain-name">Embedded Systems &amp; Real-Time Control</span>
+              </div>
+              <div class="domain-pill-card corner-ticks">
+                <span class="domain-indicator"></span>
+                <span class="domain-name">Additive Manufacturing &amp; Materials</span>
+              </div>
+              <div class="domain-pill-card corner-ticks">
+                <span class="domain-indicator"></span>
+                <span class="domain-name">Space Systems &amp; Mission Architecture</span>
+              </div>
+              <div class="domain-pill-card corner-ticks">
+                <span class="domain-indicator"></span>
+                <span class="domain-name">Digital Twin &amp; Physics Simulation</span>
+              </div>
+              <div class="domain-pill-card corner-ticks">
+                <span class="domain-indicator"></span>
+                <span class="domain-name">Vinastra Research Fellowship</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="mono-meta" style="margin-bottom: 16px;">COLLABORATION PATHWAYS</div>
+            <div class="collaboration-tracks-list">
+              <div class="collab-track-card corner-ticks">
+                <h4>Universities &amp; Research Labs</h4>
+                <p>Robotics joint testing, computational simulations, student research, and peer-reviewed technical publications.</p>
+              </div>
+              <div class="collab-track-card corner-ticks">
+                <h4>Space Agencies &amp; Programs</h4>
+                <p>Technology-development grant programs, ISAM mission studies, and space autonomy validation architectures.</p>
+              </div>
+              <div class="collab-track-card corner-ticks">
+                <h4>Industrial Technology Partners</h4>
+                <p>Hardware suppliers in robotics, sensors, wire-arc additive manufacturing, and space-grade embedded systems.</p>
+              </div>
+              <div class="collab-track-card corner-ticks">
+                <h4>Incubators &amp; Investors</h4>
+                <p>Seed capital, aerospace advisory, customer discovery, and prototype validation acceleration.</p>
+              </div>
+            </div>
+            <div style="margin-top: 24px;">
+              <a href="/collaborate/" class="btn-aphelion-primary">PARTNER WITH VINASTRA →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. SECTION 11: DEFENSIBILITY AND TECHNOLOGY DEVELOPMENT -->
+    <section class="tech-section" id="defensibility">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>11 / ENGINEERING ADVANTAGE</span>
+        </div>
+        <h2 class="section-title">BUILD THE INTELLIGENCE<br>BEHIND SPACE CONSTRUCTION<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          Vinastra focuses defensibility in the most complex, foundational domain: autonomous industrial construction and verified robotic assembly in space.
+        </p>
+
+        <div class="defensibility-pillars-grid">
+          <div class="defensibility-card corner-ticks">
+            <div class="defensibility-num">01 // ADVANTAGE</div>
+            <h4>Control Software</h4>
+            <p>Proprietary mission logic, dynamic task sequencing, autonomous replanning algorithms, and robotic fleet coordination protocols.</p>
+          </div>
+          <div class="defensibility-card corner-ticks">
+            <div class="defensibility-num">02 // ADVANTAGE</div>
+            <h4>Digital Twin</h4>
+            <p>Sub-millimeter blueprint-to-reality verification engines, structural progress verification, and anomaly classification models.</p>
+          </div>
+          <div class="defensibility-card corner-ticks">
+            <div class="defensibility-num">03 // ADVANTAGE</div>
+            <h4>Robotic Procedures</h4>
+            <p>Validated additive manufacturing toolpaths, modular component positioning routines, and automated fault-recovery sequences.</p>
+          </div>
+          <div class="defensibility-card corner-ticks">
+            <div class="defensibility-num">04 // ADVANTAGE</div>
+            <h4>Experimental Data</h4>
+            <p>Empirical ground prototype datasets serving as the foundation for training future autonomous deep-space construction models.</p>
+          </div>
+          <div class="defensibility-card corner-ticks">
+            <div class="defensibility-num">05 // ADVANTAGE</div>
+            <h4>Planned IP Portfolio</h4>
+            <p>Developing patentable robotic joining mechanisms, novel end-effector interfaces, and proprietary construction system architectures.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. SECTION 12: INVESTMENT AND PROTOTYPE FUNDING -->
+    <section class="tech-section tech-section-alt" id="investors">
+      <div class="tech-container">
+        <div class="section-eyebrow">
+          <span class="eyebrow-indicator"></span>
+          <span>12 / INVESTMENT OPPORTUNITY</span>
+        </div>
+        <h2 class="section-title">FUND THE FIRST PROOF OF<br>AUTONOMOUS CONSTRUCTION<span class="orange-dot">.</span></h2>
+        <p class="section-subtitle">
+          Proposed seed capital raise to build and validate ASCS Prototype-1 on Earth, delivering investor-grade technical proof.
+        </p>
+
+        <div class="investment-hero-banner corner-ticks">
+          <div>
+            <div class="invest-ask-headline">₹2.5 Cr Seed Raise</div>
+            <div class="invest-runway-text">18-MONTH RUNWAY // PROTOTYPE-1 DEMONSTRATOR</div>
+            <p class="invest-objective-p">
+              Deliver a validated ground-based ASCS Prototype-1 demonstrating autonomous assembly, additive 3D printing, and digital-twin verification, while preparing a partner-ready proposal for an initial in-space flight demonstration.
+            </p>
+          </div>
+          <div style="text-align: right;">
+            <a href="/investors/" class="btn-aphelion-primary" style="font-size: 0.8125rem; padding: 18px 32px;">DISCUSS INVESTMENT &amp; PARTNERSHIPS →</a>
+          </div>
+        </div>
+
+        <div class="allocation-bar-stack" title="Budget Allocation Bar">
+          <div class="alloc-seg-1" title="Hardware 35%"></div>
+          <div class="alloc-seg-2" title="AI & Software 25%"></div>
+          <div class="alloc-seg-3" title="Engineering Team 20%"></div>
+          <div class="alloc-seg-4" title="Testing 10%"></div>
+          <div class="alloc-seg-5" title="IP & Ops 10%"></div>
+        </div>
+
+        <div class="allocation-breakdown-grid">
+          <div class="alloc-item-card corner-ticks">
+            <div class="alloc-item-pct">35%</div>
+            <div class="alloc-item-title">Prototype Hardware</div>
+            <p class="alloc-item-desc">Robotic manipulators, mobile mobility base, optical/LiDAR sensor suites, additive printhead, and joining end-effectors.</p>
+          </div>
+          <div class="alloc-item-card corner-ticks">
+            <div class="alloc-item-pct">25%</div>
+            <div class="alloc-item-title">AI &amp; Software</div>
+            <p class="alloc-item-desc">Digital-twin platform, autonomous mission planner, closed-loop machine-vision metrology, and supervisory control HUD.</p>
+          </div>
+          <div class="alloc-item-card corner-ticks">
+            <div class="alloc-item-pct">20%</div>
+            <div class="alloc-item-title">Engineering Team</div>
+            <p class="alloc-item-desc">Core technical hires: robotics/mechatronics, AI/CV engineers, CAD/structural engineers, and specialized advisors.</p>
+          </div>
+          <div class="alloc-item-card corner-ticks">
+            <div class="alloc-item-pct">10%</div>
+            <div class="alloc-item-title">Testing &amp; Labs</div>
+            <p class="alloc-item-desc">Laboratory test fixtures, structural materials, environmental simulation testing, and partner flight preparations.</p>
+          </div>
+          <div class="alloc-item-card corner-ticks">
+            <div class="alloc-item-pct">10%</div>
+            <div class="alloc-item-title">IP &amp; Operations</div>
+            <p class="alloc-item-desc">Patent filings, legal compliance, engineering documentation, corporate governance, and company runway.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. SECTION 13: FINAL CALL TO ACTION -->
+    <section class="final-cta-section" id="contact">
+      <div class="cta-backdrop-layer" aria-hidden="true">
+        <img src="/public/deck/slide-2.jpg" alt="Orbital spacecraft facing sunrise Earth horizon" loading="lazy">
+      </div>
+      <div class="cta-content-wrapper">
+        <div class="section-eyebrow" style="justify-content: center;">
+          <span class="eyebrow-indicator"></span>
+          <span>13 / JOIN THE MISSION</span>
+        </div>
+        <h2 class="cta-headline">THE NEXT INDUSTRIAL<br>FRONTIER IS IN SPACE<span class="orange-dot">.</span></h2>
+        <p class="cta-supporting-text">
+          Join Vinastra in developing the autonomous construction technology that could enable future space factories.
+        </p>
+        <div class="cta-actions-row">
+          <a href="/contact/" class="btn-aphelion-primary">PARTNER WITH VINASTRA →</a>
+          <a href="#technology" class="btn-aphelion-secondary">EXPLORE OUR TECHNOLOGY</a>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Global Footer -->
-  <footer class="site-footer">
-    <div class="editorial-container">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <a class="brand" href="/home/" aria-label="Vinastra Aerospace home">
-            <img class="brand-symbol" src="/public/favicon_io/android-chrome-512x512.png" alt="Vinastra Aerospace emblem" width="32" height="32">
-            <span class="brand-text">
-              <span class="brand-name">VINASTRA</span>
-              <span class="brand-sub">AEROSPACE</span>
-            </span>
-          </a>
-          <p class="footer-desc">
-            Vinastra Aerospace Pvt. Ltd. is an early-stage Indian SpaceTech venture developing the Autonomous Space Construction System (ASCS) for assembling, maintaining, and manufacturing orbital infrastructure.
-          </p>
-          <span class="status-pill status-active">
-            <i></i> FOUNDED 2026 · HYDERABAD / BENGALURU, INDIA
-          </span>
-        </div>
+  <!-- Global Minimal Dark Footer -->
+  <footer class="site-footer" id="site-footer">
+    <div class="footer-inner-grid">
+      <div>
+        <div class="footer-brand-title">VINASTRA AEROSPACE</div>
+        <div class="footer-brand-tagline">AUTONOMOUS INDUSTRIAL INFRASTRUCTURE FOR SPACE</div>
+        <p class="footer-legal-desc">
+          VINASTRA AEROSPACE PRIVATE LIMITED is an early-stage Indian SpaceTech and DeepTech enterprise pioneering autonomous construction systems and modular factory architectures for deep space.
+        </p>
+      </div>
 
-        <div>
-          <div class="footer-heading">ARCHITECTURE</div>
-          <ul class="footer-links">
-            <li><a href="/home/">Overview</a></li>
-            <li><a href="/about/">About &amp; Mission</a></li>
-            <li><a href="/innovation/">ASCS Architecture</a></li>
-            <li><a href="/research/">Planned R&amp;D &amp; Roadmap</a></li>
-          </ul>
-        </div>
+      <div>
+        <div class="footer-column-heading">PLATFORM &amp; VISION</div>
+        <ul class="footer-links-list">
+          <li><a href="#technology">ASCS Platform</a></li>
+          <li><a href="#systems">Construction Flow</a></li>
+          <li><a href="#space-factory">Space Factory</a></li>
+          <li><a href="#economy">Resource Economy</a></li>
+          <li><a href="#prototype">Prototype-1 Lab</a></li>
+          <li><a href="#mission-control">Digital Twin HUD</a></li>
+        </ul>
+      </div>
 
-        <div>
-          <div class="footer-heading">ENGAGEMENT</div>
-          <ul class="footer-links">
-            <li><a href="/news/">Public Register</a></li>
-            <li><a href="/investors/">Seed Investor Brief</a></li>
-            <li><a href="/collaborate/">Collaboration Pathways</a></li>
-            <li><a href="/contact/">Direct Contact Channel</a></li>
-          </ul>
-        </div>
+      <div>
+        <div class="footer-column-heading">NAVIGATION</div>
+        <ul class="footer-links-list">
+          <li><a href="/about/">About Company</a></li>
+          <li><a href="/innovation/">ASCS Innovation</a></li>
+          <li><a href="/research/">R&amp;D Fellowship</a></li>
+          <li><a href="/news/">Public Register</a></li>
+          <li><a href="/investors/">Investor Brief</a></li>
+          <li><a href="/collaborate/">Collaborate</a></li>
+          <li><a href="/contact/">Contact Channel</a></li>
+        </ul>
+      </div>
 
-        <div>
-          <div class="footer-heading">COMMUNICATIONS</div>
-          <div class="footer-contact-item">
-            <span>OFFICIAL CONTACT EMAIL</span>
+      <div>
+        <div class="footer-column-heading">COMMUNICATIONS</div>
+        <div class="footer-contact-details">
+          <div class="footer-contact-row">
+            <span>FOUNDER &amp; CEO</span>
+            <strong>Vinay Jeedi</strong>
+          </div>
+          <div class="footer-contact-row">
+            <span>OFFICIAL INQUIRY EMAIL</span>
             <a href="mailto:thesparkofwisdom@gmail.com">thesparkofwisdom@gmail.com</a>
           </div>
-          <div class="footer-contact-item">
+          <div class="footer-contact-row">
+            <span>EXECUTIVE LINKEDIN</span>
+            <a href="https://www.linkedin.com/in/vinay-jeedi" target="_blank" rel="noopener">Vinay Jeedi Profile</a>
+          </div>
+          <div class="footer-contact-row">
             <span>HEADQUARTERS</span>
             <span style="color: var(--color-text);">Hyderabad / Bengaluru, India</span>
           </div>
-          <div class="footer-contact-item">
-            <span>MEDIA &amp; ASSETS CITATIONS</span>
-            <a href="/public/IMAGE-CREDITS.md" target="_blank" rel="noopener">Public Domain Credits</a>
-          </div>
         </div>
       </div>
+    </div>
 
-      <div class="footer-disclaimer">
-        <strong>HONEST POSITIONING &amp; DISCLOSURE STATEMENT:</strong> Vinastra Aerospace Pvt. Ltd. is an early-stage DeepTech startup founded in 2026 by Vinay Jeedi. Current work comprises conceptual design, mathematical modeling, simulation environments, and early-stage prototype planning. References to autonomous space factories, asteroid-resource processing, satellite servicing, and deep-space manufacturing represent proposed architectures and long-term research trajectories, not operational hardware. Vinastra does not claim active orbit assets, commercial customers, secured institutional venture funding, or formal government contracts.
-      </div>
+    <div class="footer-disclaimer-box">
+      <strong>HONEST POSITIONING &amp; DISCLOSURE STATEMENT:</strong> Vinastra Aerospace Pvt. Ltd. is an early-stage DeepTech startup founded in 2026 by Vinay Jeedi. Current work comprises conceptual design, mathematical modeling, simulation environments, and early-stage prototype planning. References to autonomous space factories, asteroid-resource processing, satellite servicing, and deep-space manufacturing represent proposed architectures and long-term research trajectories, not operational hardware. Vinastra does not claim active orbit assets, commercial customers, secured institutional venture funding, or formal government contracts.
+    </div>
 
-      <div class="footer-bottom">
-        <div>&copy; 2026 VINASTRA AEROSPACE PVT. LTD. ALL RIGHTS RESERVED.</div>
-        <div>
-          <a href="#top">BACK TO ORBIT TOP ↑</a>
-        </div>
+    <div class="footer-bottom-bar">
+      <div>&copy; <span id="copyright-year">2026</span> VINASTRA AEROSPACE PRIVATE LIMITED. ALL RIGHTS RESERVED.</div>
+      <div>
+        <a href="#top" style="color: var(--color-accent); text-decoration: none;">BACK TO TOP ↑</a>
       </div>
     </div>
   </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="/script.js"></script>
   <script type="module" src="/firebase-auth.js"></script>

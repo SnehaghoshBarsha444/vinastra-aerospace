@@ -1,6 +1,6 @@
 /**
  * VINASTRA AEROSPACE — INTERACTIVE SCRIPTS & INTEGRATION
- * Specification: design.md, skill.md, agents.md
+ * Specification: APHELION design system rebuild
  */
 
 // Determine current route
@@ -8,7 +8,9 @@ const currentPath = window.location.pathname.replace(/\/$/, '') || '/home';
 const routeName = window.location.pathname.split('/').filter(Boolean)[0] || 'home';
 document.body.dataset.route = routeName;
 
-// Populate Primary Navigation across all pages
+// Populate Primary Navigation across sub-pages only
+// On homepage, the nav is hardcoded with anchor links (#technology, #systems, etc.)
+// so we must NOT overwrite it with page-based links.
 const navItems = [
   ['Home', '/home/'],
   ['About', '/about/'],
@@ -20,14 +22,15 @@ const navItems = [
   ['Contact', '/contact/']
 ];
 
-document.querySelectorAll('.primary-nav').forEach((nav) => {
-  nav.innerHTML = navItems.map(([label, href]) => {
-    const isHome = (currentPath === '' || currentPath === '/home' || currentPath === '/') && (href === '/home/' || href === '/');
-    const isActive = isHome || currentPath === href.replace(/\/$/, '');
-    const activeClass = isActive ? ' class="active-route" aria-current="page"' : '';
-    return `<a href="${href}"${activeClass}>${label}</a>`;
-  }).join('');
-});
+if (routeName !== 'home') {
+  document.querySelectorAll('.primary-nav').forEach((nav) => {
+    nav.innerHTML = navItems.map(([label, href]) => {
+      const isActive = currentPath === href.replace(/\/$/, '');
+      const activeClass = isActive ? ' class="active-route" aria-current="page"' : '';
+      return `<a href="${href}"${activeClass}>${label}</a>`;
+    }).join('');
+  });
+}
 
 // Mobile Menu Toggle
 const menuToggle = document.querySelector('.menu-toggle');
@@ -46,6 +49,12 @@ if (menuToggle && primaryNav) {
       menuToggle.setAttribute('aria-expanded', 'false');
     });
   });
+}
+
+// Dynamic Copyright Year
+const copyrightYear = document.getElementById('copyright-year');
+if (copyrightYear) {
+  copyrightYear.textContent = new Date().getFullYear();
 }
 
 // Scroll Progress & Topbar Glassmorphism
@@ -191,6 +200,17 @@ if (subsystemButtons.length > 0 && panelTitle && panelDesc) {
   });
 }
 
+// ASCS Layer Card Interactive Highlight (new APHELION markup)
+const layerCards = document.querySelectorAll('.ascs-layer-card[data-layer]');
+if (layerCards.length > 0) {
+  layerCards.forEach((card) => {
+    card.addEventListener('click', () => {
+      layerCards.forEach((c) => c.classList.remove('active'));
+      card.classList.add('active');
+    });
+  });
+}
+
 // Space Factory Blueprint / Render Toggle
 const factoryToggleBtns = document.querySelectorAll('[data-factory-view]');
 const factoryImage = document.querySelector('#factory-main-image') || document.querySelector('[data-factory-image]');
@@ -222,12 +242,12 @@ if (factoryToggleBtns.length > 0 && factoryImage) {
 }
 
 // ==========================================================================
-// GSAP + SCROLLTRIGGER COORDINATED SCROLL EFFECTS
+// GSAP + SCROLLTRIGGER COORDINATED SCROLL EFFECTS (APHELION REBUILD)
 // ==========================================================================
 const initGSAPScrollEffects = () => {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReducedMotion) {
-    document.querySelectorAll('.reveal, .dossier-card, .bottleneck-card, .pillar-card, .news-card').forEach((el) => {
+    document.querySelectorAll('.reveal, .bottleneck-card, .capability-card, .defensibility-card, .beachhead-card, .ascs-layer-card, .sequence-stage-card, .resource-stage-item, .objective-item, .roadmap-phase-card, .milestone-year-card, .alloc-item-card, .business-stage-box, .domain-pill-card, .collab-track-card').forEach((el) => {
       el.classList.add('visible');
     });
     return;
@@ -237,15 +257,15 @@ const initGSAPScrollEffects = () => {
     gsap.registerPlugin(ScrollTrigger);
 
     // 1. Hero Coordinated Entrance Timeline
-    const heroCopy = document.querySelector('.hero-copy');
-    if (heroCopy) {
+    const heroLeft = document.querySelector('.hero-left-column');
+    if (heroLeft) {
       const heroTL = gsap.timeline({ defaults: { ease: 'power3.out' } });
       heroTL
-        .from('.hero-copy .eyebrow', { opacity: 0, y: 25, duration: 0.8, delay: 0.1 })
-        .from('.hero-headline', { opacity: 0, y: 35, duration: 1.0 }, '-=0.6')
-        .from('.hero-desc', { opacity: 0, y: 25, duration: 0.8 }, '-=0.6')
-        .from('.hero-actions .action', { opacity: 0, y: 20, stagger: 0.15, duration: 0.7 }, '-=0.5')
-        .from('.mission-console', { opacity: 0, x: 45, duration: 1.0, ease: 'power2.out' }, '-=0.8');
+        .from('.hero-eyebrow', { opacity: 0, y: 25, duration: 0.8, delay: 0.1 })
+        .from('.hero-main-headline', { opacity: 0, y: 35, duration: 1.0 }, '-=0.6')
+        .from('.hero-supporting-copy', { opacity: 0, y: 25, duration: 0.8 }, '-=0.6')
+        .from('.hero-cta-group a', { opacity: 0, y: 20, stagger: 0.15, duration: 0.7 }, '-=0.5')
+        .from('.hero-metrics-strip', { opacity: 0, y: 30, duration: 1.0, ease: 'power2.out' }, '-=0.8');
     }
 
     // 2. Parallax Synced with Scroll (Scrubbed)
@@ -266,18 +286,21 @@ const initGSAPScrollEffects = () => {
       });
     }
 
-    // 3. Staggered Reveals for Section Headers
-    document.querySelectorAll('.section-header').forEach((header) => {
-      const children = Array.from(header.children).filter((c) => !c.classList.contains('no-animate'));
-      if (children.length > 0) {
-        gsap.from(children, {
+    // 3. Staggered Reveals for Section Eyebrows & Titles
+    document.querySelectorAll('.tech-section .tech-container, .final-cta-section .cta-content-wrapper').forEach((container) => {
+      const eyebrow = container.querySelector('.section-eyebrow');
+      const title = container.querySelector('.section-title') || container.querySelector('.cta-headline');
+      const subtitle = container.querySelector('.section-subtitle') || container.querySelector('.cta-supporting-text');
+      const targets = [eyebrow, title, subtitle].filter(Boolean);
+      if (targets.length > 0) {
+        gsap.from(targets, {
           opacity: 0,
           y: 28,
           stagger: 0.14,
           duration: 0.8,
           ease: 'power2.out',
           scrollTrigger: {
-            trigger: header,
+            trigger: container,
             start: 'top 85%',
             toggleActions: 'play none none none'
           }
@@ -285,12 +308,22 @@ const initGSAPScrollEffects = () => {
       }
     });
 
-    // 4. Staggered Card Reveals (Dossiers, Bottlenecks, Pillars, News)
+    // 4. Staggered Card Reveals for all APHELION grid sections
     const cardGridSelectors = [
       '.bottleneck-grid',
-      '.dossier-grid',
-      '.pillars-grid',
-      '.news-grid',
+      '.ascs-exploded-stack',
+      '.construction-sequence-grid',
+      '.factory-capabilities-grid',
+      '.resource-stages-grid',
+      '.prototype-objectives-list',
+      '.roadmap-phases-container',
+      '.milestones-deck-grid',
+      '.market-beachhead-grid',
+      '.business-stages-grid',
+      '.research-domains-grid',
+      '.collaboration-tracks-list',
+      '.defensibility-pillars-grid',
+      '.allocation-breakdown-grid',
       '.console-telemetry-grid',
       '.ascs-subsystems-list',
       '.timeline-grid',
@@ -317,8 +350,8 @@ const initGSAPScrollEffects = () => {
       });
     });
 
-    // 5. Timeline-driven sequence: ASCS Architecture Section
-    const ascsSection = document.querySelector('#architecture') || document.querySelector('.ascs-architecture-section');
+    // 5. Timeline-driven sequence: ASCS Technology Section
+    const ascsSection = document.querySelector('#technology') || document.querySelector('#architecture') || document.querySelector('.ascs-architecture-section');
     if (ascsSection) {
       const archTL = gsap.timeline({
         scrollTrigger: {
@@ -328,12 +361,70 @@ const initGSAPScrollEffects = () => {
         }
       });
       archTL
-        .from('.ascs-nav-header', { opacity: 0, y: 20, duration: 0.6 })
-        .from('.ascs-subsystem-btn', { opacity: 0, x: -25, stagger: 0.08, duration: 0.5 }, '-=0.3')
-        .from('.ascs-panel-detail', { opacity: 0, scale: 0.98, duration: 0.7, ease: 'power2.out' }, '-=0.4');
+        .from('.ascs-architecture-wrapper', { opacity: 0, y: 20, duration: 0.6 })
+        .from('.ascs-layer-card', { opacity: 0, x: -25, stagger: 0.08, duration: 0.5 }, '-=0.3')
+        .from('.ascs-visual-side', { opacity: 0, scale: 0.98, duration: 0.7, ease: 'power2.out' }, '-=0.4');
     }
 
-    // 6. Synchronized Scroll Progress Bar
+    // 6. Mission Control Console entrance
+    const missionSection = document.querySelector('#mission-control');
+    if (missionSection) {
+      const missionTL = gsap.timeline({
+        scrollTrigger: {
+          trigger: missionSection,
+          start: 'top 75%',
+          toggleActions: 'play none none none'
+        }
+      });
+      missionTL
+        .from('.console-header-bar', { opacity: 0, y: 15, duration: 0.5 })
+        .from('.console-viewport', { opacity: 0, scale: 0.97, duration: 0.8 }, '-=0.3')
+        .from('.console-sidebar .sidebar-data-block', { opacity: 0, x: 30, stagger: 0.1, duration: 0.5 }, '-=0.5');
+    }
+
+    // 7. Investment banner entrance
+    const investSection = document.querySelector('#investors');
+    if (investSection) {
+      gsap.from('.investment-hero-banner', {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        scrollTrigger: {
+          trigger: investSection,
+          start: 'top 75%',
+          toggleActions: 'play none none none'
+        }
+      });
+      gsap.from('.allocation-bar-stack', {
+        scaleX: 0,
+        transformOrigin: 'left center',
+        duration: 1.2,
+        ease: 'power2.inOut',
+        scrollTrigger: {
+          trigger: '.allocation-bar-stack',
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      });
+    }
+
+    // 8. Final CTA section
+    const ctaSection = document.querySelector('.final-cta-section');
+    if (ctaSection) {
+      gsap.from('.cta-actions-row a', {
+        opacity: 0,
+        y: 20,
+        stagger: 0.15,
+        duration: 0.7,
+        scrollTrigger: {
+          trigger: ctaSection,
+          start: 'top 75%',
+          toggleActions: 'play none none none'
+        }
+      });
+    }
+
+    // 9. Synchronized Scroll Progress Bar
     const scrollTracker = document.querySelector('.scroll-tracker');
     if (scrollTracker) {
       ScrollTrigger.create({
@@ -358,7 +449,7 @@ const initGSAPScrollEffects = () => {
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.reveal, .dossier-card, .bottleneck-card, .pillar-card, .news-card').forEach((el) => {
+    document.querySelectorAll('.reveal, .bottleneck-card, .capability-card, .defensibility-card, .beachhead-card, .ascs-layer-card, .sequence-stage-card, .resource-stage-item, .objective-item, .roadmap-phase-card, .milestone-year-card, .alloc-item-card').forEach((el) => {
       revealObserver.observe(el);
     });
   }
@@ -474,4 +565,3 @@ const hydrateNewsFeed = async () => {
 };
 
 window.addEventListener('DOMContentLoaded', hydrateNewsFeed);
-
