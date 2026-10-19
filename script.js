@@ -311,7 +311,6 @@ const initGSAPScrollEffects = () => {
     // 4. Staggered Card Reveals for all APHELION grid sections
     const cardGridSelectors = [
       '.bottleneck-grid',
-      '.ascs-exploded-stack',
       '.construction-sequence-grid',
       '.factory-capabilities-grid',
       '.resource-stages-grid',
@@ -362,8 +361,9 @@ const initGSAPScrollEffects = () => {
       });
       archTL
         .from('.ascs-architecture-wrapper', { opacity: 0, y: 20, duration: 0.6 })
-        .from('.ascs-layer-card', { opacity: 0, x: -25, stagger: 0.08, duration: 0.5 }, '-=0.3')
-        .from('.ascs-visual-side', { opacity: 0, scale: 0.98, duration: 0.7, ease: 'power2.out' }, '-=0.4');
+        .from('.ascs-embed-side', { opacity: 0, x: -25, duration: 0.6 }, '-=0.3')
+        .from('.ascs-visual-side', { opacity: 0, x: 25, duration: 0.6 }, '-=0.4')
+        .from('.ascs-layers-grid .ascs-layer-card', { opacity: 0, y: 25, stagger: 0.08, duration: 0.5 }, '-=0.2');
     }
 
     // 6. Mission Control Console entrance
