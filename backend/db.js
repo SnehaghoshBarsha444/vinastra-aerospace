@@ -43,7 +43,8 @@ class DatabaseEngine {
     if (this.initialized) return;
 
     let loaded = false;
-    // Try primary path first, then fallback
+    
+    // Try to load from JSON file first (local development)
     for (const testPath of [primaryDbPath, fallbackDbPath]) {
       try {
         const raw = await fs.readFile(testPath, 'utf8');
@@ -55,18 +56,61 @@ class DatabaseEngine {
           break;
         }
       } catch {
-        // Continue to next path or seed
+        // Continue to next path
       }
     }
 
-    if (!loaded || !this.data.users.length) {
-      await this.seedInitialData();
+    // If no data found, initialize with empty collections
+    // DO NOT seed demo data - use real Firebase data
+    if (!loaded) {
+      console.log('[Database] No existing data found. Initialize with empty collections.');
+      await this.persist();
     }
 
     this.initialized = true;
   }
 
+  // Create initial admin user (for first-time setup)
+  async createInitialAdmin() {
+    const adminEmail = process.env.ADMIN_BOOTSTRAP_EMAIL || 'admin@vinastra.space';
+    const adminPass = process.env.ADMIN_BOOTSTRAP_PASS || 'VinastraAdmin2026!';
+    
+    // Check if admin already exists
+    const existing = this.data.users.find(u => u.email === adminEmail);
+    if (existing) {
+      console.log('[Database] Admin user already exists');
+      return existing;
+    }
+    
+    const { hash, salt } = hashPassword(adminPass);
+    const now = new Date().toISOString();
+    
+    const adminUser = {
+      id: crypto.randomBytes(16).toString('hex'),
+      name: 'VINASTRA Admin',
+      email: adminEmail,
+      passwordHash: hash,
+      salt: salt,
+      role: 'ADMIN',
+      institutionId: null,
+      department: 'Executive Administration',
+      status: 'ACTIVE',
+      emailVerified: true,
+      createdAt: now,
+      updatedAt: now
+    };
+    
+    this.data.users.push(adminUser);
+    await this.persist();
+    
+    console.log('[Database] Initial admin user created:', adminEmail);
+    return adminUser;
+  }
+  
+  // DEPRECATED: Old seed function replaced with real data
   async seedInitialData() {
+    console.warn('[Database] seedInitialData is deprecated. Use real Firebase data instead.');
+    return;
     const adminPass = hashPassword('VinastraAdmin2026!');
     const engPass = hashPassword('Engineer2026!');
     const resPass = hashPassword('Research2026!');

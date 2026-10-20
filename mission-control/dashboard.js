@@ -8,24 +8,14 @@ let currentProfile = null;
 let currentData = null;
 let activeTab = 'overview';
 
-// Seed demo users for role explorer
-const DEMO_USERS = {
-  ADMIN: { email: 'admin@vinastra.space', name: 'Vinay Jeedi', role: 'ADMIN' },
-  ENGINEER: { email: 'engineer@vinastra.space', name: 'Dr. Vikram Sarabhai', role: 'ENGINEER' },
-  RESEARCHER: { email: 'researcher@iitb.ac.in', name: 'Prof. Sunita Sharma', role: 'RESEARCHER' },
-  STUDENT: { email: 'student@iitb.ac.in', name: 'Aarav Patel', role: 'STUDENT' },
-  INVESTOR: { email: 'investor@aerospace-fund.co', name: 'Rajesh Mehta', role: 'INVESTOR' }
-};
-
 // Initialize Dashboard
 document.addEventListener('DOMContentLoaded', async () => {
   setupNavigation();
-  setupRoleSwitcher();
   setupModals();
   await loadDashboard();
 });
 
-// Setup sidebar tab navigation
+// Tab navigation setup
 function setupNavigation() {
   document.querySelectorAll('.mc-nav-item[data-tab]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
@@ -64,41 +54,7 @@ function switchTab(tabId) {
   if (header) header.textContent = titles[tabId] || 'Mission Control Terminal';
 }
 
-// Setup role switcher toolbar for evaluation and demo
-function setupRoleSwitcher() {
-  document.querySelectorAll('.mc-role-pill').forEach((pill) => {
-    pill.addEventListener('click', async () => {
-      const targetRole = pill.dataset.role;
-      document.querySelectorAll('.mc-role-pill').forEach((p) => p.classList.remove('active'));
-      pill.classList.add('active');
-
-      // Attempt to authenticate as demo persona
-      const demo = DEMO_USERS[targetRole];
-      if (demo) {
-        try {
-          const passMap = {
-            ADMIN: 'VinastraAdmin2026!',
-            ENGINEER: 'Engineer2026!',
-            RESEARCHER: 'Research2026!',
-            STUDENT: 'Student2026!',
-            INVESTOR: 'Investor2026!'
-          };
-          const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: demo.email, password: passMap[targetRole] })
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (data.token) localStorage.setItem('vinastra_token', data.token);
-          }
-        } catch {}
-      }
-
-      await loadDashboard();
-    });
-  });
-}
+// Role switcher removed - users must login with their own credentials
 
 // Load telemetry & dashboard data with proper loading states
 async function loadDashboard() {
