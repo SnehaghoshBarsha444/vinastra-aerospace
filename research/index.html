@@ -46,7 +46,20 @@
       <span></span>
       <span class="sr-only">Menu</span>
     </button>
-    <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation"></nav>
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation">
+      <a href="/home/">HOME</a>
+      <a href="/about/">ABOUT</a>
+      <a href="/innovation/">INNOVATION</a>
+      <a href="/research/">RESEARCH</a>
+      <a href="/news/">NEWS</a>
+      <a href="/investors/">INVESTORS</a>
+      <a href="/collaborate/">COLLABORATE</a>
+      <a href="/contact/">CONTACT</a>
+      <div class="mobile-nav-auth">
+        <a href="/login/" class="auth-btn auth-btn-login">Login</a>
+        <a href="/login/?mode=signup" class="auth-btn auth-btn-signup">Create Account</a>
+      </div>
+    </nav>
     <div class="topbar-auth" id="topbar-auth">
       <a href="/login/" class="auth-btn auth-btn-login" id="nav-btn-login">Login</a>
       <a href="/login/?mode=signup" class="auth-btn auth-btn-signup" id="nav-btn-signup">Create Account</a>
@@ -90,6 +103,48 @@
               <span class="status-pill status-proposed"><i></i> PROPOSED R&amp;D</span>
             </div>
           </aside>
+        </div>
+      </section>
+
+      <!-- Section: The 3 Bottlenecks (Innovation Challenges) -->
+      <section class="section-wrapper" style="padding-top: 0;">
+        <div class="section-header reveal">
+          <div class="section-kicker">
+            <span>00 / THE CHALLENGE</span> · THREE PHYSICAL BOTTLENECKS
+          </div>
+          <h2 class="editorial-statement">
+            Why terrestrial manufacturing <em>cannot scale into space</em> — the three critical <strong>bottleneck</strong> constraints preventing in-space industrial scaling.
+          </h2>
+        </div>
+        
+        <p class="lead" style="margin-top: 16px; margin-bottom: 32px;">
+          These three <strong>bottleneck</strong> challenges define why traditional Earth-based manufacturing cannot support large-scale space infrastructure — and why autonomous in-space construction is the only viable path forward.
+        </p>
+
+        <div class="dossier-grid">
+          <article class="dossier-card reveal">
+            <div class="dossier-card-num">01 / BOTTLENECK</div>
+            <h3 class="dossier-card-title">Launch Mass &amp; Fairing Envelope</h3>
+            <p class="dossier-card-body">
+              Every satellite, station module, and solar collector today must fold inside rocket fairings typically measuring 5 meters in diameter. Once launched, complicated mechanical unfold sequences present severe single-point failure modes. In-space fabrication builds deployed-scale trusses without fairing limits.
+            </p>
+          </article>
+
+          <article class="dossier-card reveal">
+            <div class="dossier-card-num">02 / BOTTLENECK</div>
+            <h3 class="dossier-card-title">Human Operational Limitations</h3>
+            <p class="dossier-card-body">
+              Extravehicular Activities (EVAs) require massive life-support overhead, high radiation shielding, and strict time windows. Routine structural joining, high-heat metallurgy, and heavy logistics cannot depend on astronauts; they require persistent, high-precision robotic manipulation.
+            </p>
+          </article>
+
+          <article class="dossier-card reveal">
+            <div class="dossier-card-num">03 / BOTTLENECK</div>
+            <h3 class="dossier-card-title">Speed-of-Light Latency</h3>
+            <p class="dossier-card-body">
+              In deep-space orbits, cislunar space, or Mars trajectories, round-trip teleoperation delays range from several seconds to tens of minutes. Direct joystick control from Earth is impossible. The construction system must be autonomous-first, possessing local edge-intelligence to adapt and self-correct.
+            </p>
+          </article>
         </div>
       </section>
 
@@ -230,6 +285,52 @@
         </div>
       </section>
 
+      <!-- Section: Collaboration-Focused Technical Section (Authenticated Research) -->
+      <section class="section-wrapper" id="collaboration-section" style="display: none;">
+        <div class="section-header reveal">
+          <div class="section-kicker">
+            <span>03 / COLLABORATION</span> · TECHNICAL PARTNERSHIPS
+          </div>
+          <h2 class="editorial-statement">
+            Join the <em>research collaboration</em> network.
+          </h2>
+          <p class="lead" style="margin-top: 20px;">
+            Our authenticated research portal provides access to technical collaboration pathways, joint development programs, and institutional partnership opportunities.
+          </p>
+        </div>
+
+        <div class="dossier-grid">
+          <article class="dossier-card reveal">
+            <div class="dossier-card-num">COLLABORATION 01</div>
+            <h3 class="dossier-card-title">University Research Partnership</h3>
+            <p class="dossier-card-body">
+              Collaborate with our engineering team on robotics kinematics, additive manufacturing, and optical metrology research. AccessPrototype-1 test data and simulation environments.
+            </p>
+          </article>
+
+          <article class="dossier-card reveal">
+            <div class="dossier-card-num">COLLABORATION 02</div>
+            <h3 class="dossier-card-title">Industry Co-Development</h3>
+            <p class="dossier-card-body">
+              Joint development programs for space-grade components, robotic end-effectors, and next-generation metrology sensors. Technical data sharing under NDA.
+            </p>
+          </article>
+
+          <article class="dossier-card reveal">
+            <div class="dossier-card-num">COLLABORATION 03</div>
+            <h3 class="dossier-card-title">Government &amp; Agency Programs</h3>
+            <p class="dossier-card-body">
+              Participating in government-funded space technology development initiatives. Technical briefings and progress reports for authorized program participants.
+            </p>
+          </article>
+        </div>
+
+        <div class="profile-actions" style="margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="/mission-control/" class="action action-primary">ENTER MISSION CONTROL <span class="action-arrow">→</span></a>
+          <a href="/collaborate/" class="action action-line">VIEW COLLABORATION PATHWAYS <span class="action-arrow">↗</span></a>
+        </div>
+      </section>
+
       <!-- Route Navigation Footer -->
       <div style="display: flex; justify-content: space-between; align-items: center; padding: 40px 0; border-top: 1px solid var(--color-line-subtle); margin-top: 60px; flex-wrap: wrap; gap: 20px;">
         <a class="action action-line" href="/innovation/">
@@ -305,7 +406,9 @@
 
       <div class="footer-bottom">
         <div>&copy; 2026 VINASTRA AEROSPACE PVT. LTD. ALL RIGHTS RESERVED.</div>
-        <div>
+        <div style="display: flex; gap: 16px;">
+          <a href="/terms/">Terms of Service</a>
+          <a href="/privacy/">Privacy Policy</a>
           <a href="#top">BACK TO ORBIT TOP ↑</a>
         </div>
       </div>
@@ -316,5 +419,37 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="/script.js"></script>
   <script type="module" src="/firebase-auth.js"></script>
+  <script type="module">
+    // Show collaboration section for authenticated users
+    import { renderAuthNav } from "/firebase-auth.js";
+    
+    // Wait for auth to initialize and check if user is logged in
+    window.addEventListener("load", () => {
+      // Small delay to ensure firebase-auth has loaded
+      setTimeout(() => {
+        const user = window.VinastraAuth?.getUser ? window.VinastraAuth.getUser() : null;
+        const collaborationSection = document.getElementById("collaboration-section");
+        
+        // Check localStorage cache as fallback
+        if (!user) {
+          try {
+            const cached = localStorage.getItem("vinastra_user_session");
+            if (cached) {
+              const userData = JSON.parse(cached);
+              if (userData && userData.id) {
+                if (collaborationSection) {
+                  collaborationSection.style.display = "block";
+                }
+              }
+            }
+          } catch (e) {}
+        } else if (user && user.id) {
+          if (collaborationSection) {
+            collaborationSection.style.display = "block";
+          }
+        }
+      }, 500);
+    });
+  </script>
 </body>
 </html>

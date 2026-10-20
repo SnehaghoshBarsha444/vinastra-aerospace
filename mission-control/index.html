@@ -52,8 +52,18 @@
       color: var(--mc-text);
     }
   </style>
+<script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+      }
+    }
+  </script>
 </head>
-<body class="mission-control-body">
+<body class="mission-control-body" data-authenticated="true">
 
   <!-- TOPBAR -->
   <header class="mc-topbar">
@@ -352,5 +362,44 @@
   </div>
 
   <script src="/mission-control/dashboard.js"></script>
+  <script type="module" src="/firebase-auth.js"></script>
+  <script type="module">
+    // Authentication check for mission control dashboard
+    import { renderAuthNav } from "/firebase-auth.js";
+    
+    window.addEventListener("load", () => {
+      setTimeout(async () => {
+        // Check if user is authenticated
+        let isAuthenticated = false;
+        
+        // Try to get user from firebase-auth module
+        if (window.VinastraAuth?.getUser) {
+          const user = window.VinastraAuth.getUser();
+          if (user && user.id) isAuthenticated = true;
+        }
+        
+        // Check localStorage cache as fallback
+        if (!isAuthenticated) {
+          try {
+            const cached = localStorage.getItem("vinastra_user_session");
+            if (cached) {
+              const userData = JSON.parse(cached);
+              if (userData && userData.id) isAuthenticated = true;
+            }
+          } catch (e) {}
+        }
+        
+        if (!isAuthenticated) {
+          // User not authenticated - redirect to login
+          window.location.href = "/login/";
+        } else {
+          // User is authenticated - load dashboard content
+          if (window.loadMissionControlDashboard) {
+            window.loadMissionControlDashboard();
+          }
+        }
+      }, 300);
+    });
+  </script>
 </body>
 </html>

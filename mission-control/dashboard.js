@@ -12,8 +12,44 @@ let activeTab = 'overview';
 document.addEventListener('DOMContentLoaded', async () => {
   setupNavigation();
   setupModals();
-  await loadDashboard();
+  
+  // Check authentication via Firebase first
+  await checkAuthentication();
 });
+
+// Check if user is authenticated via Firebase
+async function checkAuthentication() {
+  const token = localStorage.getItem('vinastra_user_session');
+  const userData = token ? JSON.parse(token) : null;
+  
+  if (!userData) {
+    // Not authenticated - show login prompt
+    showAuthRequired();
+    return;
+  }
+  
+  // User is authenticated - load dashboard
+  await loadDashboard();
+}
+
+function showAuthRequired() {
+  const mainContent = document.querySelector('.mc-main');
+  if (mainContent) {
+    mainContent.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; color: var(--mc-text); text-align: center; padding: 40px;">
+        <div style="font-size: 4rem; margin-bottom: 24px;">🔒</div>
+        <h2 style="font-family: var(--font-mono); font-size: 1.5rem; margin-bottom: 16px;">AUTHENTICATION REQUIRED</h2>
+        <p style="color: var(--mc-text-muted); font-size: 0.9375rem; margin-bottom: 24px; max-width: 400px;">
+          You must be signed in to access the Mission Control Terminal. Please authenticate to continue.
+        </p>
+        <div style="display: flex; gap: 12px;">
+          <a href="/login/" class="mc-btn-primary" style="padding: 12px 24px; text-decoration: none;">SIGN IN</a>
+          <a href="/login/?mode=signup" class="mc-btn-ghost" style="padding: 12px 24px; text-decoration: none;">CREATE ACCOUNT</a>
+        </div>
+      </div>
+    `;
+  }
+}
 
 // Tab navigation setup
 function setupNavigation() {

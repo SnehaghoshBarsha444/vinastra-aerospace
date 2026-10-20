@@ -203,7 +203,20 @@
       <span></span>
       <span class="sr-only">Menu</span>
     </button>
-    <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation"></nav>
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation">
+      <a href="/home/">HOME</a>
+      <a href="/about/">ABOUT</a>
+      <a href="/innovation/">INNOVATION</a>
+      <a href="/research/">RESEARCH</a>
+      <a href="/news/">NEWS</a>
+      <a href="/investors/">INVESTORS</a>
+      <a href="/collaborate/">COLLABORATE</a>
+      <a href="/contact/">CONTACT</a>
+      <div class="mobile-nav-auth">
+        <a href="/login/" class="auth-btn auth-btn-login">Login</a>
+        <a href="/login/?mode=signup" class="auth-btn auth-btn-signup">Create Account</a>
+      </div>
+    </nav>
     <div class="topbar-auth" id="topbar-auth">
       <button type="button" class="auth-btn auth-btn-login" id="nav-btn-login">Login</button>
       <button type="button" class="auth-btn auth-btn-signup" id="nav-btn-signup">Create Account</button>
@@ -360,7 +373,11 @@
       </div>
       <div class="footer-bottom">
         <div>&copy; 2026 VINASTRA AEROSPACE PVT. LTD. ALL RIGHTS RESERVED.</div>
-        <div><a href="#top">BACK TO TOP ↑</a></div>
+        <div style="display: flex; gap: 16px;">
+          <a href="/terms/">Terms of Service</a>
+          <a href="/privacy/">Privacy Policy</a>
+          <a href="#top">BACK TO TOP ↑</a>
+        </div>
       </div>
     </div>
   </footer>
@@ -587,6 +604,37 @@
     // Check periodically or on auth update
     window.addEventListener("load", () => {
       setTimeout(updateProfileUI, 300);
+      
+      // Check if already authenticated and redirect to dashboard
+      setTimeout(() => {
+        const cached = localStorage.getItem("vinastra_user_session");
+        if (cached) {
+          try {
+            const userData = JSON.parse(cached);
+            if (userData && userData.id) {
+              // User is already logged in - redirect to dashboard
+              const role = (userData.role || 'professional').toUpperCase();
+              const roleDestinations = {
+                'ADMIN': '/mission-control/admin/',
+                'FOUNDER': '/mission-control/admin/',
+                'CTO': '/mission-control/',
+                'RD_LEAD': '/mission-control/',
+                'ENGINEER': '/mission-control/',
+                'PROFESSIONAL': '/mission-control/',
+                'RESEARCHER': '/mission-control/',
+                'COORDINATOR': '/mission-control/',
+                'STUDENTS': '/mission-control/',
+                'STUDENT': '/mission-control/',
+                'FELLOW': '/mission-control/',
+                'INVESTOR': '/investors/',
+                'ADVISOR': '/mission-control/'
+              };
+              const destination = roleDestinations[role] || '/mission-control/';
+              window.location.href = destination;
+            }
+          } catch (e) {}
+        }
+      }, 500);
     });
   </script>
 </body>
