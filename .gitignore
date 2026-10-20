@@ -10,3 +10,16 @@ data/secure_vault/
 *.pptx
 *.docx
 Vinastra_Aerospace_Agent_Pack/
+
+# CRITICAL: Never commit Firebase service account keys to version control
+*firebase-adminsdk*.json
+service-account*.json
+*-firebase-adminsdk-*.json
+
+# Prevent accidental commit of sensitive JSON files (but allow specific ones)
+# *.json
+# !package.json
+# !package-lock.json
+# !data/db.json
+# !data/inquiries.json
+# !vercel.json

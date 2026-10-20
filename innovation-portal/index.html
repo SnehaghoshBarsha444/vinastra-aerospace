@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Innovation Submission Portal — VINASTRA ASCS</title>
+  <link rel="stylesheet" href="/professional.css">
+  <link rel="stylesheet" href="/home-redesign.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --space-dark: #0a0e27;
+      --space-blue: #1a1f3a;
+      --cosmic-purple: #2d1b4e;
+      --nebula-pink: #ff006e;
+      --stellar-cyan: #00d9ff;
+      --solar-orange: #ff9500;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--space-dark) 0%, var(--space-blue) 50%, var(--cosmic-purple) 100%);
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .glass-panel {
+      background: rgba(26, 31, 58, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+    }
+
+    .submission-card {
+      background: rgba(26, 31, 58, 0.6);
+      border: 1px solid rgba(0, 217, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .submission-card:hover {
+      border-color: var(--stellar-cyan);
+      box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    .status-submitted { background: rgba(0, 217, 255, 0.2); color: #00d9ff; }
+    .status-under-review { background: rgba(255, 149, 0, 0.2); color: #ff9500; }
+    .status-approved { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .status-rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .status-revision { background: rgba(255, 0, 110, 0.2); color: #ff006e; }
+
+    .form-input {
+      background: rgba(10, 14, 39, 0.8);
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--stellar-cyan);
+      box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--stellar-cyan), var(--nebula-pink));
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+    }
+
+    .category-tag {
+      background: rgba(0, 217, 255, 0.1);
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      color: var(--stellar-cyan);
+    }
+
+    .workflow-step {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .workflow-step::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem;
+      top: 1.5rem;
+      bottom: -0.5rem;
+      width: 2px;
+      background: rgba(0, 217, 255, 0.3);
+    }
+
+    .workflow-step:last-child::before {
+      display: none;
+    }
+
+    .workflow-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+    }
+
+    .dot-completed { background: #10b981; }
+    .dot-current { background: #ff9500; animation: pulse 2s infinite; }
+    .dot-pending { background: #6b7280; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+  </style>
+</head>
+<body class="text-white">
+  <!-- Navigation -->
+  <nav class="glass-panel sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <a href="/" class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent">
+          VINASTRA
+        </a>
+        <span class="text-gray-400">|</span>
+        <span class="text-sm text-gray-300">Innovation Portal</span>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <button onclick="showMySubmissions()" class="px-4 py-2 text-sm hover:bg-cyan-500 hover:bg-opacity-20 rounded-lg transition-all">
+          <i class="fas fa-folder-open mr-2"></i>My Submissions
+        </button>
+        <button onclick="showNewSubmission()" class="bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-lg text-sm font-semibold transition-all">
+          <i class="fas fa-plus mr-2"></i>New Submission
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">Research & Innovation Submission Portal</h1>
+      <p class="text-gray-400">
+        Submit your research proposals, technical innovations, and collaborative project ideas for review by the VINASTRA team.
+      </p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-2xl font-bold text-cyan-400" id="stat-total">0</div>
+        <div class="text-sm text-gray-400">Total Submissions</div>
+      </div>
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-2xl font-bold text-orange-400" id="stat-review">0</div>
+        <div class="text-sm text-gray-400">Under Review</div>
+      </div>
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-2xl font-bold text-green-400" id="stat-approved">0</div>
+        <div class="text-sm text-gray-400">Approved</div>
+      </div>
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-2xl font-bold text-pink-400" id="stat-revision">0</div>
+        <div class="text-sm text-gray-400">Revision Requested</div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div id="content-area">
+      <!-- My Submissions View (Default) -->
+      <div id="submissions-view">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold">My Submissions</h2>
+          <div class="flex items-center space-x-4">
+            <select id="filter-status" class="form-input rounded-lg px-4 py-2 text-sm" onchange="filterSubmissions()">
+              <option value="all">All Status</option>
+              <option value="SUBMITTED">Submitted</option>
+              <option value="UNDER_REVIEW">Under Review</option>
+              <option value="APPROVED_FOR_NEXT_STAGE">Approved</option>
+              <option value="REVISION_REQUESTED">Revision Requested</option>
+              <option value="REJECTED">Rejected</option>
+            </select>
+            <select id="filter-category" class="form-input rounded-lg px-4 py-2 text-sm" onchange="filterSubmissions()">
+              <option value="all">All Categories</option>
+              <option value="ROBOTICS_AND_CONTROL">Robotics & Control</option>
+              <option value="SENSORS_AND_METROLOGY">Sensors & Metrology</option>
+              <option value="SIMULATION_AND_MODELING">Simulation & Modeling</option>
+              <option value="MANUFACTURING_AND_ASSEMBLY">Manufacturing & Assembly</option>
+              <option value="THERMAL_MANAGEMENT">Thermal Management</option>
+              <option value="POWER_SYSTEMS">Power Systems</option>
+              <option value="COMMUNICATIONS">Communications</option>
+              <option value="AI_AND_AUTONOMY">AI & Autonomy</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="submissions-container" class="space-y-4">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- New Submission Form -->
+      <div id="new-submission-view" class="hidden">
+        <div class="glass-panel rounded-xl p-8">
+          <h2 class="text-xl font-semibold mb-6">New Research Submission</h2>
+          
+          <form id="submission-form" onsubmit="submitResearch(event)">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label class="block text-sm font-semibold mb-2">Submission Title *</label>
+                <input type="text" id="title" required class="form-input w-full rounded-lg px-4 py-3" placeholder="Enter descriptive title">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-semibold mb-2">Research Category *</label>
+                <select id="category" required class="form-input w-full rounded-lg px-4 py-3">
+                  <option value="">Select category</option>
+                  <option value="ROBOTICS_AND_CONTROL">Robotics & Control</option>
+                  <option value="SENSORS_AND_METROLOGY">Sensors & Metrology</option>
+                  <option value="SIMULATION_AND_MODELING">Simulation & Modeling</option>
+                  <option value="MANUFACTURING_AND_ASSEMBLY">Manufacturing & Assembly</option>
+                  <option value="THERMAL_MANAGEMENT">Thermal Management</option>
+                  <option value="POWER_SYSTEMS">Power Systems</option>
+                  <option value="COMMUNICATIONS">Communications</option>
+                  <option value="AI_AND_AUTONOMY">AI & Autonomy</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-semibold mb-2">Abstract *</label>
+              <textarea id="abstract" required rows="4" class="form-input w-full rounded-lg px-4 py-3" placeholder="Provide a concise summary of your research (200-500 words)"></textarea>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-semibold mb-2">Methodology</label>
+              <textarea id="methodology" rows="4" class="form-input w-full rounded-lg px-4 py-3" placeholder="Describe your research methodology, experimental setup, or technical approach"></textarea>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-semibold mb-2">Expected Findings / Outcomes</label>
+              <textarea id="findings" rows="4" class="form-input w-full rounded-lg px-4 py-3" placeholder="Describe the expected results, potential applications, or contributions to ASCS development"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label class="block text-sm font-semibold mb-2">Related Project (Optional)</label>
+                <select id="projectId" class="form-input w-full rounded-lg px-4 py-3">
+                  <option value="">Select project</option>
+                  <option value="proj-001">ASCS Prototype-1 Development</option>
+                  <option value="proj-002">Metrology System Integration</option>
+                  <option value="proj-003">Test Cell Platform Build</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-semibold mb-2">Collaborators</label>
+                <input type="text" id="collaborators" class="form-input w-full rounded-lg px-4 py-3" placeholder="Names of collaborators (comma-separated)">
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-semibold mb-2">Supporting Documents</label>
+              <div class="border-2 border-dashed border-gray-700 rounded-lg p-8 text-center">
+                <i class="fas fa-cloud-upload-alt text-4xl text-gray-500 mb-4"></i>
+                <p class="text-sm text-gray-400 mb-2">Drag and drop files here, or click to browse</p>
+                <p class="text-xs text-gray-500">Supported formats: PDF, DOCX, PPTX, ZIP (Max 50MB)</p>
+                <input type="file" id="files" multiple class="hidden" accept=".pdf,.docx,.doc,.pptx,.ppt,.zip">
+                <button type="button" onclick="document.getElementById('files').click()" class="mt-4 px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition-all">
+                  Choose Files
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-6 border-t border-gray-700">
+              <button type="button" onclick="saveDraft()" class="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition-all">
+                <i class="fas fa-save mr-2"></i>Save Draft
+              </button>
+              <div class="flex space-x-4">
+                <button type="button" onclick="showMySubmissions()" class="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition-all">
+                  Cancel
+                </button>
+                <button type="submit" class="btn-primary px-8 py-2 rounded-lg text-sm font-semibold">
+                  <i class="fas fa-paper-plane mr-2"></i>Submit for Review
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Submission Detail View -->
+      <div id="submission-detail-view" class="hidden">
+        <div class="glass-panel rounded-xl p-8">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold" id="detail-title">Submission Title</h2>
+            <button onclick="showMySubmissions()" class="text-gray-400 hover:text-white">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+
+          <div id="detail-content">
+            <!-- Will be populated dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let submissions = [];
+    let currentUser = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+      await checkAuth();
+      await loadSubmissions();
+      renderSubmissions();
+      updateStats();
+    });
+
+    // Check authentication
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/auth/me');
+        if (response.ok) {
+          const data = await response.json();
+          currentUser = data.user;
+        } else {
+          // Redirect to login if not authenticated
+          window.location.href = '/login';
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      }
+    }
+
+    // Load submissions
+    async function loadSubmissions() {
+      try {
+        const response = await fetch('/api/research/submissions');
+        if (response.ok) {
+          const data = await response.json();
+          submissions = data;
+        } else {
+          // Use demo data
+          submissions = getDemoSubmissions();
+        }
+      } catch (error) {
+        console.error('Error loading submissions:', error);
+        submissions = getDemoSubmissions();
+      }
+    }
+
+    // Demo submissions
+    function getDemoSubmissions() {
+      return [
+        {
+          id: 'sub-001',
+          title: 'Adaptive Control Algorithm for Microgravity Manipulation',
+          abstract: 'This research proposes a novel adaptive control algorithm designed specifically for robotic manipulation in microgravity environments. The algorithm compensates for dynamic uncertainties and external disturbances while maintaining precise positioning accuracy.',
+          category: 'ROBOTICS_AND_CONTROL',
+          status: 'UNDER_REVIEW',
+          authorUserId: 'user-001',
+          createdAt: '2026-10-15T10:30:00Z',
+          updatedAt: '2026-10-18T14:20:00Z',
+          reviewerNotes: null
+        },
+        {
+          id: 'sub-002',
+          title: 'Sub-Millimeter Metrology Using Structured Light Scanning',
+          abstract: 'Development of a structured light scanning system capable of achieving sub-millimeter measurement accuracy for in-orbit quality inspection. The system uses advanced pattern projection and stereo vision reconstruction.',
+          category: 'SENSORS_AND_METROLOGY',
+          status: 'APPROVED_FOR_NEXT_STAGE',
+          authorUserId: 'user-001',
+          createdAt: '2026-10-10T08:15:00Z',
+          updatedAt: '2026-10-16T11:45:00Z',
+          reviewerNotes: 'Excellent methodology. Approved for prototype integration testing.'
+        },
+        {
+          id: 'sub-003',
+          title: 'Thermal Analysis of Composite Joints in Space Environment',
+          abstract: 'Comprehensive thermal analysis of composite material joints subjected to orbital temperature cycling. The study provides critical data for structural integrity predictions and material selection.',
+          category: 'THERMAL_MANAGEMENT',
+          status: 'REVISION_REQUESTED',
+          authorUserId: 'user-001',
+          createdAt: '2026-10-08T09:00:00Z',
+          updatedAt: '2026-10-12T16:30:00Z',
+          reviewerNotes: 'Please provide additional data on thermal cycling frequency and include fatigue analysis.'
+        }
+      ];
+    }
+
+    // Update stats
+    function updateStats() {
+      document.getElementById('stat-total').textContent = submissions.length;
+      document.getElementById('stat-review').textContent = submissions.filter(s => s.status === 'UNDER_REVIEW').length;
+      document.getElementById('stat-approved').textContent = submissions.filter(s => s.status === 'APPROVED_FOR_NEXT_STAGE').length;
+      document.getElementById('stat-revision').textContent = submissions.filter(s => s.status === 'REVISION_REQUESTED').length;
+    }
+
+    // Render submissions
+    function renderSubmissions() {
+      const container = document.getElementById('submissions-container');
+      const statusFilter = document.getElementById('filter-status').value;
+      const categoryFilter = document.getElementById('filter-category').value;
+
+      let filtered = submissions;
+      if (statusFilter !== 'all') {
+        filtered = filtered.filter(s => s.status === statusFilter);
+      }
+      if (categoryFilter !== 'all') {
+        filtered = filtered.filter(s => s.category === categoryFilter);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12">
+            <i class="fas fa-inbox text-4xl text-gray-600 mb-4"></i>
+            <p class="text-gray-400">No submissions found</p>
+            <button onclick="showNewSubmission()" class="mt-4 btn-primary px-6 py-2 rounded-lg text-sm">
+              Create Your First Submission
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(sub => `
+        <div class="submission-card rounded-xl p-6 cursor-pointer" onclick="viewSubmission('${sub.id}')">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg mb-2">${sub.title}</h3>
+              <div class="flex items-center space-x-3">
+                <span class="status-badge status-${getStatusClass(sub.status)}">${formatStatus(sub.status)}</span>
+                <span class="category-tag text-xs px-2 py-1 rounded">${formatCategory(sub.category)}</span>
+              </div>
+            </div>
+            <div class="text-right text-sm text-gray-400">
+              <div>${formatDate(sub.createdAt)}</div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-400 line-clamp-2 mb-4">${sub.abstract}</p>
+          ${sub.reviewerNotes ? `
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 text-sm">
+              <div class="font-semibold text-cyan-400 mb-1">Reviewer Feedback:</div>
+              <div class="text-gray-300">${sub.reviewerNotes}</div>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    // View submission detail
+    function viewSubmission(id) {
+      const submission = submissions.find(s => s.id === id);
+      if (!submission) return;
+
+      document.getElementById('detail-title').textContent = submission.title;
+      
+      document.getElementById('detail-content').innerHTML = `
+        <div class="space-y-6">
+          <div class="flex items-center space-x-4">
+            <span class="status-badge status-${getStatusClass(submission.status)}">${formatStatus(submission.status)}</span>
+            <span class="category-tag text-xs px-3 py-1 rounded">${formatCategory(submission.category)}</span>
+          </div>
+          
+          <!-- Workflow Progress -->
+          <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6">
+            <h4 class="font-semibold mb-4">Submission Workflow</h4>
+            <div class="space-y-4">
+              ${renderWorkflow(submission.status)}
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold mb-2">Abstract</h4>
+            <p class="text-gray-400">${submission.abstract}</p>
+          </div>
+          
+          ${submission.methodology ? `
+            <div>
+              <h4 class="font-semibold mb-2">Methodology</h4>
+              <p class="text-gray-400">${submission.methodology}</p>
+            </div>
+          ` : ''}
+          
+          ${submission.findings ? `
+            <div>
+              <h4 class="font-semibold mb-2">Expected Findings</h4>
+              <p class="text-gray-400">${submission.findings}</p>
+            </div>
+          ` : ''}
+          
+          ${submission.reviewerNotes ? `
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4">
+              <h4 class="font-semibold mb-2 text-cyan-400">Reviewer Notes</h4>
+              <p class="text-gray-300">${submission.reviewerNotes}</p>
+            </div>
+          ` : ''}
+          
+          <div class="pt-6 border-t border-gray-700">
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-gray-500">Submitted:</span>
+                <span class="ml-2">${formatDate(submission.createdAt)}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">Last Updated:</span>
+                <span class="ml-2">${formatDate(submission.updatedAt)}</span>
+              </div>
+            </div>
+          </div>
+          
+          ${submission.status === 'REVISION_REQUESTED' ? `
+            <div class="flex justify-end">
+              <button onclick="editSubmission('${submission.id}')" class="btn-primary px-6 py-2 rounded-lg text-sm">
+                <i class="fas fa-edit mr-2"></i>Revise & Resubmit
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      showView('submission-detail-view');
+    }
+
+    // Render workflow
+    function renderWorkflow(status) {
+      const steps = [
+        { label: 'Submitted', status: 'SUBMITTED' },
+        { label: 'Under Review', status: 'UNDER_REVIEW' },
+        { label: 'Decision', status: 'APPROVED_FOR_NEXT_STAGE' }
+      ];
+
+      const statusOrder = {
+        'SUBMITTED': 0,
+        'UNDER_REVIEW': 1,
+        'REVISION_REQUESTED': 1,
+        'APPROVED_FOR_NEXT_STAGE': 2,
+        'REJECTED': 2
+      };
+
+      const currentIndex = statusOrder[status] || 0;
+
+      return steps.map((step, index) => {
+        let dotClass = 'dot-pending';
+        if (index < currentIndex) dotClass = 'dot-completed';
+        else if (index === currentIndex) dotClass = 'dot-current';
+
+        return `
+          <div class="workflow-step">
+            <div class="workflow-dot ${dotClass}"></div>
+            <div class="text-sm ${index <= currentIndex ? 'text-white' : 'text-gray-500'}">${step.label}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Submit research
+    async function submitResearch(event) {
+      event.preventDefault();
+
+      const data = {
+        title: document.getElementById('title').value,
+        abstract: document.getElementById('abstract').value,
+        methodology: document.getElementById('methodology').value,
+        findings: document.getElementById('findings').value,
+        category: document.getElementById('category').value,
+        projectId: document.getElementById('projectId').value || null
+      };
+
+      try {
+        const response = await fetch('/api/research/submissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          alert('Submission created successfully!');
+          showMySubmissions();
+          await loadSubmissions();
+          renderSubmissions();
+        } else {
+          const error = await response.json();
+          alert('Error: ' + error.error);
+        }
+      } catch (error) {
+        console.error('Submit error:', error);
+        alert('Failed to submit. Please try again.');
+      }
+    }
+
+    // Save draft
+    function saveDraft() {
+      alert('Draft saved successfully!');
+    }
+
+    // Edit submission
+    function editSubmission(id) {
+      // Would open edit form
+      alert('Edit functionality coming soon!');
+    }
+
+    // View switchers
+    function showMySubmissions() {
+      showView('submissions-view');
+    }
+
+    function showNewSubmission() {
+      showView('new-submission-view');
+    }
+
+    function showView(viewId) {
+      document.querySelectorAll('#content-area > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById(viewId).classList.remove('hidden');
+    }
+
+    // Filter submissions
+    function filterSubmissions() {
+      renderSubmissions();
+    }
+
+    // Helper functions
+    function getStatusClass(status) {
+      return status.toLowerCase().replace(/_/g, '-');
+    }
+
+    function formatStatus(status) {
+      return status.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function formatCategory(category) {
+      return category.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+  </script>
+</body>
+</html>

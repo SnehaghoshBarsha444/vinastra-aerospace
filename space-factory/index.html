@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Factory Master Blueprint — VINASTRA ASCS</title>
+  <link rel="stylesheet" href="/professional.css">
+  <link rel="stylesheet" href="/home-redesign.css">
+  <link rel="stylesheet" href="/motion.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --space-dark: #0a0e27;
+      --space-blue: #1a1f3a;
+      --cosmic-purple: #2d1b4e;
+      --nebula-pink: #ff006e;
+      --stellar-cyan: #00d9ff;
+      --solar-orange: #ff9500;
+      --asteroid-gray: #6b7280;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--space-dark) 0%, var(--space-blue) 50%, var(--cosmic-purple) 100%);
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .blueprint-grid {
+      background-image: 
+        linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    .subsystem-card {
+      background: rgba(26, 31, 58, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .subsystem-card:hover {
+      border-color: var(--stellar-cyan);
+      box-shadow: 0 0 30px rgba(0, 217, 255, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .status-active { background: #10b981; }
+    .status-in-progress { background: var(--solar-orange); }
+    .status-review { background: var(--nebula-pink); }
+    .status-planned { background: var(--asteroid-gray); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .architecture-diagram {
+      background: radial-gradient(circle at center, rgba(0, 217, 255, 0.05) 0%, transparent 70%);
+    }
+
+    .component-node {
+      fill: rgba(0, 217, 255, 0.1);
+      stroke: var(--stellar-cyan);
+      stroke-width: 2;
+    }
+
+    .component-label {
+      fill: #e5e7eb;
+      font-size: 12px;
+    }
+
+    .connection-line {
+      stroke: var(--stellar-cyan);
+      stroke-width: 1;
+      stroke-dasharray: 5, 5;
+      opacity: 0.5;
+    }
+
+    .glass-panel {
+      background: rgba(26, 31, 58, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(255, 0, 110, 0.1));
+      border: 1px solid rgba(0, 217, 255, 0.3);
+    }
+
+    .progress-bar {
+      background: rgba(107, 114, 128, 0.3);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, var(--stellar-cyan), var(--nebula-pink));
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+
+    .version-badge {
+      background: rgba(255, 149, 0, 0.2);
+      color: var(--solar-orange);
+      border: 1px solid var(--solar-orange);
+    }
+
+    .timeline-item {
+      border-left: 2px solid var(--stellar-cyan);
+    }
+
+    .timeline-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--stellar-cyan);
+      border-radius: 50%;
+      position: absolute;
+      left: -7px;
+      top: 0;
+    }
+
+    .tab-button {
+      transition: all 0.3s ease;
+    }
+
+    .tab-button.active {
+      background: rgba(0, 217, 255, 0.2);
+      border-bottom: 2px solid var(--stellar-cyan);
+    }
+  </style>
+</head>
+<body class="blueprint-grid text-white">
+  <!-- Navigation -->
+  <nav class="glass-panel sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <a href="/" class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent">
+          VINASTRA
+        </a>
+        <span class="text-gray-400">|</span>
+        <span class="text-sm text-gray-300">Space Factory Blueprint</span>
+      </div>
+      
+      <div class="flex items-center space-x-6">
+        <button onclick="switchTab('overview')" class="tab-button active px-4 py-2 text-sm rounded-lg" id="tab-overview">
+          <i class="fas fa-th-large mr-2"></i>Overview
+        </button>
+        <button onclick="switchTab('architecture')" class="tab-button px-4 py-2 text-sm rounded-lg" id="tab-architecture">
+          <i class="fas fa-project-diagram mr-2"></i>Architecture
+        </button>
+        <button onclick="switchTab('timeline')" class="tab-button px-4 py-2 text-sm rounded-lg" id="tab-timeline">
+          <i class="fas fa-history mr-2"></i>Timeline
+        </button>
+        <a href="/mission-control" class="bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-lg text-sm font-semibold transition-all">
+          Mission Control
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Header Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="stat-card rounded-xl p-6">
+        <div class="text-3xl font-bold text-cyan-400" id="total-subsystems">8</div>
+        <div class="text-sm text-gray-400 mt-1">Total Subsystems</div>
+      </div>
+      <div class="stat-card rounded-xl p-6">
+        <div class="text-3xl font-bold text-green-400" id="active-subsystems">3</div>
+        <div class="text-sm text-gray-400 mt-1">In Development</div>
+      </div>
+      <div class="stat-card rounded-xl p-6">
+        <div class="text-3xl font-bold text-orange-400" id="review-subsystems">2</div>
+        <div class="text-sm text-gray-400 mt-1">Under Review</div>
+      </div>
+      <div class="stat-card rounded-xl p-6">
+        <div class="text-3xl font-bold text-pink-400" id="completion-percent">45%</div>
+        <div class="text-sm text-gray-400 mt-1">Overall Progress</div>
+      </div>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="content-overview" class="tab-content">
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-2">ASCS Master Blueprint</h2>
+        <p class="text-gray-400">
+          Autonomous Space Construction System architecture for orbital assembly, inspection, and maintenance operations.
+        </p>
+      </div>
+
+      <!-- Subsystems Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="subsystems-container">
+        <!-- Will be populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Architecture Tab -->
+    <div id="content-architecture" class="tab-content hidden">
+      <div class="glass-panel rounded-xl p-8 architecture-diagram">
+        <h2 class="text-2xl font-bold mb-6">System Architecture</h2>
+        
+        <div class="flex justify-center mb-8">
+          <svg width="800" height="600" id="architecture-svg">
+            <!-- Will be populated by JavaScript -->
+          </svg>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+          <div class="text-center">
+            <div class="w-4 h-4 rounded bg-cyan-400 mx-auto mb-2"></div>
+            <div class="text-sm text-gray-400">Core Systems</div>
+          </div>
+          <div class="text-center">
+            <div class="w-4 h-4 rounded bg-pink-400 mx-auto mb-2"></div>
+            <div class="text-sm text-gray-400">Sensing & Vision</div>
+          </div>
+          <div class="text-center">
+            <div class="w-4 h-4 rounded bg-orange-400 mx-auto mb-2"></div>
+            <div class="text-sm text-gray-400">Control & Motion</div>
+          </div>
+          <div class="text-center">
+            <div class="w-4 h-4 rounded bg-green-400 mx-auto mb-2"></div>
+            <div class="text-sm text-gray-400">Integration</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline Tab -->
+    <div id="content-timeline" class="tab-content hidden">
+      <div class="glass-panel rounded-xl p-8">
+        <h2 class="text-2xl font-bold mb-6">Development Timeline</h2>
+        
+        <div class="space-y-6" id="timeline-container">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subsystem Detail Modal -->
+  <div id="subsystem-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="glass-panel rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold" id="modal-title">Subsystem Name</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-white">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      
+      <div id="modal-content">
+        <!-- Will be populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let subsystems = [];
+    let activeTab = 'overview';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadSubsystems();
+      renderSubsystems();
+      renderArchitecture();
+      renderTimeline();
+    });
+
+    // Load subsystems from API
+    async function loadSubsystems() {
+      try {
+        const response = await fetch('/api/space-factory/subsystems');
+        if (response.ok) {
+          const data = await response.json();
+          subsystems = data.subsystems || [];
+        } else {
+          // Use demo data if API not available
+          subsystems = getDemoSubsystems();
+        }
+      } catch (error) {
+        console.error('Error loading subsystems:', error);
+        subsystems = getDemoSubsystems();
+      }
+      updateStats();
+    }
+
+    // Demo data
+    function getDemoSubsystems() {
+      return [
+        {
+          id: 'sub-001',
+          name: '6-DoF Robotic Manipulator Arm',
+          code: 'ARM-001',
+          status: 'IN_PROGRESS',
+          progress: 45,
+          version: 'Rev 1.2',
+          description: 'Primary manipulation system for assembly operations with sub-millimeter positioning accuracy.',
+          components: ['Shoulder Joint', 'Elbow Joint', 'Wrist Assembly', 'End Effector'],
+          requirements: [
+            'Position accuracy: ±0.5mm',
+            'Payload capacity: 25kg',
+            'Reach: 2.5m',
+            'Operating temp: -40°C to +80°C'
+          ],
+          lastUpdated: '2026-10-15'
+        },
+        {
+          id: 'sub-002',
+          name: 'Metrology & Vision System',
+          code: 'VIS-001',
+          status: 'IN_PROGRESS',
+          progress: 60,
+          version: 'Rev 1.0',
+          description: 'Advanced sensing system for real-time position tracking and quality inspection.',
+          components: ['Laser Rangefinder', 'Stereo Cameras', 'Structured Light Scanner', 'Infrared Sensors'],
+          requirements: [
+            'Measurement resolution: 0.1mm',
+            'Update rate: 30Hz',
+            'Field of view: 120°',
+            'Operating wavelength: 400-1000nm'
+          ],
+          lastUpdated: '2026-10-18'
+        },
+        {
+          id: 'sub-003',
+          name: 'Orbital Test Cell Platform',
+          code: 'CELL-001',
+          status: 'REVIEW',
+          progress: 80,
+          version: 'Rev 2.0',
+          description: 'Controlled environment test facility for ground-based validation of ASCS components.',
+          components: ['Thermal Chamber', 'Vacuum System', 'Vibration Isolation', 'Data Acquisition'],
+          requirements: [
+            'Vacuum level: 10^-6 Torr',
+            'Temperature range: -100°C to +150°C',
+            'Clean room class: ISO 7',
+            'Power capacity: 50kW'
+          ],
+          lastUpdated: '2026-10-20'
+        },
+        {
+          id: 'sub-004',
+          name: 'Motion Planning & Control',
+          code: 'CTRL-001',
+          status: 'IN_PROGRESS',
+          progress: 35,
+          version: 'Rev 1.1',
+          description: 'Real-time control algorithms for collision-free path planning and trajectory execution.',
+          components: ['Inverse Kinematics Solver', 'Collision Detection', 'Path Optimizer', 'Real-time Controller'],
+          requirements: [
+            'Planning time: <100ms',
+            'Control frequency: 1kHz',
+            'Collision margin: 50mm',
+            'Degrees of freedom: 6+1'
+          ],
+          lastUpdated: '2026-10-12'
+        },
+        {
+          id: 'sub-005',
+          name: 'End Effector Tool Changer',
+          code: 'TOOL-001',
+          status: 'REVIEW',
+          progress: 70,
+          version: 'Rev 1.0',
+          description: 'Modular tool system for switching between assembly, inspection, and maintenance tools.',
+          components: ['Quick-Release Mechanism', 'Power/Data Interface', 'Tool Cartridge System', 'Locking Actuator'],
+          requirements: [
+            'Tool change time: <30s',
+            'Maximum tools: 8',
+            'Payload per tool: 5kg',
+            'Connection reliability: 99.99%'
+          ],
+          lastUpdated: '2026-10-19'
+        },
+        {
+          id: 'sub-006',
+          name: 'Power Management System',
+          code: 'PWR-001',
+          status: 'PLANNED',
+          progress: 15,
+          version: 'Rev 0.3',
+          description: 'Distributed power architecture for sustained orbital operations with redundancy.',
+          components: ['Solar Array Interface', 'Battery System', 'Power Distribution Unit', 'Thermal Control'],
+          requirements: [
+            'Total power: 5kW',
+            'Battery capacity: 20kWh',
+            'Bus voltage: 28V / 120V',
+            'Fault tolerance: Dual redundant'
+          ],
+          lastUpdated: '2026-10-10'
+        },
+        {
+          id: 'sub-007',
+          name: 'Communications & Telemetry',
+          code: 'COMM-001',
+          status: 'PLANNED',
+          progress: 10,
+          version: 'Rev 0.2',
+          description: 'Space-to-ground and inter-module communication system for command and data relay.',
+          components: ['S-Band Transceiver', 'UHF Backup', 'Data Handling Unit', 'Antenna Array'],
+          requirements: [
+            'Downlink rate: 10 Mbps',
+            'Uplink rate: 1 Mbps',
+            'Latency: <500ms',
+            'Frequency bands: S-band, UHF'
+          ],
+          lastUpdated: '2026-10-08'
+        },
+        {
+          id: 'sub-008',
+          name: 'GNC & Propulsion Module',
+          code: 'GNC-001',
+          status: 'PLANNED',
+          progress: 20,
+          version: 'Rev 0.5',
+          description: 'Guidance, navigation, and control system for orbital maneuvering and station-keeping.',
+          components: ['IMU Suite', 'Star Tracker', 'Reaction Wheels', 'Cold Gas Thrusters'],
+          requirements: [
+            'Pointing accuracy: 0.1°',
+            'ΔV capacity: 50 m/s',
+            'Attitude knowledge: 0.01°',
+            'Stability: 0.001°/s'
+          ],
+          lastUpdated: '2026-10-05'
+        }
+      ];
+    }
+
+    // Update stats
+    function updateStats() {
+      document.getElementById('total-subsystems').textContent = subsystems.length;
+      document.getElementById('active-subsystems').textContent = subsystems.filter(s => s.status === 'IN_PROGRESS').length;
+      document.getElementById('review-subsystems').textContent = subsystems.filter(s => s.status === 'REVIEW').length;
+      
+      const avgProgress = subsystems.reduce((sum, s) => sum + s.progress, 0) / subsystems.length;
+      document.getElementById('completion-percent').textContent = Math.round(avgProgress) + '%';
+    }
+
+    // Render subsystems
+    function renderSubsystems() {
+      const container = document.getElementById('subsystems-container');
+      container.innerHTML = '';
+
+      subsystems.forEach(subsystem => {
+        const statusClass = getStatusClass(subsystem.status);
+        const statusLabel = getStatusLabel(subsystem.status);
+
+        const card = document.createElement('div');
+        card.className = 'subsystem-card rounded-xl p-6 cursor-pointer';
+        card.onclick = () => openModal(subsystem);
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <div class="flex items-center space-x-2 mb-1">
+                <div class="status-indicator ${statusClass}"></div>
+                <span class="text-xs text-gray-400">${statusLabel}</span>
+              </div>
+              <h3 class="text-lg font-semibold">${subsystem.name}</h3>
+              <div class="text-sm text-gray-500 mt-1">${subsystem.code}</div>
+            </div>
+            <span class="version-badge text-xs px-2 py-1 rounded">${subsystem.version}</span>
+          </div>
+          
+          <p class="text-sm text-gray-400 mb-4 line-clamp-2">${subsystem.description}</p>
+          
+          <div class="mb-2">
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-gray-500">Progress</span>
+              <span class="text-cyan-400">${subsystem.progress}%</span>
+            </div>
+            <div class="progress-bar h-2">
+              <div class="progress-fill" style="width: ${subsystem.progress}%"></div>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-700">
+            <div class="text-xs text-gray-500">
+              <i class="fas fa-cubes mr-1"></i>${subsystem.components?.length || 0} Components
+            </div>
+            <div class="text-xs text-gray-500">
+              <i class="fas fa-clock mr-1"></i>${subsystem.lastUpdated}
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // Render architecture diagram
+    function renderArchitecture() {
+      const svg = document.getElementById('architecture-svg');
+      
+      svg.innerHTML = `
+        <!-- Central Node -->
+        <circle cx="400" cy="300" r="60" class="component-node" />
+        <text x="400" y="295" text-anchor="middle" class="component-label font-semibold">ASCS</text>
+        <text x="400" y="310" text-anchor="middle" class="component-label" style="font-size: 10px;">Core System</text>
+        
+        <!-- Outer Nodes -->
+        <circle cx="400" cy="100" r="50" class="component-node" style="fill: rgba(0, 217, 255, 0.1);" />
+        <text x="400" y="95" text-anchor="middle" class="component-label">GNC</text>
+        <text x="400" y="110" text-anchor="middle" class="component-label" style="font-size: 10px;">Navigation</text>
+        
+        <circle cx="600" cy="150" r="50" class="component-node" style="fill: rgba(255, 0, 110, 0.1);" />
+        <text x="600" y="145" text-anchor="middle" class="component-label">Vision</text>
+        <text x="600" y="160" text-anchor="middle" class="component-label" style="font-size: 10px;">Metrology</text>
+        
+        <circle cx="650" cy="300" r="50" class="component-node" style="fill: rgba(255, 149, 0, 0.1);" />
+        <text x="650" y="295" text-anchor="middle" class="component-label">Arm</text>
+        <text x="650" y="310" text-anchor="middle" class="component-label" style="font-size: 10px;">Manipulator</text>
+        
+        <circle cx="600" cy="450" r="50" class="component-node" style="fill: rgba(16, 185, 129, 0.1);" />
+        <text x="600" y="445" text-anchor="middle" class="component-label">Control</text>
+        <text x="600" y="460" text-anchor="middle" class="component-label" style="font-size: 10px;">Planning</text>
+        
+        <circle cx="400" cy="500" r="50" class="component-node" style="fill: rgba(0, 217, 255, 0.1);" />
+        <text x="400" y="495" text-anchor="middle" class="component-label">Power</text>
+        <text x="400" y="510" text-anchor="middle" class="component-label" style="font-size: 10px;">Management</text>
+        
+        <circle cx="200" cy="450" r="50" class="component-node" style="fill: rgba(255, 0, 110, 0.1);" />
+        <text x="200" y="445" text-anchor="middle" class="component-label">Comm</text>
+        <text x="200" y="460" text-anchor="middle" class="component-label" style="font-size: 10px;">Telemetry</text>
+        
+        <circle cx="150" cy="300" r="50" class="component-node" style="fill: rgba(255, 149, 0, 0.1);" />
+        <text x="150" y="295" text-anchor="middle" class="component-label">Tools</text>
+        <text x="150" y="310" text-anchor="middle" class="component-label" style="font-size: 10px;">End Effector</text>
+        
+        <circle cx="200" cy="150" r="50" class="component-node" style="fill: rgba(16, 185, 129, 0.1);" />
+        <text x="200" y="145" text-anchor="middle" class="component-label">Test Cell</text>
+        <text x="200" y="160" text-anchor="middle" class="component-label" style="font-size: 10px;">Platform</text>
+        
+        <!-- Connection Lines -->
+        <line x1="400" y1="240" x2="400" y2="150" class="connection-line" />
+        <line x1="450" y1="260" x2="560" y2="170" class="connection-line" />
+        <line x1="460" y1="300" x2="600" y2="300" class="connection-line" />
+        <line x1="450" y1="340" x2="560" y2="430" class="connection-line" />
+        <line x1="400" y1="360" x2="400" y2="450" class="connection-line" />
+        <line x1="350" y1="340" x2="240" y2="430" class="connection-line" />
+        <line x1="340" y1="300" x2="200" y2="300" class="connection-line" />
+        <line x1="350" y1="260" x2="240" y2="170" class="connection-line" />
+      `;
+    }
+
+    // Render timeline
+    function renderTimeline() {
+      const container = document.getElementById('timeline-container');
+      
+      const milestones = [
+        { date: 'Q1 2026', title: 'Conceptual Architecture Complete', status: 'COMPLETE', description: 'Core ASCS mathematical modeling and simulation framework established.' },
+        { date: 'Q2 2026', title: 'University Partnership Formalized', status: 'COMPLETE', description: 'Joint research cell established with academic institutions.' },
+        { date: 'Q3 2026', title: 'Component-Level Testing', status: 'IN_PROGRESS', description: 'Validation of individual subsystems in controlled test cell environment.' },
+        { date: 'Q4 2026', title: 'Prototype-1 Assembly', status: 'PLANNED', description: 'Integration of all subsystems into ground demonstrator unit.' },
+        { date: 'Q1 2027', title: 'System-Level Validation', status: 'PLANNED', description: 'End-to-end testing of autonomous assembly workflows.' },
+        { date: 'Q2 2027', title: 'Flight Qualification Review', status: 'PLANNED', description: 'Preparation for orbital deployment readiness assessment.' }
+      ];
+
+      container.innerHTML = milestones.map(milestone => `
+        <div class="timeline-item relative pl-8 pb-6">
+          <div class="timeline-dot"></div>
+          <div class="glass-panel rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-semibold">${milestone.title}</h4>
+              <span class="text-xs px-2 py-1 rounded ${milestone.status === 'COMPLETE' ? 'bg-green-500 bg-opacity-20 text-green-400' : milestone.status === 'IN_PROGRESS' ? 'bg-orange-500 bg-opacity-20 text-orange-400' : 'bg-gray-500 bg-opacity-20 text-gray-400'}">${milestone.status}</span>
+            </div>
+            <div class="text-sm text-gray-400 mb-2">${milestone.date}</div>
+            <p class="text-sm text-gray-300">${milestone.description}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Tab switching
+    function switchTab(tab) {
+      activeTab = tab;
+      
+      // Update tab buttons
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`tab-${tab}`).classList.add('active');
+      
+      // Update content
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+      document.getElementById(`content-${tab}`).classList.remove('hidden');
+    }
+
+    // Modal functions
+    function openModal(subsystem) {
+      const modal = document.getElementById('subsystem-modal');
+      document.getElementById('modal-title').textContent = subsystem.name;
+      
+      document.getElementById('modal-content').innerHTML = `
+        <div class="space-y-6">
+          <div class="flex items-center space-x-4">
+            <span class="version-badge px-3 py-1 rounded">${subsystem.version}</span>
+            <span class="text-sm text-gray-400">${subsystem.code}</span>
+            <span class="text-xs px-2 py-1 rounded ${getStatusClass(subsystem.status)} bg-opacity-20">${getStatusLabel(subsystem.status)}</span>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold mb-2">Description</h4>
+            <p class="text-gray-400 text-sm">${subsystem.description}</p>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold mb-2">Progress</h4>
+            <div class="progress-bar h-3">
+              <div class="progress-fill" style="width: ${subsystem.progress}%"></div>
+            </div>
+            <div class="text-right text-sm text-gray-400 mt-1">${subsystem.progress}% Complete</div>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold mb-2">Components</h4>
+            <div class="grid grid-cols-2 gap-2">
+              ${subsystem.components.map(comp => `
+                <div class="bg-gray-800 bg-opacity-50 rounded px-3 py-2 text-sm">
+                  <i class="fas fa-cube text-cyan-400 mr-2"></i>${comp}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold mb-2">Requirements</h4>
+            <ul class="space-y-2">
+              ${subsystem.requirements.map(req => `
+                <li class="flex items-start text-sm text-gray-400">
+                  <i class="fas fa-check-circle text-green-400 mr-2 mt-1"></i>
+                  <span>${req}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+          
+          <div class="pt-4 border-t border-gray-700">
+            <div class="text-sm text-gray-500">
+              Last updated: ${subsystem.lastUpdated}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('subsystem-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Helper functions
+    function getStatusClass(status) {
+      switch(status) {
+        case 'ACTIVE': return 'status-active';
+        case 'IN_PROGRESS': return 'status-in-progress';
+        case 'REVIEW': return 'status-review';
+        case 'PLANNED': return 'status-planned';
+        default: return 'status-planned';
+      }
+    }
+
+    function getStatusLabel(status) {
+      switch(status) {
+        case 'ACTIVE': return 'Active';
+        case 'IN_PROGRESS': return 'In Development';
+        case 'REVIEW': return 'Under Review';
+        case 'PLANNED': return 'Planned';
+        default: return 'Unknown';
+      }
+    }
+
+    // Close modal on background click
+    document.getElementById('subsystem-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'subsystem-modal') {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

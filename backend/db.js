@@ -470,6 +470,184 @@ class DatabaseEngine {
       }
     ];
 
+    // 12. Seed Space Factory Master Blueprint Subsystems (Phase 8)
+    const subsystems = [
+      {
+        id: 'sub-01',
+        code: 'ASF-ROB',
+        name: 'Robotic Construction & Assembly Arms',
+        subsystem: 'ROBOTIC_CONSTRUCTION',
+        description: 'Dual 6-DoF cooperative robotic manipulators with micro-tolerance end-effectors for structural truss positioning and fastener latching.',
+        objectives: 'Autonomous alignment, latching, and fastening within ±0.15mm precision under orbital zero-gravity dynamics.',
+        technicalRequirements: 'Operating reach: 4.2m | Max payload: 500kg | Power draw: <450W | Joint repeatability: 50 microns',
+        interfaces: 'Interfaces with ASF-MET (Stereo Vision) for visual servoing and ASF-MAT (Cargo Rail) for component retrieval.',
+        designRevision: 'Rev 1.3',
+        status: 'IN_DEVELOPMENT',
+        assignedLead: 'Dr. Vikram Sarabhai',
+        openIssues: 'End-effector thermal binding at cryogenic shadow transit (-120°C).',
+        version: 3,
+        updatedAt: now
+      },
+      {
+        id: 'sub-02',
+        code: 'ASF-MFG',
+        name: 'Advanced Manufacturing & Additive Extrusion',
+        subsystem: 'ADVANCED_MANUFACTURING',
+        description: 'Vacuum-compatible continuous carbon-fiber reinforced PEEK and titanium powder sintering cell for on-orbit spare fabrication.',
+        objectives: 'Eliminate launch-shroud volume constraints by printing large aperture trusses and support booms directly on-orbit.',
+        technicalRequirements: 'Extrusion rate: 120 cm³/hr | Deposition tolerance: ±0.1mm | Chamber vacuum: 10⁻⁴ Torr',
+        interfaces: 'Connected to ASF-PWR (Power Bus) and ASF-RES (Recycled Feedstock Hopper).',
+        designRevision: 'Rev 1.1',
+        status: 'IN_DEVELOPMENT',
+        assignedLead: 'Prof. Sunita Sharma',
+        openIssues: 'Inter-laminar degassing during rapid vacuum heating cycles.',
+        version: 2,
+        updatedAt: now
+      },
+      {
+        id: 'sub-03',
+        code: 'ASF-PWR',
+        name: 'Power Generation & Radiative Storage',
+        subsystem: 'POWER_SYSTEMS',
+        description: 'Multi-junction gallium-arsenide solar concentrator arrays backed by solid-state battery banks and flywheel kinetics.',
+        objectives: 'Provide continuous 25 kW peak power through 35-minute orbital eclipse durations.',
+        technicalRequirements: 'Total generation: 45 kW BOL | Storage: 30 kWh solid-state | Bus voltage: 120V DC regulated',
+        interfaces: 'Powers all factory bays via redundant optical-isolated power bus lines.',
+        designRevision: 'Rev 0.8',
+        status: 'PROPOSED',
+        assignedLead: 'Vinay Jeedi',
+        openIssues: 'Radiator surface degradation under continuous atomic oxygen exposure.',
+        version: 1,
+        updatedAt: now
+      },
+      {
+        id: 'sub-04',
+        code: 'ASF-COM',
+        name: 'Communications & Laser Telemetry Link',
+        subsystem: 'COMMUNICATIONS',
+        description: 'High-bandwidth optical laser terminal providing 10 Gbps inter-satellite link to relay constellation and X-band ground backup.',
+        objectives: 'Stream real-time stereoscopic point clouds and digital twin synchronization to ground command.',
+        technicalRequirements: 'Laser wavelength: 1550nm | Pointing accuracy: 5 micro-radians | Data throughput: 10 Gbps',
+        interfaces: 'Feeds ASF-GND (Digital Twin Telemetry) and mission control ground stations.',
+        designRevision: 'Rev 1.0',
+        status: 'UNDER_REVIEW',
+        assignedLead: 'Dr. Vikram Sarabhai',
+        openIssues: 'Beam jitter compensation during robotic arm high-torque maneuvers.',
+        version: 2,
+        updatedAt: now
+      },
+      {
+        id: 'sub-05',
+        code: 'ASF-THM',
+        name: 'Thermal Control & Cryogenic Radiators',
+        subsystem: 'THERMAL_CONTROL',
+        description: 'Loop heat pipes (LHPs) with ammonia working fluid, variable emittance electrochromic louvers, and phase-change thermal capacitors.',
+        objectives: 'Maintain core manufacturing electronics and sensor benches between +15°C and +25°C across solar transit extremes.',
+        technicalRequirements: 'Heat rejection: 18 kW max | Operating range: -150°C to +150°C external',
+        interfaces: 'Thermal jackets wrap ASF-MFG extrusion bay and optical benches.',
+        designRevision: 'Rev 1.2',
+        status: 'IN_DEVELOPMENT',
+        assignedLead: 'Dr. Vikram Sarabhai',
+        openIssues: 'Condenser freeze-out protection during prolonged deep eclipse orientations.',
+        version: 3,
+        updatedAt: now
+      },
+      {
+        id: 'sub-06',
+        code: 'ASF-RES',
+        name: 'Resource Processing & Raw Feedstock Sorting',
+        subsystem: 'RESOURCE_PROCESSING',
+        description: 'Thermal vacuum distillation of volatile compounds and centrifugal separation of metal-silicate powders from asteroidal and lunar feedstock.',
+        objectives: 'Produce pure iron-nickel and silica powders for additive manufacturing sintering chambers.',
+        technicalRequirements: 'Batch capacity: 50 kg/day | Extraction yield: >85% | Particle classification: <45 microns',
+        interfaces: 'Supplies refined granular material to ASF-MFG additive hoppers.',
+        designRevision: 'Rev 0.6',
+        status: 'PROPOSED',
+        assignedLead: 'Prof. Sunita Sharma',
+        openIssues: 'Zero-g powder fluidization and electrostatic clumping.',
+        version: 1,
+        updatedAt: now
+      },
+      {
+        id: 'sub-07',
+        code: 'ASF-MAT',
+        name: 'Material Handling & Magnetic Cargo Rails',
+        subsystem: 'MATERIAL_HANDLING',
+        description: 'Linear induction motor (LIM) internal rail shuttle transporting standardized modular component pallets across assembly bays.',
+        objectives: 'Autonomous transfer of feedstock canisters, completed satellite buses, and replacement tools.',
+        technicalRequirements: 'Rail length: 18m | Shuttle speed: 0.5 m/s | Positioning repeatability: ±0.5mm',
+        interfaces: 'Bridges storage lockers with ASF-ROB construction bay berths.',
+        designRevision: 'Rev 0.9',
+        status: 'PROPOSED',
+        assignedLead: 'Vinay Jeedi',
+        openIssues: 'Electromagnetic interference with sensitive magnetometer payloads.',
+        version: 1,
+        updatedAt: now
+      },
+      {
+        id: 'sub-08',
+        code: 'ASF-GND',
+        name: 'Ground Supervision & Physics-Based Digital Twin',
+        subsystem: 'GROUND_SUPERVISION',
+        description: 'High-fidelity edge simulator running alongside orbital telemetry to predict collision risks, joint thermal stress, and verify assembly commands.',
+        objectives: 'Latency-tolerant supervisory control verifying commands prior to orbital execution.',
+        technicalRequirements: 'Simulation rate: 100 Hz real-time physics | State latency: <2.5 seconds | Anomaly buffer: 5s',
+        interfaces: 'Receives live packet stream via ASF-COM and controls ASF-ROB autonomous sequencer.',
+        designRevision: 'Rev 2.0',
+        status: 'APPROVED_FOR_TESTING',
+        assignedLead: 'Vinay Jeedi',
+        openIssues: 'Validation against physical Prototype-1 ground demonstrator sensor telemetry.',
+        version: 4,
+        updatedAt: now
+      }
+    ];
+
+    // 13. Seed Innovation Proposals (Phase 6)
+    const innovations = [
+      {
+        id: 'inv-01',
+        title: 'Modular Docking Node with Integrated Fluid & Optical Data Bus',
+        problemStatement: 'Current space docking mechanisms require separate robotic plug-ins for propellant transfer, high-speed data, and high-voltage power.',
+        proposedSolution: 'A tri-conical hermaphroditic docking interface that establishes structural lock, 100Gbps optical bus, and cryogenic fluid couplings in a single stroke.',
+        technicalApproach: 'Kinematic alignment pins coupled with dry-break zero-spill fluid poppets and non-contact optical collimators.',
+        feasibilityAssessment: 'Simulations indicate 98.4% alignment success within ±15mm initial capture envelope.',
+        requiredResources: 'Precision 5-axis CNC machining, silicone seals vacuum test chamber, cleanroom test cell.',
+        dependencies: 'Requires ASF-ROB end-effector for docking approach guidance.',
+        expectedOutcomes: 'Reduces module assembly time from 4 hours to 12 minutes.',
+        risksAndLimitations: 'Seal embrittlement after 100+ mating cycles under direct ultraviolet radiation.',
+        authorUserId: uStudent.id,
+        relatedSubsystem: 'ASF-MAT',
+        status: 'APPROVED_FOR_INVESTIGATION',
+        reviewerNotes: 'Highly promising concept. Formally approved for ground cell investigation.',
+        decisionByUserId: uAdmin.id,
+        decisionAt: now,
+        version: 1,
+        createdAt: now,
+        updatedAt: now
+      },
+      {
+        id: 'inv-02',
+        title: 'Continuous Sintered Titanium Lattice for Deep Space Reflector Trusses',
+        problemStatement: 'Large deployable space antennas suffer from mechanical hinge failure and thermal drift during launch deployment.',
+        proposedSolution: 'On-orbit selective laser sintering of ultra-lightweight titanium lattice parabolic ribs.',
+        technicalApproach: 'Direct metal laser sintering using spherical Ti-6Al-4V powder in low-gravity vacuum.',
+        feasibilityAssessment: 'Finite element analysis confirms 4x stiffness-to-weight ratio compared to folded carbon composite boons.',
+        requiredResources: 'Laser sintering test head, vacuum chamber, metallurgical scanner.',
+        dependencies: 'Requires ASF-MFG and ASF-PWR 15 kW bus.',
+        expectedOutcomes: 'Enables 25-meter aperture radio reflectors without launch fairing diameter constraints.',
+        risksAndLimitations: 'Residual thermal stress causing micro-warping of the parabolic curvature.',
+        authorUserId: uResearcher.id,
+        relatedSubsystem: 'ASF-MFG',
+        status: 'UNDER_REVIEW',
+        reviewerNotes: 'Under technical evaluation for power consumption bounds.',
+        decisionByUserId: null,
+        decisionAt: null,
+        version: 1,
+        createdAt: now,
+        updatedAt: now
+      }
+    ];
+
     this.data = {
       users: [uAdmin, uEngineer, uResearcher, uStudent, uInvestor],
       institutions: [instHq, instIitb, instIsro],
@@ -484,7 +662,9 @@ class DatabaseEngine {
       notifications: notifications,
       auditLogs: auditLogs,
       inquiries: [],
-      passwordResets: []
+      passwordResets: [],
+      blueprintSubsystems: subsystems,
+      innovations: innovations
     };
 
     await this.persist();

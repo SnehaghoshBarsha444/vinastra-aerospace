@@ -7,11 +7,16 @@ import { verifyToken } from './crypto.js';
 import { db } from './db.js';
 
 export const ROLES = {
-  ADMIN: 'ADMIN',
   FOUNDER: 'FOUNDER',
+  ADMIN: 'ADMIN',
+  CTO: 'CTO',
+  RD_LEAD: 'RD_LEAD',
   ENGINEER: 'ENGINEER',
   RESEARCHER: 'RESEARCHER',
+  COORDINATOR: 'COORDINATOR',
+  FELLOW: 'FELLOW',
   STUDENT: 'STUDENT',
+  ADVISOR: 'ADVISOR',
   INVESTOR: 'INVESTOR'
 };
 
@@ -21,14 +26,22 @@ export function mapRegistrationRole(clientRole) {
     case 'students':
     case 'student':
       return ROLES.STUDENT;
+    case 'fellow':
+    case 'intern':
+      return ROLES.FELLOW;
     case 'researcher':
     case 'academic':
       return ROLES.RESEARCHER;
+    case 'coordinator':
+    case 'university_coordinator':
+      return ROLES.COORDINATOR;
     case 'professional':
     case 'engineer':
       return ROLES.ENGINEER;
     case 'investor':
       return ROLES.INVESTOR;
+    case 'advisor':
+      return ROLES.ADVISOR;
     default:
       return ROLES.STUDENT; // Default safe unprivileged role
   }
