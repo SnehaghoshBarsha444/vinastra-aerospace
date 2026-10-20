@@ -8,6 +8,8 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { handleApiRequest } from './backend/api.js';
+import { initializeFirestoreSync } from './src/lib/firebase/firestore-sync.js';
+import { db } from './backend/db.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT) || 4174;
@@ -117,10 +119,27 @@ const server = createServer(async (request, response) => {
 
 if (process.env.VERCEL !== '1') {
   let activePort = port;
-  server.on('listening', () => {
+  server.on('listening', async () => {
     const addr = server.address();
     const actualPort = typeof addr === 'object' && addr ? addr.port : activePort;
     console.log(`Vinastra Aerospace listening on http://localhost:${actualPort}`);
+    
+    // Initialize Firestore sync after server starts
+    try {
+      await db.init();
+      const syncResult = await initializeFirestoreSync(db, {
+        enableRealtimeSync: true,
+        syncIntervalMs: 60000, // Sync every 60 seconds
+        syncOnStartup: true
+      });
+      if (syncResult.success) {
+        console.log('[Server] Firestore real-time sync enabled');
+      } else {
+        console.log('[Server] Firestore sync disabled:', syncResult.reason || syncResult.error);
+      }
+    } catch (error) {
+      console.log('[Server] Firestore sync initialization skipped:', error.message);
+    }
   });
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
