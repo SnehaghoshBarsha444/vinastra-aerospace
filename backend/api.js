@@ -10,7 +10,6 @@ import {
   ROLES,
   mapRegistrationRole,
   authenticateRequest,
-import { initializeFirestoreSync, syncDocumentToFirestore } from '../src/lib/firebase/firestore-sync.js';
   hasRole,
   canAccessProject,
   canAccessDocument,
