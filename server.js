@@ -3,6 +3,9 @@
  * Integrates Mission Control APIs, RBAC authentication, and secure static asset delivery.
  */
 
+import { config } from 'dotenv';
+config(); // Load environment variables first
+
 import { createServer } from 'node:http';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';

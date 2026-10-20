@@ -89,21 +89,31 @@ function validateServerAdminCredentials() {
 // FIREBASE ADMIN CONFIGURATION
 // ============================================================
 
-// Client Project Admin (for server-side operations on client Firebase)
-const FIREBASE_CLIENT_ADMIN_CONFIG = {
-  projectId: process.env.FIREBASE_CLIENT_ADMIN_PROJECT_ID || "vinastra-aerospace-clientside",
-  clientEmail: process.env.FIREBASE_CLIENT_ADMIN_CLIENT_EMAIL,
-  privateKey: process.env.FIREBASE_CLIENT_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-  storageBucket: "vinastra-aerospace-clientside.firebasestorage.app"
-};
+// Helper function to convert \n string literals to actual newlines
+function formatPrivateKey(key) {
+  if (!key) return null;
+  // If the key contains literal \n, convert to actual newlines
+  return key.replace(/\\n/g, '\n');
+}
 
-// Server Project Admin (for Mission Control Admin Portal)
-const FIREBASE_SERVER_ADMIN_CONFIG = {
-  projectId: process.env.FIREBASE_ADMIN_PROJECT_ID || "vinastra-aerospace-serverside",
-  clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-  privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-  storageBucket: "vinastra-aerospace-serverside.firebasestorage.app"
-};
+// Get Firebase Admin config (called after env vars are loaded)
+function getClientAdminConfig() {
+  return {
+    projectId: process.env.FIREBASE_CLIENT_ADMIN_PROJECT_ID || "vinastra-aerospace-clientside",
+    clientEmail: process.env.FIREBASE_CLIENT_ADMIN_CLIENT_EMAIL,
+    privateKey: formatPrivateKey(process.env.FIREBASE_CLIENT_ADMIN_PRIVATE_KEY),
+    storageBucket: "vinastra-aerospace-clientside.firebasestorage.app"
+  };
+}
+
+function getServerAdminConfig() {
+  return {
+    projectId: process.env.FIREBASE_ADMIN_PROJECT_ID || "vinastra-aerospace-serverside",
+    clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+    privateKey: formatPrivateKey(process.env.FIREBASE_ADMIN_PRIVATE_KEY),
+    storageBucket: "vinastra-aerospace-serverside.firebasestorage.app"
+  };
+}
 
 // ============================================================
 // FIREBASE ADMIN INITIALIZATION
@@ -140,45 +150,50 @@ async function initializeFirebaseAdmin() {
   
   try {
     // Dynamically import firebase-admin (server-side only)
-    admin = await import('firebase-admin');
+    const adminModule = await import('firebase-admin');
+    admin = adminModule.default || adminModule;
+    
+    // Get configs AFTER env vars are loaded
+    const clientConfig = getClientAdminConfig();
+    const serverConfig = getServerAdminConfig();
     
     // Initialize Client Project Admin (REQUIRED)
     validateClientAdminCredentials();
     
     clientAdmin = admin.initializeApp({
       credential: admin.credential.cert({
-        projectId: FIREBASE_CLIENT_ADMIN_CONFIG.projectId,
-        clientEmail: FIREBASE_CLIENT_ADMIN_CONFIG.clientEmail,
-        privateKey: FIREBASE_CLIENT_ADMIN_CONFIG.privateKey
+        projectId: clientConfig.projectId,
+        clientEmail: clientConfig.clientEmail,
+        privateKey: clientConfig.privateKey
       }),
-      projectId: FIREBASE_CLIENT_ADMIN_CONFIG.projectId,
-      storageBucket: FIREBASE_CLIENT_ADMIN_CONFIG.storageBucket
+      projectId: clientConfig.projectId,
+      storageBucket: clientConfig.storageBucket
     }, 'vinastra-client-admin');
     
     clientAuth = admin.auth(clientAdmin);
     clientDb = admin.firestore(clientAdmin);
     
     console.log('[Firebase Client Admin] Successfully initialized');
-    console.log('[Firebase Client Admin] Project ID:', FIREBASE_CLIENT_ADMIN_CONFIG.projectId);
+    console.log('[Firebase Client Admin] Project ID:', clientConfig.projectId);
     
     // Initialize Server Project Admin (OPTIONAL - for Mission Control Admin Portal)
     if (validateServerAdminCredentials()) {
       try {
         serverAdmin = admin.initializeApp({
           credential: admin.credential.cert({
-            projectId: FIREBASE_SERVER_ADMIN_CONFIG.projectId,
-            clientEmail: FIREBASE_SERVER_ADMIN_CONFIG.clientEmail,
-            privateKey: FIREBASE_SERVER_ADMIN_CONFIG.privateKey
+            projectId: serverConfig.projectId,
+            clientEmail: serverConfig.clientEmail,
+            privateKey: serverConfig.privateKey
           }),
-          projectId: FIREBASE_SERVER_ADMIN_CONFIG.projectId,
-          storageBucket: FIREBASE_SERVER_ADMIN_CONFIG.storageBucket
+          projectId: serverConfig.projectId,
+          storageBucket: serverConfig.storageBucket
         }, 'vinastra-server-admin');
         
         serverAuth = admin.auth(serverAdmin);
         serverDb = admin.firestore(serverAdmin);
         
         console.log('[Firebase Server Admin] Successfully initialized');
-        console.log('[Firebase Server Admin] Project ID:', FIREBASE_SERVER_ADMIN_CONFIG.projectId);
+        console.log('[Firebase Server Admin] Project ID:', serverConfig.projectId);
       } catch (error) {
         console.warn('[Firebase Server Admin] Failed to initialize (optional):', error.message);
       }
@@ -469,6 +484,9 @@ async function createAuditLog({ userId, action, resourceType, resourceId, detail
  * @returns {Object} Configuration status
  */
 function checkAdminStatus() {
+  const clientConfig = getClientAdminConfig();
+  const serverConfig = getServerAdminConfig();
+  
   return {
     isInitialized,
     hasError: !!initializationError,
@@ -477,11 +495,11 @@ function checkAdminStatus() {
       hasCredentials: !!(process.env.FIREBASE_CLIENT_ADMIN_PROJECT_ID && 
                          process.env.FIREBASE_CLIENT_ADMIN_CLIENT_EMAIL && 
                          process.env.FIREBASE_CLIENT_ADMIN_PRIVATE_KEY),
-      projectId: FIREBASE_CLIENT_ADMIN_CONFIG.projectId
+      projectId: clientConfig.projectId
     },
     serverAdmin: {
       hasCredentials: validateServerAdminCredentials(),
-      projectId: FIREBASE_SERVER_ADMIN_CONFIG.projectId
+      projectId: serverConfig.projectId
     }
   };
 }
@@ -520,15 +538,9 @@ const exports = {
   verifyUserRole,
   createAuditLog,
   
-  // Config (non-sensitive)
-  FIREBASE_CLIENT_ADMIN_CONFIG: {
-    projectId: FIREBASE_CLIENT_ADMIN_CONFIG.projectId,
-    storageBucket: FIREBASE_CLIENT_ADMIN_CONFIG.storageBucket
-  },
-  FIREBASE_SERVER_ADMIN_CONFIG: {
-    projectId: FIREBASE_SERVER_ADMIN_CONFIG.projectId,
-    storageBucket: FIREBASE_SERVER_ADMIN_CONFIG.storageBucket
-  }
+  // Config getters (non-sensitive)
+  getClientAdminConfig,
+  getServerAdminConfig
 };
 
 export default exports;

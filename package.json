@@ -13,6 +13,7 @@
     "node": ">=20"
   },
   "dependencies": {
+    "dotenv": "^18.0.8",
     "firebase-admin": "^13.10.0"
   }
 }
