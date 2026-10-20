@@ -535,19 +535,44 @@ function ensureAuthModal() {
     submitBtn.innerHTML = `AUTHENTICATING… <span class="action-arrow">⟳</span>`;
     feedback.style.display = "none";
 
+    // Helper function to get redirect destination based on role
+    const getRoleDestination = (role) => {
+      const userRole = (role || 'professional').toUpperCase();
+      const roleDestinations = {
+        'ADMIN': '/mission-control/admin/',
+        'FOUNDER': '/mission-control/admin/',
+        'CTO': '/mission-control/',
+        'RD_LEAD': '/mission-control/',
+        'ENGINEER': '/mission-control/',
+        'PROFESSIONAL': '/mission-control/',
+        'RESEARCHER': '/mission-control/',
+        'COORDINATOR': '/mission-control/',
+        'STUDENTS': '/mission-control/',
+        'STUDENT': '/mission-control/',
+        'FELLOW': '/mission-control/',
+        'INVESTOR': '/investors/',
+        'ADVISOR': '/mission-control/'
+      };
+      return roleDestinations[userRole] || '/mission-control/';
+    };
+
     try {
-      await loginUser({ email, password });
+      const result = await loginUser({ email, password });
+      const user = result?.profile || currentUserProfile;
+      
       feedback.className = "auth-feedback success";
-      feedback.textContent = "Authentication successful. Welcome aboard!";
+      feedback.textContent = "Authentication successful! Redirecting to dashboard...";
       feedback.style.display = "block";
+      
+      // Redirect to dashboard
       setTimeout(() => {
-        closeAuthModal();
-      }, 1000);
+        const destination = getRoleDestination(user?.role);
+        window.location.href = destination;
+      }, 800);
     } catch (err) {
       feedback.className = "auth-feedback error";
       feedback.textContent = formatAuthError(err);
       feedback.style.display = "block";
-    } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = `AUTHENTICATE &amp; ENTER <span class="action-arrow">→</span>`;
     }
@@ -572,19 +597,44 @@ function ensureAuthModal() {
     submitBtn.innerHTML = `REGISTERING IDENTITY… <span class="action-arrow">⟳</span>`;
     feedback.style.display = "none";
 
+    // Helper function for signup redirect
+    const getSignupRoleDestination = (userRole) => {
+      const roleVal = (userRole || 'professional').toUpperCase();
+      const roleDestinations = {
+        'ADMIN': '/mission-control/admin/',
+        'FOUNDER': '/mission-control/admin/',
+        'CTO': '/mission-control/',
+        'RD_LEAD': '/mission-control/',
+        'ENGINEER': '/mission-control/',
+        'PROFESSIONAL': '/mission-control/',
+        'RESEARCHER': '/mission-control/',
+        'COORDINATOR': '/mission-control/',
+        'STUDENTS': '/mission-control/',
+        'STUDENT': '/mission-control/',
+        'FELLOW': '/mission-control/',
+        'INVESTOR': '/investors/',
+        'ADVISOR': '/mission-control/'
+      };
+      return roleDestinations[roleVal] || '/mission-control/';
+    };
+
     try {
-      await createAccount({ name, email, password, role });
+      const result = await createAccount({ name, email, password, role });
+      const user = result?.profile || currentUserProfile;
+      
       feedback.className = "auth-feedback success";
-      feedback.textContent = "Account registered and saved to Vinastra database!";
+      feedback.textContent = "Account registered! Redirecting to dashboard...";
       feedback.style.display = "block";
+      
+      // Redirect to dashboard
       setTimeout(() => {
-        closeAuthModal();
-      }, 1200);
+        const destination = getSignupRoleDestination(user?.role || role);
+        window.location.href = destination;
+      }, 800);
     } catch (err) {
       feedback.className = "auth-feedback error";
       feedback.textContent = formatAuthError(err);
       feedback.style.display = "block";
-    } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = `REGISTER ACCOUNT TO DATABASE <span class="action-arrow">→</span>`;
     }

@@ -429,16 +429,42 @@
       feedback.style.display = "none";
 
       try {
-        await loginUser({ email, password });
-        feedback.className = "portal-feedback success";
-        feedback.textContent = "✓ Authentication successful. Welcome to Vinastra Aerospace!";
-        feedback.style.display = "block";
-        updateProfileUI();
+        const result = await loginUser({ email, password });
+        const user = result?.profile || window.VinastraAuth?.getUser();
+        
+        // Hide forms and show loading state
+        formLogin.style.display = "none";
+        formSignup.style.display = "none";
+        portalTabs.style.display = "none";
+        portalTitle.textContent = "Redirecting to Dashboard...";
+        
+        // Get role and determine destination
+        const userRole = (user?.role || 'professional').toUpperCase();
+        
+        // Role-based redirect destinations
+        const roleDestinations = {
+          'ADMIN': '/mission-control/admin/',
+          'FOUNDER': '/mission-control/admin/',
+          'CTO': '/mission-control/',
+          'RD_LEAD': '/mission-control/',
+          'ENGINEER': '/mission-control/',
+          'PROFESSIONAL': '/mission-control/',
+          'RESEARCHER': '/mission-control/',
+          'COORDINATOR': '/mission-control/',
+          'STUDENT': '/mission-control/',
+          'FELLOW': '/mission-control/',
+          'INVESTOR': '/investors/',
+          'ADVISOR': '/mission-control/'
+        };
+        
+        const destination = roleDestinations[userRole] || '/mission-control/';
+        
+        // Immediate redirect
+        window.location.href = destination;
       } catch (err) {
         feedback.className = "portal-feedback error";
         feedback.textContent = `✗ ${formatAuthError(err)}`;
         feedback.style.display = "block";
-      } finally {
         btn.disabled = false;
         btn.innerHTML = `AUTHENTICATE &amp; ENTER <span class="action-arrow">→</span>`;
       }
@@ -464,16 +490,43 @@
       feedback.style.display = "none";
 
       try {
-        await createAccount({ name, email, password, role });
-        feedback.className = "portal-feedback success";
-        feedback.textContent = `✓ Account registered! Profile record for ${name} (${role}) stored to Firestore database.`;
-        feedback.style.display = "block";
-        updateProfileUI();
+        const result = await createAccount({ name, email, password, role });
+        const user = result?.profile || window.VinastraAuth?.getUser();
+        
+        // Hide forms and show loading state
+        formLogin.style.display = "none";
+        formSignup.style.display = "none";
+        portalTabs.style.display = "none";
+        portalTitle.textContent = "Redirecting to Dashboard...";
+        
+        // Get role and determine destination
+        const userRole = (user?.role || role || 'professional').toUpperCase();
+        
+        // Role-based redirect destinations
+        const roleDestinations = {
+          'ADMIN': '/mission-control/admin/',
+          'FOUNDER': '/mission-control/admin/',
+          'CTO': '/mission-control/',
+          'RD_LEAD': '/mission-control/',
+          'ENGINEER': '/mission-control/',
+          'PROFESSIONAL': '/mission-control/',
+          'RESEARCHER': '/mission-control/',
+          'COORDINATOR': '/mission-control/',
+          'STUDENTS': '/mission-control/',
+          'STUDENT': '/mission-control/',
+          'FELLOW': '/mission-control/',
+          'INVESTOR': '/investors/',
+          'ADVISOR': '/mission-control/'
+        };
+        
+        const destination = roleDestinations[userRole] || '/mission-control/';
+        
+        // Immediate redirect
+        window.location.href = destination;
       } catch (err) {
         feedback.className = "portal-feedback error";
         feedback.textContent = `✗ ${formatAuthError(err)}`;
         feedback.style.display = "block";
-      } finally {
         btn.disabled = false;
         btn.innerHTML = `CREATE ACCOUNT &amp; REGISTER TO DATABASE <span class="action-arrow">→</span>`;
       }
