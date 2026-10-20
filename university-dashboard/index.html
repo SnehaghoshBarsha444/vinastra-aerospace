@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University Dashboard — VINASTRA Aerospace Research Collaboration</title>
+  <link rel="stylesheet" href="/professional.css">
+  <link rel="stylesheet" href="/home-redesign.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --space-dark: #0a0e27;
+      --space-blue: #1a1f3a;
+      --cosmic-purple: #2d1b4e;
+      --nebula-pink: #ff006e;
+      --stellar-cyan: #00d9ff;
+      --solar-orange: #ff9500;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--space-dark) 0%, var(--space-blue) 50%, var(--cosmic-purple) 100%);
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .glass-panel {
+      background: rgba(26, 31, 58, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+    }
+
+    .project-card {
+      background: rgba(26, 31, 58, 0.6);
+      border: 1px solid rgba(0, 217, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .project-card:hover {
+      border-color: var(--stellar-cyan);
+      box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    .status-active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .status-progress { background: rgba(255, 149, 0, 0.2); color: #ff9500; }
+    .status-review { background: rgba(0, 217, 255, 0.2); color: #00d9ff; }
+
+    .tab-button {
+      transition: all 0.3s ease;
+    }
+
+    .tab-button.active {
+      background: rgba(0, 217, 255, 0.2);
+      border-bottom: 2px solid var(--stellar-cyan);
+    }
+  </style>
+</head>
+<body class="text-white">
+  <!-- Navigation -->
+  <nav class="glass-panel sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <a href="/" class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent">
+          VINASTRA
+        </a>
+        <span class="text-gray-400">|</span>
+        <span class="text-sm text-gray-300">University Research Portal</span>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <span id="user-name" class="text-sm text-gray-300"></span>
+        <button onclick="logout()" class="text-sm text-gray-400 hover:text-white transition-colors">
+          <i class="fas fa-sign-out-alt mr-2"></i>Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Loading State -->
+  <div id="loading-state" class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+      <div class="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+      <p class="text-gray-400 text-sm font-mono">LOADING RESEARCH DATA...</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content" class="max-w-7xl mx-auto px-6 py-8 hidden">
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-3xl font-bold text-cyan-400" id="stat-projects">0</div>
+        <div class="text-sm text-gray-400">Active Projects</div>
+      </div>
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-3xl font-bold text-orange-400" id="stat-tasks">0</div>
+        <div class="text-sm text-gray-400">Pending Tasks</div>
+      </div>
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-3xl font-bold text-green-400" id="stat-submissions">0</div>
+        <div class="text-sm text-gray-400">Submissions</div>
+      </div>
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-3xl font-bold text-pink-400" id="stat-students">0</div>
+        <div class="text-sm text-gray-400">Students</div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="flex space-x-4 mb-6 border-b border-gray-700">
+      <button onclick="switchTab('projects')" class="tab-button active px-4 py-2 text-sm rounded-t-lg" id="tab-projects">
+        <i class="fas fa-project-diagram mr-2"></i>Projects
+      </button>
+      <button onclick="switchTab('tasks')" class="tab-button px-4 py-2 text-sm rounded-t-lg" id="tab-tasks">
+        <i class="fas fa-tasks mr-2"></i>Task Management
+      </button>
+      <button onclick="switchTab('submissions')" class="tab-button px-4 py-2 text-sm rounded-t-lg" id="tab-submissions">
+        <i class="fas fa-upload mr-2"></i>File Submissions
+      </button>
+      <button onclick="switchTab('mentor')" class="tab-button px-4 py-2 text-sm rounded-t-lg" id="tab-mentor">
+        <i class="fas fa-comments mr-2"></i>Mentor Communication
+      </button>
+      <button onclick="switchTab('calendar')" class="tab-button px-4 py-2 text-sm rounded-t-lg" id="tab-calendar">
+        <i class="fas fa-calendar-alt mr-2"></i>Calendar
+      </button>
+    </div>
+
+    <!-- Projects Tab -->
+    <div id="content-projects" class="tab-content">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold">Assigned Research Projects</h2>
+      </div>
+      <div id="projects-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Projects will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Tasks Tab -->
+    <div id="content-tasks" class="tab-content hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold">Task Management</h2>
+        <button onclick="showCreateTaskModal()" class="bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-lg text-sm font-semibold transition-all">
+          <i class="fas fa-plus mr-2"></i>Assign Task
+        </button>
+      </div>
+      <div id="tasks-container" class="space-y-4">
+        <!-- Tasks will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Submissions Tab -->
+    <div id="content-submissions" class="tab-content hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold">Research Submissions</h2>
+        <button onclick="showUploadModal()" class="bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-lg text-sm font-semibold transition-all">
+          <i class="fas fa-upload mr-2"></i>Upload Work
+        </button>
+      </div>
+      <div id="submissions-container" class="space-y-4">
+        <!-- Submissions will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Mentor Communication Tab -->
+    <div id="content-mentor" class="tab-content hidden">
+      <div class="glass-panel rounded-xl p-6">
+        <h2 class="text-2xl font-bold mb-6">VINASTRA R&D Team Communication</h2>
+        <div id="messages-container" class="space-y-4 mb-6 max-h-96 overflow-y-auto">
+          <!-- Messages will be loaded here -->
+        </div>
+        <div class="flex space-x-4">
+          <input type="text" id="message-input" placeholder="Type your message..." class="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-400">
+          <button onclick="sendMessage()" class="bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-lg font-semibold transition-all">
+            <i class="fas fa-paper-plane mr-2"></i>Send
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar Tab -->
+    <div id="content-calendar" class="tab-content hidden">
+      <div class="glass-panel rounded-xl p-6">
+        <h2 class="text-2xl font-bold mb-6">Technical Review Meetings & Collaboration Sessions</h2>
+        <div id="calendar-container">
+          <p class="text-gray-400 text-center py-12">Calendar integration coming soon</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Task Modal -->
+  <div id="create-task-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="glass-panel rounded-2xl p-8 max-w-lg w-full mx-4">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xl font-bold">Assign New Task</h3>
+        <button onclick="closeCreateTaskModal()" class="text-gray-400 hover:text-white">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <form onsubmit="createTask(event)">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold mb-2">Task Title</label>
+            <input type="text" id="task-title" required class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-2">Assign To (Student)</label>
+            <select id="task-assignee" required class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white">
+              <option value="">Select student</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-2">Project</label>
+            <select id="task-project" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white">
+              <option value="">Select project (optional)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-2">Deadline</label>
+            <input type="date" id="task-deadline" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-2">Description</label>
+            <textarea id="task-description" rows="3" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white"></textarea>
+          </div>
+        </div>
+        <div class="flex space-x-4 mt-6">
+          <button type="button" onclick="closeCreateTaskModal()" class="flex-1 bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg transition-all">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-lg font-semibold transition-all">
+            Create Task
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let projects = [];
+    let tasks = [];
+    let submissions = [];
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+      await checkAuth();
+      await loadDashboardData();
+      hideLoading();
+    });
+
+    // Check authentication
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/auth/me');
+        if (!response.ok) {
+          window.location.href = '/login/';
+          return;
+        }
+        const data = await response.json();
+        currentUser = data.user;
+        document.getElementById('user-name').textContent = currentUser.name;
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        window.location.href = '/login/';
+      }
+    }
+
+    // Load all dashboard data
+    async function loadDashboardData() {
+      try {
+        const response = await fetch('/api/dashboard/overview');
+        if (response.ok) {
+          const data = await response.json();
+          projects = data.projects || [];
+          tasks = data.roleSpecific?.tasks || [];
+          
+          updateStats();
+          renderProjects();
+          renderTasks();
+        }
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      }
+    }
+
+    // Update stats
+    function updateStats() {
+      document.getElementById('stat-projects').textContent = projects.length;
+      document.getElementById('stat-tasks').textContent = tasks.filter(t => t.status !== 'DONE').length;
+      document.getElementById('stat-submissions').textContent = submissions.length;
+      // Students count would come from API
+    }
+
+    // Render projects
+    function renderProjects() {
+      const container = document.getElementById('projects-container');
+      
+      if (projects.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-2 text-center py-12">
+            <i class="fas fa-folder-open text-4xl text-gray-600 mb-4"></i>
+            <p class="text-gray-400">No projects assigned yet</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = projects.map(project => `
+        <div class="project-card rounded-xl p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="font-semibold text-lg">${project.title}</h3>
+              <p class="text-sm text-gray-400">${project.code}</p>
+            </div>
+            <span class="status-badge status-${project.status === 'ACTIVE' ? 'active' : 'progress'}">${project.status}</span>
+          </div>
+          <p class="text-sm text-gray-400 mb-4">${project.description || 'No description available'}</p>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-500">Phase: ${project.phase || 'Planning'}</span>
+            <button onclick="viewProject('${project.id}')" class="text-cyan-400 hover:text-cyan-300">
+              View Details <i class="fas fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render tasks
+    function renderTasks() {
+      const container = document.getElementById('tasks-container');
+      
+      if (tasks.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12">
+            <i class="fas fa-tasks text-4xl text-gray-600 mb-4"></i>
+            <p class="text-gray-400">No tasks assigned</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = tasks.map(task => `
+        <div class="glass-panel rounded-lg p-4 flex items-center justify-between">
+          <div>
+            <h4 class="font-semibold">${task.title}</h4>
+            <p class="text-sm text-gray-400">${task.description || ''}</p>
+            <div class="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+              <span><i class="fas fa-clock mr-1"></i>${task.deadline ? new Date(task.deadline).toLocaleDateString() : 'No deadline'}</span>
+              <span class="status-badge status-${task.status === 'DONE' ? 'active' : 'progress'}">${task.status}</span>
+            </div>
+          </div>
+          <button onclick="updateTaskStatus('${task.id}')" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded transition-all">
+            <i class="fas fa-edit"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // Tab switching
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+      
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+      document.getElementById(`content-${tabName}`).classList.remove('hidden');
+    }
+
+    // Loading state
+    function hideLoading() {
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('main-content').classList.remove('hidden');
+    }
+
+    // Logout
+    async function logout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/login/';
+    }
+
+    // Create task
+    async function createTask(event) {
+      event.preventDefault();
+      const taskData = {
+        title: document.getElementById('task-title').value,
+        assignedUserId: document.getElementById('task-assignee').value,
+        projectId: document.getElementById('task-project').value || null,
+        deadline: document.getElementById('task-deadline').value || null,
+        description: document.getElementById('task-description').value
+      };
+
+      try {
+        const response = await fetch('/api/tasks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(taskData)
+        });
+
+        if (response.ok) {
+          closeCreateTaskModal();
+          await loadDashboardData();
+          alert('Task created successfully!');
+        }
+      } catch (error) {
+        console.error('Failed to create task:', error);
+        alert('Failed to create task');
+      }
+    }
+
+    // Modal functions
+    function showCreateTaskModal() {
+      document.getElementById('create-task-modal').classList.remove('hidden');
+      document.getElementById('create-task-modal').classList.add('flex');
+    }
+
+    function closeCreateTaskModal() {
+      document.getElementById('create-task-modal').classList.add('hidden');
+      document.getElementById('create-task-modal').classList.remove('flex');
+    }
+
+    function showUploadModal() {
+      alert('File upload modal - will integrate with Firebase Storage');
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('message-input');
+      if (input.value.trim()) {
+        alert('Message sent feature coming soon');
+        input.value = '';
+      }
+    }
+
+    function viewProject(projectId) {
+      window.location.href = `/mission-control/`;
+    }
+
+    function updateTaskStatus(taskId) {
+      alert('Task status update coming soon');
+    }
+  </script>
+</body>
+</html>

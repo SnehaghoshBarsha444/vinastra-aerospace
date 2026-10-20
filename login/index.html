@@ -491,11 +491,36 @@
     function updateProfileUI() {
       const user = window.VinastraAuth?.getUser();
       if (user) {
+        // ROLE-BASED REDIRECTION
+        const role = (user.role || 'STUDENT').toUpperCase();
+        
+        // Redirect based on role
+        const roleDestinations = {
+          'ADMIN': '/mission-control/admin/',
+          'FOUNDER': '/mission-control/admin/',
+          'CTO': '/mission-control/',
+          'RD_LEAD': '/mission-control/',
+          'ENGINEER': '/mission-control/',
+          'RESEARCHER': '/university-dashboard/',
+          'COORDINATOR': '/university-dashboard/',
+          'STUDENT': '/student-dashboard/',
+          'FELLOW': '/student-dashboard/',
+          'INVESTOR': '/investors/',
+          'ADVISOR': '/mission-control/'
+        };
+        
+        const destination = roleDestinations[role] || '/mission-control/';
+        
+        // Show success message briefly, then redirect
+        setTimeout(() => {
+          window.location.href = destination;
+        }, 1000);
+        
         portalTabs.style.display = "none";
         formLogin.style.display = "none";
         formSignup.style.display = "none";
         profileView.classList.add("active");
-        portalTitle.textContent = "Verified Registry Session";
+        portalTitle.textContent = "Redirecting...";
 
         document.getElementById("page-profile-name").textContent = user.name || "Member";
         document.getElementById("page-profile-role-tag").textContent = (user.role || "Member").toUpperCase();

@@ -100,8 +100,11 @@ function setupRoleSwitcher() {
   });
 }
 
-// Load telemetry & dashboard data
+// Load telemetry & dashboard data with proper loading states
 async function loadDashboard() {
+  // Show loading state immediately
+  showLoadingState();
+  
   const token = localStorage.getItem('vinastra_token');
   const headers = {};
   if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -110,25 +113,27 @@ async function loadDashboard() {
     const res = await fetch('/api/dashboard/overview', { headers });
 
     if (res.status === 401) {
-      // Auto-fallback: Login as Admin persona for seamless first-load review
-      const loginRes = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'admin@vinastra.space', password: 'VinastraAdmin2026!' })
-      });
-      if (loginRes.ok) {
-        const loginData = await loginRes.json();
-        localStorage.setItem('vinastra_token', loginData.token);
-        return await loadDashboard();
-      }
+      // Redirect to login instead of auto-login
+      hideLoadingState();
       window.location.href = '/login/';
       return;
     }
 
+    if (!res.ok) {
+      throw new Error('Failed to load dashboard data');
+    }
+
     const data = await res.json();
+    
+    // Cache profile data for faster subsequent loads
+    if (data.profile) {
+      localStorage.setItem('vinastra_user_profile', JSON.stringify(data.profile));
+    }
+    
     currentData = data;
     currentProfile = data.profile;
 
+    // Render all components
     renderHeaderProfile();
     renderOverview();
     renderProjects();
@@ -137,8 +142,58 @@ async function loadDashboard() {
     renderEngineering();
     renderDocuments();
     renderInvestor();
+    
+    // Hide loading state after successful render
+    hideLoadingState();
+    
   } catch (err) {
     console.error('Failed to load dashboard:', err);
+    hideLoadingState();
+    showErrorState('Failed to load dashboard. Please try again.');
+  }
+}
+
+// Loading state management
+function showLoadingState() {
+  const mainContent = document.querySelector('.mc-main');
+  if (mainContent) {
+    const loader = document.createElement('div');
+    loader.id = 'dashboard-loader';
+    loader.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; color: var(--mc-text-muted);">
+        <div style="width: 48px; height: 48px; border: 3px solid var(--mc-border); border-top-color: var(--mc-accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
+        <div style="font-family: var(--font-mono); font-size: 0.875rem; letter-spacing: 0.1em;">LOADING MISSION DATA...</div>
+      </div>
+      <style>
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      </style>
+    `;
+    mainContent.insertBefore(loader, mainContent.firstChild);
+  }
+}
+
+function hideLoadingState() {
+  const loader = document.getElementById('dashboard-loader');
+  if (loader) loader.remove();
+}
+
+function showErrorState(message) {
+  const mainContent = document.querySelector('.mc-main');
+  if (mainContent) {
+    const error = document.createElement('div');
+    error.id = 'dashboard-error';
+    error.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; color: var(--mc-text);">
+        <div style="font-size: 3rem; margin-bottom: 16px;">⚠️</div>
+        <div style="font-family: var(--font-mono); font-size: 0.875rem; margin-bottom: 16px;">${message}</div>
+        <button onclick="loadDashboard()" style="background: var(--mc-accent); color: #000; border: none; padding: 12px 24px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em; cursor: pointer; border-radius: 2px;">
+          RETRY
+        </button>
+      </div>
+    `;
+    mainContent.insertBefore(error, mainContent.firstChild);
   }
 }
 

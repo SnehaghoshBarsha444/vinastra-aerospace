@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard — VINASTRA Aerospace Research Program</title>
+  <link rel="stylesheet" href="/professional.css">
+  <link rel="stylesheet" href="/home-redesign.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --space-dark: #0a0e27;
+      --space-blue: #1a1f3a;
+      --cosmic-purple: #2d1b4e;
+      --nebula-pink: #ff006e;
+      --stellar-cyan: #00d9ff;
+      --solar-orange: #ff9500;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--space-dark) 0%, var(--space-blue) 50%, var(--cosmic-purple) 100%);
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .glass-panel {
+      background: rgba(26, 31, 58, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+    }
+
+    .assignment-card {
+      background: rgba(26, 31, 58, 0.6);
+      border: 1px solid rgba(0, 217, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .assignment-card:hover {
+      border-color: var(--stellar-cyan);
+      box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+    }
+
+    .priority-high { border-left: 4px solid #ef4444; }
+    .priority-medium { border-left: 4px solid #ff9500; }
+    .priority-low { border-left: 4px solid #10b981; }
+  </style>
+</head>
+<body class="text-white">
+  <!-- Navigation -->
+  <nav class="glass-panel sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <a href="/" class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent">
+          VINASTRA
+        </a>
+        <span class="text-gray-400">|</span>
+        <span class="text-sm text-gray-300">Student Research Portal</span>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <span id="user-name" class="text-sm text-gray-300"></span>
+        <button onclick="logout()" class="text-sm text-gray-400 hover:text-white transition-colors">
+          <i class="fas fa-sign-out-alt mr-2"></i>Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Loading State -->
+  <div id="loading-state" class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+      <div class="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+      <p class="text-gray-400 text-sm font-mono">LOADING ASSIGNMENTS...</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content" class="max-w-7xl mx-auto px-6 py-8 hidden">
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-3xl font-bold text-cyan-400" id="stat-assignments">0</div>
+        <div class="text-sm text-gray-400">My Assignments</div>
+      </div>
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-3xl font-bold text-orange-400" id="stat-pending">0</div>
+        <div class="text-sm text-gray-400">Pending Tasks</div>
+      </div>
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-3xl font-bold text-green-400" id="stat-completed">0</div>
+        <div class="text-sm text-gray-400">Completed</div>
+      </div>
+      <div class="glass-panel rounded-xl p-4">
+        <div class="text-3xl font-bold text-pink-400" id="stat-submissions">0</div>
+        <div class="text-sm text-gray-400">Submissions</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex space-x-4 mb-6 border-b border-gray-700">
+      <button onclick="switchTab('assignments')" class="tab-button active px-4 py-2 text-sm rounded-t-lg" id="tab-assignments">
+        <i class="fas fa-tasks mr-2"></i>My Assignments
+      </button>
+      <button onclick="switchTab('submissions')" class="tab-button px-4 py-2 text-sm rounded-t-lg" id="tab-submissions">
+        <i class="fas fa-upload mr-2"></i>My Submissions
+      </button>
+      <button onclick="switchTab('feedback')" class="tab-button px-4 py-2 text-sm rounded-t-lg" id="tab-feedback">
+        <i class="fas fa-comment-dots mr-2"></i>Feedback
+      </button>
+      <button onclick="switchTab('progress')" class="tab-button px-4 py-2 text-sm rounded-t-lg" id="tab-progress">
+        <i class="fas fa-chart-line mr-2"></i>Progress
+      </button>
+    </div>
+
+    <!-- Assignments Tab -->
+    <div id="content-assignments" class="tab-content">
+      <h2 class="text-2xl font-bold mb-6">My Assignments</h2>
+      <div id="assignments-container" class="space-y-4">
+        <!-- Assignments will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Submissions Tab -->
+    <div id="content-submissions" class="tab-content hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold">My Research Submissions</h2>
+        <button onclick="showSubmissionModal()" class="bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-lg text-sm font-semibold transition-all">
+          <i class="fas fa-plus mr-2"></i>New Submission
+        </button>
+      </div>
+      <div id="submissions-container" class="space-y-4">
+        <!-- Submissions will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Feedback Tab -->
+    <div id="content-feedback" class="tab-content hidden">
+      <h2 class="text-2xl font-bold mb-6">Feedback & Reviews</h2>
+      <div id="feedback-container" class="space-y-4">
+        <!-- Feedback will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Progress Tab -->
+    <div id="content-progress" class="tab-content hidden">
+      <h2 class="text-2xl font-bold mb-6">My Progress</h2>
+      <div class="glass-panel rounded-xl p-6">
+        <div id="progress-chart">
+          <p class="text-gray-400 text-center py-12">Progress tracking coming soon</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submission Modal -->
+  <div id="submission-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="glass-panel rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xl font-bold">Submit Research Work</h3>
+        <button onclick="closeSubmissionModal()" class="text-gray-400 hover:text-white">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <form onsubmit="submitResearch(event)">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold mb-2">Title</label>
+            <input type="text" id="submission-title" required class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-2">Abstract</label>
+            <textarea id="submission-abstract" required rows="4" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white"></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-2">Category</label>
+            <select id="submission-category" required class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white">
+              <option value="ROBOTICS_AND_CONTROL">Robotics & Control</option>
+              <option value="SENSORS_AND_METROLOGY">Sensors & Metrology</option>
+              <option value="SIMULATION_AND_MODELING">Simulation & Modeling</option>
+              <option value="MANUFACTURING_AND_ASSEMBLY">Manufacturing & Assembly</option>
+              <option value="AI_AND_AUTONOMY">AI & Autonomy</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-2">Upload Files (Optional)</label>
+            <input type="file" id="submission-files" multiple class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white">
+          </div>
+        </div>
+        <div class="flex space-x-4 mt-6">
+          <button type="button" onclick="closeSubmissionModal()" class="flex-1 bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg transition-all">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-lg font-semibold transition-all">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let tasks = [];
+    let submissions = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await checkAuth();
+      await loadData();
+      hideLoading();
+    });
+
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/auth/me');
+        if (!response.ok) {
+          window.location.href = '/login/';
+          return;
+        }
+        const data = await response.json();
+        currentUser = data.user;
+        document.getElementById('user-name').textContent = currentUser.name;
+      } catch (error) {
+        window.location.href = '/login/';
+      }
+    }
+
+    async function loadData() {
+      try {
+        const response = await fetch('/api/dashboard/overview');
+        if (response.ok) {
+          const data = await response.json();
+          tasks = data.roleSpecific?.tasks || [];
+          submissions = data.roleSpecific?.submissions || [];
+          
+          updateStats();
+          renderAssignments();
+          renderSubmissions();
+        }
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('stat-assignments').textContent = tasks.length;
+      document.getElementById('stat-pending').textContent = tasks.filter(t => t.status !== 'DONE').length;
+      document.getElementById('stat-completed').textContent = tasks.filter(t => t.status === 'DONE').length;
+      document.getElementById('stat-submissions').textContent = submissions.length;
+    }
+
+    function renderAssignments() {
+      const container = document.getElementById('assignments-container');
+      
+      if (tasks.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12">
+            <i class="fas fa-tasks text-4xl text-gray-600 mb-4"></i>
+            <p class="text-gray-400">No assignments yet</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = tasks.map(task => `
+        <div class="assignment-card priority-${task.priority?.toLowerCase() || 'medium'} rounded-lg p-6">
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="font-semibold text-lg">${task.title}</h4>
+              <p class="text-sm text-gray-400 mt-1">${task.description || ''}</p>
+              <div class="flex items-center space-x-4 mt-3 text-xs text-gray-500">
+                <span><i class="fas fa-clock mr-1"></i>${task.deadline ? new Date(task.deadline).toLocaleDateString() : 'No deadline'}</span>
+                <span class="px-2 py-1 rounded ${task.status === 'DONE' ? 'bg-green-500 bg-opacity-20 text-green-400' : 'bg-orange-500 bg-opacity-20 text-orange-400'}">${task.status}</span>
+              </div>
+            </div>
+            <button onclick="updateProgress('${task.id}')" class="bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition-all text-sm">
+              Update Progress
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderSubmissions() {
+      const container = document.getElementById('submissions-container');
+      
+      if (submissions.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12">
+            <i class="fas fa-file-upload text-4xl text-gray-600 mb-4"></i>
+            <p class="text-gray-400">No submissions yet</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = submissions.map(sub => `
+        <div class="glass-panel rounded-lg p-4">
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="font-semibold">${sub.title}</h4>
+              <p class="text-sm text-gray-400 mt-1">${sub.abstract?.substring(0, 100)}...</p>
+              <div class="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                <span>${new Date(sub.createdAt).toLocaleDateString()}</span>
+                <span class="px-2 py-1 rounded bg-cyan-500 bg-opacity-20 text-cyan-400">${sub.status}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+      
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+      document.getElementById(`content-${tabName}`).classList.remove('hidden');
+    }
+
+    function hideLoading() {
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('main-content').classList.remove('hidden');
+    }
+
+    async function logout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/login/';
+    }
+
+    async function submitResearch(event) {
+      event.preventDefault();
+      const data = {
+        title: document.getElementById('submission-title').value,
+        abstract: document.getElementById('submission-abstract').value,
+        category: document.getElementById('submission-category').value
+      };
+
+      try {
+        const response = await fetch('/api/research/submissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          closeSubmissionModal();
+          await loadData();
+          alert('Submission created successfully!');
+        }
+      } catch (error) {
+        alert('Failed to submit');
+      }
+    }
+
+    function updateProgress(taskId) {
+      alert('Progress update modal coming soon');
+    }
+
+    function showSubmissionModal() {
+      document.getElementById('submission-modal').classList.remove('hidden');
+      document.getElementById('submission-modal').classList.add('flex');
+    }
+
+    function closeSubmissionModal() {
+      document.getElementById('submission-modal').classList.add('hidden');
+      document.getElementById('submission-modal').classList.remove('flex');
+    }
+  </script>
+</body>
+</html>
