@@ -62,6 +62,48 @@ function setupNavigation() {
     // Redirect to home
     window.location.href = '/';
   });
+  
+  // Role switcher functionality
+  setupRoleSwitcher();
+}
+
+// Role switcher - allows switching perspectives for demo purposes
+function setupRoleSwitcher() {
+  document.querySelectorAll('.mc-role-pill').forEach((pill) => {
+    pill.addEventListener('click', () => {
+      const role = pill.dataset.role;
+      switchRole(role);
+    });
+  });
+}
+
+// Switch role perspective and re-render content
+function switchRole(role) {
+  // Remove active class from all pills
+  document.querySelectorAll('.mc-role-pill').forEach((p) => p.classList.remove('active'));
+  
+  // Add active class to selected pill
+  document.querySelector(`.mc-role-pill[data-role="${role}"]`)?.classList.add('active');
+  
+  // Update current profile role for rendering
+  if (currentProfile) {
+    currentProfile.role = role;
+  }
+  
+  // Re-render all tabs with new role perspective
+  renderHeaderProfile();
+  renderOverview();
+  renderProjects();
+  renderTasks();
+  renderResearch();
+  renderEngineering();
+  renderDocuments();
+  renderInvestor();
+  
+  // Switch to appropriate tab based on role
+  if (role === 'INVESTOR') {
+    switchTab('investor');
+  }
 }
 
 function switchTab(tabId) {
@@ -106,20 +148,25 @@ async function loadDashboard() {
       console.log('API auth required, using local data');
     }
 
-    if (!res.ok) {
+    if (!res.ok && res.status !== 401) {
       throw new Error('Failed to load dashboard data');
     }
 
-    const data = await res.json();
+    const data = res.status === 401 ? null : await res.json();
     
+    // Get user session for profile
+    const sessionData = localStorage.getItem('vinastra_user_session');
+    const userData = sessionData ? JSON.parse(sessionData) : null;
+    
+    // Use API data or fallback to mock/sample data
+    currentData = data || generateSampleData(userData);
+    currentProfile = userData || { name: 'Guest', role: 'PROFESSIONAL', email: 'guest@vinastra.aero' };
+
     // Cache profile data for faster subsequent loads
-    if (data.profile) {
+    if (data && data.profile) {
       localStorage.setItem('vinastra_user_profile', JSON.stringify(data.profile));
     }
     
-    currentData = data;
-    currentProfile = data.profile;
-
     // Render all components
     renderHeaderProfile();
     renderOverview();
@@ -135,9 +182,165 @@ async function loadDashboard() {
     
   } catch (err) {
     console.error('Failed to load dashboard:', err);
+    
+    // Fallback to sample data
+    const sessionData = localStorage.getItem('vinastra_user_session');
+    const userData = sessionData ? JSON.parse(sessionData) : null;
+    currentProfile = userData || { name: 'Guest', role: 'PROFESSIONAL', email: 'guest@vinastra.aero' };
+    currentData = generateSampleData(userData);
+    
+    renderHeaderProfile();
+    renderOverview();
+    renderProjects();
+    renderTasks();
+    renderResearch();
+    renderEngineering();
+    renderDocuments();
+    renderInvestor();
+    
     hideLoadingState();
-    showErrorState('Failed to load dashboard. Please try again.');
   }
+}
+
+// Generate sample data for demonstration
+function generateSampleData(user) {
+  const role = user?.role || 'PROFESSIONAL';
+  
+  return {
+    profile: user,
+    projects: [
+      {
+        id: 1,
+        code: 'ASCS-KIN-01',
+        title: 'Robotic Kinematics & Motion Planning',
+        description: '6-DOF arm trajectory optimization for autonomous assembly',
+        category: 'ROBOTICS',
+        phase: 'Phase 2',
+        confidentialityLevel: 'INTERNAL',
+        status: 'ACTIVE'
+      },
+      {
+        id: 2,
+        code: 'ASCS-VIS-02',
+        title: 'Multi-Spectral Vision System',
+        description: 'Stereoscopic edge detection for zero-gravity metrology',
+        category: 'METROLOGY',
+        phase: 'Phase 1',
+        confidentialityLevel: 'INSTITUTIONAL',
+        status: 'ACTIVE'
+      },
+      {
+        id: 3,
+        code: 'ASCS-MAT-03',
+        title: 'Space-Grade Composite Materials',
+        description: 'Novel carbon-fiber lattice structures for modular assembly',
+        category: 'MATERIALS',
+        phase: 'Phase 1',
+        confidentialityLevel: 'PUBLIC',
+        status: 'ACTIVE'
+      }
+    ],
+    documents: [
+      {
+        id: 1,
+        title: 'ASCS Technical Architecture Overview',
+        fileName: 'ASCS_Technical_Architecture.pdf',
+        fileCategory: 'ENGINEERING REPORT',
+        accessLevel: 'INTERNAL_CONFIDENTIAL',
+        fileSize: 2457600,
+        filePath: 'VINASTRA_Space_Factory_Overview.pdf'
+      },
+      {
+        id: 2,
+        title: 'Prototype-1 Kinematics Report',
+        fileName: 'P1_Kinematics_Report_2026.pdf',
+        fileCategory: 'ENGINEERING REPORT',
+        accessLevel: 'INTERNAL_CONFIDENTIAL',
+        fileSize: 1843200,
+        filePath: 'VINASTRA_Space_Factory_Overview.pdf'
+      },
+      {
+        id: 3,
+        title: 'Investor Pitch Deck Q4 2026',
+        fileName: 'Vinastra_Investor_Deck.pdf',
+        fileCategory: 'PRESENTATION',
+        accessLevel: 'INVESTOR_SAFE',
+        fileSize: 5242880,
+        filePath: 'VINASTRA_Space_Factory_Overview.pdf'
+      }
+    ],
+    roleSpecific: getRoleSpecificData(role)
+  };
+}
+
+// Get role-specific data for different perspectives
+function getRoleSpecificData(role) {
+  const baseData = {
+    tasks: [
+      {
+        id: 1,
+        title: 'Calibrate photogrammetry camera rig',
+        description: 'Fine-tune stereo camera calibration for sub-mm accuracy',
+        priority: 'HIGH',
+        status: 'IN_PROGRESS',
+        deadline: '2026-11-15'
+      },
+      {
+        id: 2,
+        title: 'Complete end-effector torque analysis',
+        description: 'Validate magnetic coupling torque specifications',
+        priority: 'CRITICAL',
+        status: 'PENDING',
+        deadline: '2026-10-30'
+      },
+      {
+        id: 3,
+        title: 'Document assembly sequence for P1',
+        description: 'Create step-by-step assembly guide for ground demonstrator',
+        priority: 'MEDIUM',
+        status: 'PENDING',
+        deadline: '2026-12-01'
+      }
+    ],
+    submissions: [
+      {
+        id: 1,
+        title: 'Multi-Spectral Vision Defect Analysis in Vacuum',
+        category: 'METROLOGY',
+        status: 'UNDER_REVIEW',
+        abstract: 'Novel approach to defect detection using multi-spectral imaging under simulated space vacuum conditions.',
+        reviewerNotes: 'Excellent methodology, awaiting final simulation results.'
+      }
+    ],
+    engineeringReviews: [
+      {
+        id: 1,
+        componentName: 'End-Effector Magnetic Quick-Release',
+        subsystem: 'KINEMATICS',
+        designRevision: 'Rev 1.2',
+        reviewStage: 'APPROVED_FOR_TESTING',
+        failureModes: 'Thermal expansion, contact jitter',
+        testingParameters: 'Tolerances: ±0.1mm | Max cycles: 5,000'
+      },
+      {
+        id: 2,
+        componentName: 'Vision System Calibration Mount',
+        subsystem: 'VISION_METROLOGY',
+        designRevision: 'Rev 1.0',
+        reviewStage: 'IN_PROGRESS',
+        failureModes: 'Vibration-induced drift',
+        testingParameters: 'Frequency range: 0-50Hz'
+      }
+    ],
+    prototypeMilestones: [
+      { name: 'Kinematics Model', progress: 100, status: 'APPROVED_FOR_TESTING' },
+      { name: 'Vision System', progress: 75, status: 'IN_PROGRESS' },
+      { name: 'End-Effector', progress: 60, status: 'IN_PROGRESS' },
+      { name: 'Power Systems', progress: 40, status: 'IN_PROGRESS' }
+    ]
+  };
+  
+  return baseData;
 }
 
 // Loading state management
