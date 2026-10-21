@@ -561,13 +561,16 @@ function ensureAuthModal() {
       const user = result?.profile || currentUserProfile;
       
       feedback.className = "auth-feedback success";
-      feedback.textContent = "Authentication successful! Redirecting to dashboard...";
+      feedback.textContent = "✓ Login successful! You can now access Mission Control.";
       feedback.style.display = "block";
       
-      // Redirect to dashboard
+      // Close modal after success
       setTimeout(() => {
-        const destination = getRoleDestination(user?.role);
-        window.location.href = destination;
+        modalOverlay.style.display = "none";
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `AUTHENTICATE &amp; ENTER <span class="action-arrow">→</span>`;
+        // Update nav to show logged in state
+        renderAuthNav();
       }, 800);
     } catch (err) {
       feedback.className = "auth-feedback error";
@@ -623,13 +626,16 @@ function ensureAuthModal() {
       const user = result?.profile || currentUserProfile;
       
       feedback.className = "auth-feedback success";
-      feedback.textContent = "Account registered! Redirecting to dashboard...";
+      feedback.textContent = "✓ Account created! You can now access Mission Control.";
       feedback.style.display = "block";
       
-      // Redirect to dashboard
+      // Close modal after success
       setTimeout(() => {
-        const destination = getSignupRoleDestination(user?.role || role);
-        window.location.href = destination;
+        modalOverlay.style.display = "none";
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `CREATE ACCOUNT <span class="action-arrow">→</span>`;
+        // Update nav to show logged in state
+        renderAuthNav();
       }, 800);
     } catch (err) {
       feedback.className = "auth-feedback error";
