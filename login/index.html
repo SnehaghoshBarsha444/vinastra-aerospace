@@ -551,11 +551,8 @@
 
     document.getElementById("page-profile-logout")?.addEventListener("click", async () => {
       await logoutUser();
-      setTab("login");
-      portalTabs.style.display = "flex";
-      profileView.classList.remove("active");
-      feedback.className = "portal-feedback";
-      feedback.style.display = "none";
+      // Force a full page reload to ensure atomic UI state reset
+      window.location.reload();
     });
 
     function updateProfileUI() {
