@@ -22,13 +22,8 @@ async function checkAuthentication() {
   const token = localStorage.getItem('vinastra_user_session');
   const userData = token ? JSON.parse(token) : null;
   
-  if (!userData) {
-    // Not authenticated - show login prompt
-    showAuthRequired();
-    return;
-  }
-  
-  // User is authenticated - load dashboard
+  // Always load dashboard - let user browse freely
+  // Auth check is just for display purposes, not blocking
   await loadDashboard();
 }
 
@@ -61,9 +56,11 @@ function setupNavigation() {
   });
 
   document.getElementById('btn-logout')?.addEventListener('click', async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
+    // Clear local storage
+    localStorage.removeItem('vinastra_user_session');
     localStorage.removeItem('vinastra_token');
-    window.location.href = '/login/';
+    // Redirect to home
+    window.location.href = '/';
   });
 }
 
@@ -105,10 +102,8 @@ async function loadDashboard() {
     const res = await fetch('/api/dashboard/overview', { headers });
 
     if (res.status === 401) {
-      // Redirect to login instead of auto-login
-      hideLoadingState();
-      window.location.href = '/login/';
-      return;
+      // No API auth - just load dashboard with cached/local data
+      console.log('API auth required, using local data');
     }
 
     if (!res.ok) {
