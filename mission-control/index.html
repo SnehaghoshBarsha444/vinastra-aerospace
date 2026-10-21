@@ -364,14 +364,29 @@
   <script src="/mission-control/dashboard.js"></script>
   <script type="module" src="/firebase-auth.js"></script>
   <script type="module">
-    // Simple auth check - no redirects, just load dashboard
+    // Load dashboard - no auth check redirect
     import { renderAuthNav } from "/firebase-auth.js";
     
     window.addEventListener("load", () => {
-      // Just load the dashboard - auth state will be handled by firebase-auth.js
-      // No redirect logic here - user navigates freely
+      // Load dashboard content directly
+      // Auth state handled by firebase-auth.js
       if (window.loadMissionControlDashboard) {
         window.loadMissionControlDashboard();
+      }
+      
+      // Check if user data exists in cache and update UI
+      const cached = localStorage.getItem("vinastra_user_session");
+      if (cached) {
+        try {
+          const userData = JSON.parse(cached);
+          if (userData && userData.id) {
+            // Update UI with user data
+            const roleBadge = document.getElementById("user-role-badge");
+            const displayName = document.getElementById("user-display-name");
+            if (roleBadge) roleBadge.textContent = (userData.role || "MEMBER").toUpperCase();
+            if (displayName) displayName.textContent = userData.name || "Operative";
+          }
+        } catch (e) {}
       }
     });
   </script>

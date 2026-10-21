@@ -561,17 +561,31 @@ function ensureAuthModal() {
       const user = result?.profile || currentUserProfile;
       
       feedback.className = "auth-feedback success";
-      feedback.textContent = "✓ Login successful! You can now access Mission Control.";
+      feedback.textContent = "✓ Login successful! Redirecting...";
       feedback.style.display = "block";
       
-      // Close modal after success
+      // Direct redirect to dashboard
+      const role = (user?.role || 'professional').toUpperCase();
+      const roleDestinations = {
+        'ADMIN': '/mission-control/admin/',
+        'FOUNDER': '/mission-control/admin/',
+        'CTO': '/mission-control/',
+        'RD_LEAD': '/mission-control/',
+        'ENGINEER': '/mission-control/',
+        'PROFESSIONAL': '/mission-control/',
+        'RESEARCHER': '/mission-control/',
+        'COORDINATOR': '/mission-control/',
+        'STUDENTS': '/mission-control/',
+        'STUDENT': '/mission-control/',
+        'FELLOW': '/mission-control/',
+        'INVESTOR': '/investors/',
+        'ADVISOR': '/mission-control/'
+      };
+      const destination = roleDestinations[role] || '/mission-control/';
+      
       setTimeout(() => {
-        modalOverlay.style.display = "none";
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `AUTHENTICATE &amp; ENTER <span class="action-arrow">→</span>`;
-        // Update nav to show logged in state
-        renderAuthNav();
-      }, 800);
+        window.location.href = destination;
+      }, 500);
     } catch (err) {
       feedback.className = "auth-feedback error";
       feedback.textContent = formatAuthError(err);
@@ -626,17 +640,31 @@ function ensureAuthModal() {
       const user = result?.profile || currentUserProfile;
       
       feedback.className = "auth-feedback success";
-      feedback.textContent = "✓ Account created! You can now access Mission Control.";
+      feedback.textContent = "✓ Account created! Redirecting...";
       feedback.style.display = "block";
       
-      // Close modal after success
+      // Direct redirect to dashboard
+      const userRole = (user?.role || role || 'professional').toUpperCase();
+      const roleDestinations = {
+        'ADMIN': '/mission-control/admin/',
+        'FOUNDER': '/mission-control/admin/',
+        'CTO': '/mission-control/',
+        'RD_LEAD': '/mission-control/',
+        'ENGINEER': '/mission-control/',
+        'PROFESSIONAL': '/mission-control/',
+        'RESEARCHER': '/mission-control/',
+        'COORDINATOR': '/mission-control/',
+        'STUDENTS': '/mission-control/',
+        'STUDENT': '/mission-control/',
+        'FELLOW': '/mission-control/',
+        'INVESTOR': '/investors/',
+        'ADVISOR': '/mission-control/'
+      };
+      const destination = roleDestinations[userRole] || '/mission-control/';
+      
       setTimeout(() => {
-        modalOverlay.style.display = "none";
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `CREATE ACCOUNT <span class="action-arrow">→</span>`;
-        // Update nav to show logged in state
-        renderAuthNav();
-      }, 800);
+        window.location.href = destination;
+      }, 500);
     } catch (err) {
       feedback.className = "auth-feedback error";
       feedback.textContent = formatAuthError(err);

@@ -449,28 +449,25 @@
         const result = await loginUser({ email, password });
         const user = result?.profile || window.VinastraAuth?.getUser();
         
-        // Show success message
-        feedback.className = "portal-feedback success";
-        feedback.textContent = "✓ Authentication successful! Click 'ENTER MISSION CONTROL' below.";
-        feedback.style.display = "block";
-        
-        // Hide login form and show profile view
-        formLogin.style.display = "none";
-        formSignup.style.display = "none";
-        portalTabs.style.display = "none";
-        profileView.classList.add("active");
-        portalTitle.textContent = "Welcome, " + (user?.name || "User");
-        
-        // Update profile UI
-        document.getElementById("page-profile-name").textContent = user?.name || "Member";
-        document.getElementById("page-profile-role-tag").textContent = (user?.role || "Member").toUpperCase();
-        document.getElementById("page-profile-role-val").textContent = user?.role || "General";
-        document.getElementById("page-avatar-letter").textContent = (user?.name || "V")[0].toUpperCase();
-        document.getElementById("page-profile-id").textContent = user?.id || "N/A";
-        document.getElementById("page-profile-email").textContent = user?.email || "N/A";
-        
-        btn.disabled = false;
-        btn.innerHTML = `AUTHENTICATE &amp; ENTER <span class="action-arrow">→</span>`;
+        // Direct redirect to dashboard based on role
+        const role = (user?.role || 'professional').toUpperCase();
+        const roleDestinations = {
+          'ADMIN': '/mission-control/admin/',
+          'FOUNDER': '/mission-control/admin/',
+          'CTO': '/mission-control/',
+          'RD_LEAD': '/mission-control/',
+          'ENGINEER': '/mission-control/',
+          'PROFESSIONAL': '/mission-control/',
+          'RESEARCHER': '/mission-control/',
+          'COORDINATOR': '/mission-control/',
+          'STUDENTS': '/mission-control/',
+          'STUDENT': '/mission-control/',
+          'FELLOW': '/mission-control/',
+          'INVESTOR': '/investors/',
+          'ADVISOR': '/mission-control/'
+        };
+        const destination = roleDestinations[role] || '/mission-control/';
+        window.location.href = destination;
       } catch (err) {
         feedback.className = "portal-feedback error";
         feedback.textContent = `✗ ${formatAuthError(err)}`;
@@ -503,28 +500,25 @@
         const result = await createAccount({ name, email, password, role });
         const user = result?.profile || window.VinastraAuth?.getUser();
         
-        // Show success message
-        feedback.className = "portal-feedback success";
-        feedback.textContent = "✓ Account created successfully! Click 'ENTER MISSION CONTROL' below.";
-        feedback.style.display = "block";
-        
-        // Hide signup form and show profile view
-        formLogin.style.display = "none";
-        formSignup.style.display = "none";
-        portalTabs.style.display = "none";
-        profileView.classList.add("active");
-        portalTitle.textContent = "Welcome, " + (user?.name || name || "User");
-        
-        // Update profile UI
-        document.getElementById("page-profile-name").textContent = user?.name || name || "Member";
-        document.getElementById("page-profile-role-tag").textContent = (user?.role || role || "Member").toUpperCase();
-        document.getElementById("page-profile-role-val").textContent = user?.role || role || "General";
-        document.getElementById("page-avatar-letter").textContent = (user?.name || name || "V")[0].toUpperCase();
-        document.getElementById("page-profile-id").textContent = user?.id || "N/A";
-        document.getElementById("page-profile-email").textContent = user?.email || email;
-        
-        btn.disabled = false;
-        btn.innerHTML = `CREATE ACCOUNT &amp; REGISTER TO DATABASE <span class="action-arrow">→</span>`;
+        // Direct redirect to dashboard based on role
+        const userRole = (user?.role || role || 'professional').toUpperCase();
+        const roleDestinations = {
+          'ADMIN': '/mission-control/admin/',
+          'FOUNDER': '/mission-control/admin/',
+          'CTO': '/mission-control/',
+          'RD_LEAD': '/mission-control/',
+          'ENGINEER': '/mission-control/',
+          'PROFESSIONAL': '/mission-control/',
+          'RESEARCHER': '/mission-control/',
+          'COORDINATOR': '/mission-control/',
+          'STUDENTS': '/mission-control/',
+          'STUDENT': '/mission-control/',
+          'FELLOW': '/mission-control/',
+          'INVESTOR': '/investors/',
+          'ADVISOR': '/mission-control/'
+        };
+        const destination = roleDestinations[userRole] || '/mission-control/';
+        window.location.href = destination;
       } catch (err) {
         feedback.className = "portal-feedback error";
         feedback.textContent = `✗ ${formatAuthError(err)}`;
@@ -561,36 +555,37 @@
       }
     }
 
-    // Check periodically or on auth update
+    // Check if already authenticated - redirect to dashboard
     window.addEventListener("load", () => {
-      setTimeout(updateProfileUI, 300);
-      
-      // Check if already authenticated - show profile view
-      // DO NOT auto-redirect - let user click the button
       setTimeout(() => {
         const cached = localStorage.getItem("vinastra_user_session");
         if (cached) {
           try {
             const userData = JSON.parse(cached);
             if (userData && userData.id) {
-              // User is logged in - show profile view, DON'T redirect
-              formLogin.style.display = "none";
-              formSignup.style.display = "none";
-              portalTabs.style.display = "none";
-              profileView.classList.add("active");
-              portalTitle.textContent = "Welcome back, " + (userData.name || "User");
-              
-              // Update profile UI
-              document.getElementById("page-profile-name").textContent = userData.name || "Member";
-              document.getElementById("page-profile-role-tag").textContent = (userData.role || "Member").toUpperCase();
-              document.getElementById("page-profile-role-val").textContent = userData.role || "General";
-              document.getElementById("page-avatar-letter").textContent = (userData.name || "V")[0].toUpperCase();
-              document.getElementById("page-profile-id").textContent = userData.id || "N/A";
-              document.getElementById("page-profile-email").textContent = userData.email || "N/A";
+              // User is logged in - redirect to dashboard
+              const role = (userData.role || 'professional').toUpperCase();
+              const roleDestinations = {
+                'ADMIN': '/mission-control/admin/',
+                'FOUNDER': '/mission-control/admin/',
+                'CTO': '/mission-control/',
+                'RD_LEAD': '/mission-control/',
+                'ENGINEER': '/mission-control/',
+                'PROFESSIONAL': '/mission-control/',
+                'RESEARCHER': '/mission-control/',
+                'COORDINATOR': '/mission-control/',
+                'STUDENTS': '/mission-control/',
+                'STUDENT': '/mission-control/',
+                'FELLOW': '/mission-control/',
+                'INVESTOR': '/investors/',
+                'ADVISOR': '/mission-control/'
+              };
+              const destination = roleDestinations[role] || '/mission-control/';
+              window.location.href = destination;
             }
           } catch (e) {}
         }
-      }, 500);
+      }, 300);
     });
   </script>
 </body>
