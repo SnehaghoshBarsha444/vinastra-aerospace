@@ -367,6 +367,11 @@
     // Authentication check for mission control dashboard
     import { renderAuthNav } from "/firebase-auth.js";
     
+    // Prevent redirect loops - check if we just came from login
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromLogin = urlParams.get('from') === 'login';
+    const justLoggedIn = sessionStorage.getItem('vinastra_just_logged_in');
+    
     window.addEventListener("load", () => {
       setTimeout(async () => {
         // Check if user is authenticated
@@ -389,11 +394,35 @@
           } catch (e) {}
         }
         
+        // If just logged in or came from login, give extra time for auth to initialize
+        if ((fromLogin || justLoggedIn) && !isAuthenticated) {
+          // Wait longer for Firebase to initialize
+          setTimeout(() => {
+            const cached = localStorage.getItem("vinastra_user_session");
+            if (cached) {
+              try {
+                const userData = JSON.parse(cached);
+                if (userData && userData.id) {
+                  sessionStorage.removeItem('vinastra_just_logged_in');
+                  if (window.loadMissionControlDashboard) {
+                    window.loadMissionControlDashboard();
+                  }
+                  return;
+                }
+              } catch (e) {}
+            }
+            // Still not authenticated after waiting - redirect to login
+            window.location.href = "/login/";
+          }, 1500);
+          return;
+        }
+        
         if (!isAuthenticated) {
           // User not authenticated - redirect to login
           window.location.href = "/login/";
         } else {
           // User is authenticated - load dashboard content
+          sessionStorage.removeItem('vinastra_just_logged_in');
           if (window.loadMissionControlDashboard) {
             window.loadMissionControlDashboard();
           }

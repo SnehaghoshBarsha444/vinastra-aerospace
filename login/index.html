@@ -550,6 +550,8 @@
     });
 
     document.getElementById("page-profile-logout")?.addEventListener("click", async () => {
+      // Set flag to prevent auto-redirect back to dashboard
+      sessionStorage.setItem('vinastra_just_logged_out', 'true');
       await logoutUser();
       // Force a full page reload to ensure atomic UI state reset
       window.location.reload();
@@ -603,12 +605,30 @@
       setTimeout(updateProfileUI, 300);
       
       // Check if already authenticated and redirect to dashboard
+      // Only redirect if NOT just logged out and NOT from mission-control
+      const justLoggedOut = sessionStorage.getItem('vinastra_just_logged_out');
+      const fromMissionControl = document.referrer.includes('/mission-control');
+      
+      if (justLoggedOut) {
+        // Clear the flag and stay on login page
+        sessionStorage.removeItem('vinastra_just_logged_out');
+        return;
+      }
+      
+      // Don't auto-redirect if we just came from mission-control (might be a loop)
+      if (fromMissionControl) {
+        return;
+      }
+      
       setTimeout(() => {
         const cached = localStorage.getItem("vinastra_user_session");
         if (cached) {
           try {
             const userData = JSON.parse(cached);
             if (userData && userData.id) {
+              // Set flag to indicate we're redirecting after login
+              sessionStorage.setItem('vinastra_just_logged_in', 'true');
+              
               // User is already logged in - redirect to dashboard
               const role = (userData.role || 'professional').toUpperCase();
               const roleDestinations = {
